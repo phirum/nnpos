@@ -548,7 +548,7 @@ Meteor.methods({
                         });
                     }
                     purchaeseTotalCost += setObj.totalCost;
-                    Pos.Collection.PurcahseDetails.direct.update(
+                    Pos.Collection.PurchaseDetails.direct.update(
                         sd._id,
                         {$set: setObj}
                     );
