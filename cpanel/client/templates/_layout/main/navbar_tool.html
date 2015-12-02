@@ -1,0 +1,27 @@
+<template name="cpanel_navbarTool">
+    <!--Tools-->
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Tools <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li class="{{isActiveRoute name='cpanel.backup'}}">
+                <a href="{{pathFor 'cpanel.backup'}}">Backup</a>
+            </li>
+
+            <!--Check restore-->
+            {{#if restore}}
+                <li class="{{isActiveRoute name='cpanel.restore'}}">
+                    <a href="{{pathFor 'cpanel.restore'}}">Restore</a>
+                </li>
+            {{/if}}
+
+            <li>
+                <a href="{{pathFor 'cpanel.help'}}" target="_blank">Help</a>
+            </li>
+            <li class="{{isActiveRoute name='cpanel.about'}}">
+                <a href="{{pathFor 'cpanel.about'}}">About</a>
+            </li>
+        </ul>
+    </li>
+</template>

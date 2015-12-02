@@ -1,0 +1,21 @@
+<template name="sample_help">
+    <!--Content-->
+        <div class="row">
+
+            <!--left content-->
+            <div class="col-md-3" id="leftCol">
+                <ul class="nav nav-stacked" id="sidebar">
+                    <li><a href="#welcome">Welcome</a></li>
+                </ul>
+            </div><!--/left-->
+
+            <!--right body-->
+            <div class="col-md-9">
+
+                <!--call body markdown-->
+                {{> sample_helpWelcome}}
+
+            </div><!--/right-->
+
+        </div><!--/row-->
+</template>

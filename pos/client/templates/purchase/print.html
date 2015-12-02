@@ -1,0 +1,127 @@
+<template name="pos_printPurchase">
+    {{#if data}}
+        {{#with data}}
+            <div align="center"
+                 style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:260px; margin: 0 auto;">
+                <table border="0">
+                    <tr>
+                        <td style="text-align: center;">
+                            <table width="100%">
+                                <tr>
+                                    <td width="25%">
+                                        <img src="/rabbit.png" class="logo" style="width:63px;"/>
+                                    </td>
+                                    <td width="75%" align="center" style="padding-top: 10px;">
+                                        <span style="font-family:'Khmer OS Muol';font-size: 14px;">{{company.khName}}</span><br><br>
+                                    </td>
+                                </tr>
+                            </table>
+                            Address: {{company.khAddress}}<br>
+                            Tel: {{company.telephone}}
+                            <h5>Invoice</h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table width="100%">
+                                <tr>
+                                    <td>Purchase ID:{{purchase._id}}</td>
+                                    <td align="right">Staff: {{purchase._staff.name}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Date:{{purchase.purchaseDate}}</td>
+                                    <!--<td>Table: {{purchase.table}}</td>-->
+                                    <td align="right">Supplier:{{purchase._supplier.name}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table width="100%">
+                                <tr style="text-align: center; text-decoration: underline;">
+                                    <td align="left"> Product</td>
+                                    <td align="right"> Price</td>
+                                    <td> Qty</td>
+                                    <td> Discount</td>
+                                    <td align="right"> Amount</td>
+                                </tr>
+                                {{#each purchaseDetails}}
+                                    <tr>
+
+                                        <td>{{order}}-{{_product.name}}</td>
+                                        <td align="right">{{price}}</td>
+                                        <td align="center">{{quantity}} {{_product._unit.name}}</td>
+                                        <td align="center">{{discount}}</td>
+                                        <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
+                                    </tr>
+                                {{/each}}
+                                <tr>
+                                    <td colspan="5">
+                                        <hr>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="100%">
+                                <tr style="text-align: right;">
+                                    <td colspan="2">Sub Total:</td>
+                                    <td colspan="2">{{purchase.subTotalFormatted}} {{baseCurrency.symbol}}</td>
+                                </tr>
+                                <tr style="text-align: right;">
+                                    <td colspan="2" align="right">Dis:</td>
+                                    <td colspan="2" align="right">{{purchase.discount}}%</td>
+
+                                </tr>
+                                <tr style="text-align: right;">
+                                    <td colspan="2">Total {{baseCurrency._id}}:</td>
+                                    <td colspan="2"
+                                        style="font-weight: bold">{{purchase.totalFormatted}} {{baseCurrency.symbol}}</td>
+                                </tr>
+                                {{#each exchangeRates.rates}}
+                                    <tr style="text-align: right;">
+                                        <td colspan="2" align="right">{{toCurrencyId}}:</td>
+                                        <td colspan="2" align="right"
+                                            style="font-weight: bold">{{multiply purchase.total rate toCurrencyId}} {{getFileOfCurrency toCurrencyId "symbol"}}</td>
+                                    </tr>
+                                {{/each}}
+                                    <!-- {{#if purchase.isPay}}-->
+                                {{#if hasPayment}}
+                                    <tr style="text-align: right;">
+                                        <td colspan="5">
+                                            <hr>
+                                        </td>
+                                    </tr>
+
+                                    {{#each paymentObj.payments}}
+                                        <tr>
+                                            <td>Paid {{currencyId}}:</td>
+                                            <td style="font-weight: bold">{{payAmount}}</td>
+                                            <td style="text-align: right">Change {{currencyId}}:</td>
+                                            <td style="text-align: right;font-weight: bold">{{formatFixTwo return}}</td>
+                                        </tr>
+                                    {{/each}}
+                                    <!--{{#each paymentObj.payments}}
+                            <tr style="text-align: right;">
+                                <td>Return {{toCurrency}}:</td>
+                                <td>{{return}}</td>
+                            </tr>
+                        {{/each}}-->
+                                        <!--{{/if}}-->
+                            {{/if}}
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 10px; text-align: center;"><br><br><br>Powered by: Rabbit, Tel: 053 50 66
+                            777
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        {{/with}}
+        {{autoprint close="true"}}
+    {{else}}
+        {{>loading}}
+    {{/if}}
+</template>

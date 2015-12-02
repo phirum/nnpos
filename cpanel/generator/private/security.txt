@@ -1,0 +1,48 @@
+/**
+ * Setting
+ */
+Security.defineMethod("{{MODULE_NAME_CAM}}_ifSetting", {
+    fetch: [],
+    transform: null,
+    deny: function (type, arg, userId) {
+        return !Roles.userIsInRole(userId, ['setting'], '{{MODULE_NAME_CAP}}');
+    }
+});
+
+/**
+ * Data Entry
+ */
+Security.defineMethod("{{MODULE_NAME_CAM}}_ifDataInsert", {
+    fetch: [],
+    transform: null,
+    deny: function (type, arg, userId) {
+        return !Roles.userIsInRole(userId, ['data-insert'], '{{MODULE_NAME_CAP}}');
+    }
+});
+
+Security.defineMethod("{{MODULE_NAME_CAM}}_ifDataUpdate", {
+    fetch: [],
+    transform: null,
+    deny: function (type, arg, userId) {
+        return !Roles.userIsInRole(userId, ['data-update'], '{{MODULE_NAME_CAP}}');
+    }
+});
+
+Security.defineMethod("{{MODULE_NAME_CAM}}_ifDataRemove", {
+    fetch: [],
+    transform: null,
+    deny: function (type, arg, userId) {
+        return !Roles.userIsInRole(userId, ['data-remove'], '{{MODULE_NAME_CAP}}');
+    }
+});
+
+/**
+ * Report
+ */
+Security.defineMethod("{{MODULE_NAME_CAM}}_ifReport", {
+    fetch: [],
+    transform: null,
+    deny: function (type, arg, userId) {
+        return !Roles.userIsInRole(userId, ['report'], '{{MODULE_NAME_CAP}}');
+    }
+});

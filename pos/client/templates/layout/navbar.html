@@ -1,0 +1,173 @@
+<template name="pos_navbar">
+    <ul class="nav navbar-nav">
+        <li class="{{isActiveRoute name='pos.home'}}"><a href="{{pathFor 'pos.home'}}">
+            <i class="fa fa-home"></i> Home
+        </a></li>
+        <li class="{{isActiveRoute name='pos.checkout'}}">
+            <a href="{{pathFor 'pos.checkout'}}">
+                <i class="fa fa-money"></i> Sale </a>
+        </li>
+
+        {{#if noSeller}}
+            <li class="dropdown">
+                <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <i class="fa fa-cogs"></i> Manage <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="{{isActiveRoute name='pos.customer'}}"><a href="{{pathFor 'pos.customer'}}">
+                        Customer</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.supplier'}}"><a href="{{pathFor 'pos.supplier'}}">
+                         Supplier</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.staff'}}"><a href="{{pathFor 'pos.staff'}}">
+                         Staff</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.userStaff'}}"><a href="{{pathFor 'pos.userStaff'}}">
+                         User Staff Mapping</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.location'}}"><a href="{{pathFor 'pos.location'}}">
+                         Location</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.locationSetting'}}"><a href="{{pathFor 'pos.locationSetting'}}">
+                         Location Setting</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.locationTransfer'}}"><a href="{{pathFor 'pos.locationTransfer'}}">
+                         Location Transfer</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.salePayment'}}"><a href="{{pathFor 'pos.salePayment'}}">
+                         Sale Payment</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.purchasePayment'}}"><a href="{{pathFor 'pos.purchasePayment'}}">
+                         Purchase Payment</a>
+                    </li>
+                    <!--<li class="{{isActiveRoute name='pos.adjustment'}}"><a href="{{pathFor 'pos.adjustment'}}">
+                         Stock Adjustment</a>
+                    </li>-->
+                    <li class="{{isActiveRoute name='pos.promotionQty'}}"><a href="{{pathFor 'pos.promotionQty'}}">
+                         Promotion Quantity
+                    </a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.promotionTotalAmount'}}"><a
+                            href="{{pathFor 'pos.promotionTotalAmount'}}">
+                         Promotion Total Amount</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.promotionPercentage'}}"><a
+                            href="{{pathFor 'pos.promotionPercentage'}}">
+                         Promotion Percentage</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <i class="fa fa-cogs"></i> Setting <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="{{isActiveRoute name='pos.exchangeRate'}}"><a href="{{pathFor 'pos.exchangeRate'}}">
+                         Exchange</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.category'}}"><a href="{{pathFor 'pos.category'}}">
+                         Category</a>
+                    </li>
+                 <!--   <li class="{{isActiveRoute name='pos.subCategory'}}"><a href="{{pathFor 'pos.subCategory'}}">
+                         Sub Category</a></li>-->
+                    <li class="{{isActiveRoute name='pos.unit'}}"><a href="{{pathFor 'pos.unit'}}">
+                         Unit</a></li>
+                    <li class="{{isActiveRoute name='pos.product'}}"><a href="{{pathFor 'pos.product'}}">
+                         Product</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <i class="fa fa-eye"></i> View List <span
+                        class="label label-danger">{{getPublishedCount 'owedSale'}}</span><span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <!--<li class="{{isActiveRoute name='pos.stock'}}"><a href="{{pathFor 'pos.stock'}}">
+                        <i class="fa fa-eye"></i> Stock List</a>
+                    </li>-->
+                    <li class="{{isActiveRoute name='pos.saleList'}}"><a href="{{pathFor 'pos.saleList'}}">
+                         Sale List
+                        <span class="label label-danger">{{getPublishedCount 'owedSale'}}</span></a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.purchaseList'}}">
+                        <a href="{{pathFor 'pos.purchaseList'}}">
+                         Purchase List
+                        <!--<span class="label label-danger">{{getPublishedCount 'owedSale'}}</span>-->
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!--
+            <li class="{{isActiveRoute name='pos.purchase'}}">
+                <a href="{{pathFor 'pos.purchase'}}">
+                     Purchase</a>
+            </li>
+             <li class="{{isActiveRoute name='pos.endOfProcess'}}"><a href="{{pathFor 'pos.endOfProcess'}}">
+                    <i class="fa fa-save"></i> EOP</a>
+            </li>-->
+
+            <li class="dropdown">
+                <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <i class="fa fa-file-text"></i> Reports <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <!--<li class="{{isActiveRoute name='pos.myCustomerReport'}}"><a
+                        href="{{pathFor 'pos.myCustomerReport'}}">Sample</a>
+                </li>-->
+                    <li class="{{isActiveRoute name='pos.saleReport'}}"><a href="{{pathFor 'pos.saleReport'}}">
+                        <i class="fa fa-file-text"></i> Sale Summery</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.saleDetailReport'}}"><a
+                            href="{{pathFor 'pos.saleDetailReport'}}">
+                        <i class="fa fa-file-text"></i> Sale Items Detail</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="{{isActiveRoute name='pos.purchaseReport'}}"><a href="{{pathFor 'pos.purchaseReport'}}">
+                        <i class="fa fa-file-text"></i> Purchase Summery</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.purchaseDetailReport'}}"><a
+                            href="{{pathFor 'pos.purchaseDetailReport'}}">
+                        <i class="fa fa-file-text"></i> Purchase Items Detail</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="{{isActiveRoute name='pos.stockReport'}}"><a href="{{pathFor 'pos.stockReport'}}">
+                        <i class="fa fa-file-text"></i> Stock Balance</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="{{isActiveRoute name='pos.owedCustomerReport'}}"><a
+                            href="{{pathFor 'pos.owedCustomerReport'}}">
+                        <i class="fa fa-file-text"></i> Owed Customer</a>
+                    </li>
+
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <i class="fa fa-wrench"></i> Tools <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+
+                    <li class="{{isActiveRoute name='pos.backup'}}"><a href="{{pathFor 'pos.backup'}}">
+                        <i class="fa fa-files-o"></i> Backup</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.restore'}}"><a href="{{pathFor 'pos.restore'}}">
+                        <i class="fa fa-files-o"></i> Restore</a>
+                    </li>
+
+                </ul>
+            </li>
+        {{/if}}
+    </ul>
+</template>
+
+
+<template name="pos_saleNotification">
+    <ul>
+        {{#each pos_saleNotification}}
+            <li>{{_customer.name}} | {{_id}}</li>
+        {{/each}}
+    </ul>
+</template>

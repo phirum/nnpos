@@ -1,0 +1,44 @@
+<!--Backup-->
+<template name="cpanel_backup">
+    {{#autoForm schema=Cpanel.Schema.Backup id="cpanel_backup"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='token' type="hidden"}}
+                {{> afQuickField name='module'}}
+                {{> afQuickField name='type' options=type}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name='branch' options=branch}}
+
+                <button type="submit" class="btn btn-primary">{{fa "download"}} Backup</button>
+                <button type="reset" class="btn btn-default">{{fa "refresh"}} Reset</button>
+            </div>
+        </div>
+    {{/autoForm}}
+</template>
+
+<!--Restore-->
+<template name="cpanel_restore">
+    {{#if restoreWaiting}}
+        {{> loading}}
+    {{/if}}
+
+    {{#autoForm schema=Cpanel.Schema.Restore id="cpanel_restore" enctype="multipart/form-data"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='token' type="hidden"}}
+                {{> afQuickField name='module'}}
+                {{> afQuickField name='type' options=type}}
+                {{> afQuickField name='branch' options=branch}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name='dropCollections' type="hidden" value=dropCollections}}
+                {{> afQuickField name='dropQuery' type="hidden" value=dropQuery}}
+                {{> afQuickField name='restoreFile' accept=".tar"}}
+
+                <button type="submit" class="btn btn-primary">{{fa "upload"}} Restore</button>
+                <button type="reset" class="btn btn-default">{{fa "refresh"}} Reset</button>
+            </div>
+        </div>
+    {{/autoForm}}
+</template>

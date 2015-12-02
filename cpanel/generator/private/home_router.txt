@@ -1,0 +1,12 @@
+{{MODULE_NAME_CAM}}Routes.route('/home', {
+    name: '{{MODULE_NAME_CAM}}.home',
+    action: function (params, queryParams) {
+        Layout.main('{{MODULE_NAME_CAM}}_home');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Home'
+        //parent: 'Home'
+    }
+});

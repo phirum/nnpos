@@ -1,0 +1,50 @@
+<template name="cpanel_generator">
+
+    {{> cpanel_generatorModule}}
+
+    {{> cpanel_generatorCRUD}}
+
+</template>
+
+<!--Module-->
+<template name="cpanel_generatorModule">
+    <h3>Module</h3>
+
+    <div class="jumbotron">
+        <!--Loading-->
+        {{#if loadingWaiting}}
+            {{> loading}}
+        {{/if}}
+
+        {{#autoForm schema=Cpanel.Schema.GeneratorModule id="cpanel_generatorModule"}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name="moduleName"}}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">{{fa "file-text"}} Generate</button>
+            <button type="reset" class="btn btn-default">{{fa "refresh"}} Reset</button>
+        {{/autoForm}}
+    </div>
+</template>
+
+<template name="cpanel_generatorCRUD">
+    <h3>CRUD</h3>
+
+    <div class="jumbotron">
+        {{#autoForm schema=Cpanel.Schema.GeneratorCRUD id="cpanel_generatorCRUD"}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name="moduleName"}}
+                    {{> afQuickField name="fieldName"}}
+                </div>
+            </div>
+
+            {{> afQuickField name="fieldPro"}}
+
+            <button type="submit" class="btn btn-primary">{{fa "file-text"}} Generate</button>
+            <button type="reset" class="btn btn-default">{{fa "refresh"}} Reset</button>
+        {{/autoForm}}
+    </div>
+</template>

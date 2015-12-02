@@ -1,0 +1,50 @@
+<template name="{{MODULE_NAME_CAM}}_navbar">
+    <li class="{{isActiveRoute name='{{MODULE_NAME_CAM}}.home'}}"><a href="{{pathFor '{{MODULE_NAME_CAM}}.home'}}">Home</a></li>
+
+    {{#if isInRole 'data-insert,data-update,data-remove' '{{MODULE_NAME_CAP}}'}}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Data <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li class="{{isActiveRoute name='{{MODULE_NAME_CAM}}.customer'}}">
+                <a href="{{pathFor '{{MODULE_NAME_CAM}}.customer'}}">Customer</a>
+            </li>
+        </ul>
+    </li>
+    {{/if}}
+
+    <!--Reports-->
+    {{#if isInRole 'report' '{{MODULE_NAME_CAP}}'}}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Reports <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li class="{{isActiveRoute name='{{MODULE_NAME_CAM}}.customerReport'}}">
+                    <a href="{{pathFor '{{MODULE_NAME_CAM}}.customerReport'}}">Customer (Browser View)</a>
+                </li>
+                <li class="{{isActiveRoute name='{{MODULE_NAME_CAM}}.customerExcelReport'}}">
+                    <a href="{{pathFor '{{MODULE_NAME_CAM}}.customerExcelReport'}}">Customer (Excel)</a>
+                </li>
+            </ul>
+        </li>
+    {{/if}}
+
+    <!--Settings-->
+    {{#if isInRole 'setting' '{{MODULE_NAME_CAP}}'}}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Settings <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li class="{{isActiveRoute name='cpanel.exchange'}}">
+                    <a href="{{pathFor 'cpanel.exchange'}}">Exchange</a>
+                </li>
+                <li class="{{isActiveRoute name='{{MODULE_NAME_CAM}}.location'}}">
+                    <a href="{{pathFor '{{MODULE_NAME_CAM}}.location'}}">Location</a>
+                </li>
+            </ul>
+        </li>
+    {{/if}}
+</template>

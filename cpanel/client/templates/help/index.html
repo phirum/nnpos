@@ -1,0 +1,37 @@
+<template name="cpanel_help">
+
+    <!--Content-->
+    <div class="row">
+
+        <!--left content-->
+        <div class="col-md-3" id="leftCol">
+            <ul class="nav nav-stacked" id="sidebar">
+                <li><a href="#user">User</a></li>
+                <li><a href="#setting">Setting</a></li>
+                <li><a href="#company">Company</a></li>
+                <li><a href="#branch">Branch</a></li>
+                <li><a href="#exchange">Exchange</a></li>
+                <li><a href="#backup">Backup</a></li>
+                <li><a href="#restore">Restore</a></li>
+                <li><a href="#changelog">Change Log</a></li>
+            </ul>
+        </div><!--/left-->
+
+        <!--right body-->
+        <div class="col-md-9">
+
+            <!--call body markdown-->
+            {{> cpanel_helpUser}}
+            {{> cpanel_helpSetting}}
+            {{> cpanel_helpCompany}}
+            {{> cpanel_helpBranch}}
+            {{> cpanel_helpExchange}}
+            {{> cpanel_helpBackup}}
+            {{> cpanel_helpRestore}}
+            {{> cpanel_helpChangelog}}
+
+        </div><!--/right-->
+
+    </div><!--/row-->
+
+</template>

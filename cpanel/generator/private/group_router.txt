@@ -1,0 +1,7 @@
+{{MODULE_NAME_CAM}}Routes = FlowRouter.group({
+    prefix: '/{{MODULE_NAME_CAM}}'
+    //subscriptions: function (params, queryParams) {
+    //    // Global subscriptions for route group
+    //    this.register('{{MODULE_NAME_CAM}}_pub', Meteor.subscribe('{{MODULE_NAME_CAM}}_pub'));
+    //}
+});

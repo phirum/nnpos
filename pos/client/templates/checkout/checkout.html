@@ -1,0 +1,439 @@
+<template name="pos_checkout">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>Sale</b></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <label for="sale-id"> <b>ID:</b></label>
+                            <input type="text" id="sale-id" class="form-control input-sm" value="{{sale._id}}" readonly>
+                            <label for="voucher"> <b>Voucher <span style="color:red">*</span></b></label>
+                            <input type="text" id="voucher" value="{{sale.voucher}}" class="form-control input-sm">
+                            <label for="sale-date"><b>Date <span style="color:red">*</span></b></label>
+
+                            <div class='input-group date' id='sale-date'>
+                                <input type='text' class="form-control input-sm sale-date" id="input-sale-date"
+                                       value="{{saleDate}}"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <label for="location-id"> <b>Locations <span style="color:red">*</span></b></label>
+                            <!-- <select id="location-id" class="form-control input-sm select-two">
+                               {{#each locations}}
+                                    <option value="{{_id}}"
+                                            selected="{{#if compareTwoValue _id sale.locationId}}selected{{/if}}">{{name}}</option>
+                                {{/each}}
+                            </select>-->
+                            <input type="text" class="form-control input-sm" value="{{location.name}}" readonly>
+                            <input type="text" id="location-id" class="form-control input-sm hidden" value="{{location._id}}" readonly>
+
+
+                            <label for="staff-id"> <b>Staff <span style="color:red">*</span></b></label>
+
+                            <!--<div class="input-group select2-bootstrap-append">-->
+                            <select id="staff-id" class="form-control input-sm select-two">
+                                {{#each staffs}}
+                                    <option value="{{_id}}"
+                                            selected="{{#if compareTwoValue _id sale.staffId}}selected{{/if}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                            <!--  <span class="input-group-addon staffInsertAddon">
+                             <a > <i class="fa fa-plus"></i> </a>
+                             </span>
+                             </div>-->
+
+                            <label for="customer-id"> <b>Customer <span style="color:red">*</span></b></label>
+
+                            <div class="input-group select2-bootstrap-append">
+                                <select id="customer-id" value="" class="form-control input-sm select-two">
+                                    {{#each customers}}
+                                        <option value="{{_id}}"
+                                                selected="{{#if compareTwoValue _id sale.customerId}}selected{{/if}}">{{_id}}
+                                            | {{name}}</option>
+                                    {{/each}}
+                                </select>
+                                 <span class="input-group-addon customerInsertAddon">
+                            <a> <i class="fa fa-plus"></i> </a>
+                            </span>
+                            </div>
+                            <label for="transaction-type"> <b>Transaction Type
+                                <span style="color:red">*</span></b></label>
+
+                            <!--<div class="input-group select2-bootstrap-append">-->
+                            <select id="transaction-type" class="form-control input-sm select-two">
+                                {{#each transactionType}}
+                                    <option value="{{value}}"
+                                            selected="{{#if compareTwoValue value sale.transactionType}}selected{{/if}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                            <label for="description">Description</label>
+                            <textarea id="description" class="form-control"
+                                      rows="4">{{adjustment.description}}</textarea>
+
+                            <div style="margin-top:5px">
+                                {{#if hasUpdate}}
+                                    <a class="btn btn-primary btn-sm" id="btn-update-sale-data">Update</a>
+                                {{/if}}
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-6"><h3 class="panel-title"><b>Product List</b></h3></div>
+                        <div class="col-md-6"><span class="pull-right">
+{{#if isRetailHelper}}
+    <a id="retail" class="btn btn-xs btn-primary" disabled="disabled">Retail</a>
+{{else}}
+    <a id="retail" class="btn btn-xs btn-default">Retail</a>
+{{/if}} |
+                            {{#if isRetailHelper}}
+                                <a id="wholesale" class="btn btn-xs btn-default">Wholesale</a>
+                            {{else}}
+                                <a id="wholesale" class="btn btn-xs btn-primary" disabled="disabled">Wholesale</a>
+                            {{/if}}
+
+</span></div>
+                    </div>
+
+
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input type="text" id="product-barcode" class="form-control input-sm" placeholder="Barcode"
+                                   autofocus>
+                        </div>
+                        <div class="col-md-5">
+                            <select id="product-id" class="form-control input-sm select-two">
+                                <option value="">(Select One)</option>
+                                {{#each products}}
+                                    <option value="{{_id}}">{{name}} ({{_unit.name}})</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" id="default-quantity" class="form-control input-sm"
+                                   placeholder="Quantity" value="1">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" id="default-discount" class="form-control input-sm"
+                                   placeholder="Discount" value="0">
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-responsive table-condensed table-hover">
+                            <thead class="jumbotron">
+                            <tr>
+                                <th>Product Name</th>
+                                <th class="align-center">Price</th>
+                                <th class="align-center">Quantity</th>
+                                <th class="align-center">Discount</th>
+                                <th class="align-center">Amount</th>
+                                <th class="align-center">&nbsp;&nbsp;Action&nbsp;&nbsp;</th>
+                            </tr>
+                            </thead>
+                            <tbody class="align-center" id="product-list">
+                            {{#each saleDetails}}
+
+                                <tr data-id="{{_id}}">
+
+                                    <td align="left">
+                                        {{_product.name}} ({{_product._unit.name}})
+                                    </td>
+                                    <td>
+                                        <input type="text" class="la-box price validation" step="0.01"
+                                               value="{{price}}"/>
+
+                                    </td>
+                                    <td>
+                                        <input type="text" style="width: 100px;" min="1"
+                                               class="la-box quantity validation"
+                                               value="{{quantity}}"/>
+
+                                    </td>
+                                    <td>
+                                        <input type="text" min="0" max="100" class="la-box discount validation"
+                                               value="{{discount}}"/>
+
+                                    </td>
+                                    <td class="total-amount">
+                                        <input type="text" class="la-box total validation" step="0.01"
+                                               value="{{amountFormatted}} {{baseCurrency.symbol}}" readonly/>
+
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-xs" role="group" aria-label="">
+                                            <a href="" class="btn btn-warning btn-imei">IMEI</a>
+                                            <a href="" class="btn btn-danger btn-remove"><i
+                                                    class="fa fa-trash"></i></a>
+                                        </div>
+
+                                        <!-- <a href="" class="btn btn-xs btn-danger btn-remove"><i
+                                                 class="fa fa-trash"></i></a>-->
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-11 col-md-offset-1">
+                        <form class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="total_riel" class="col-sm-5 control-label">Sub
+                                            Total {{baseCurrency._id}}</label>
+
+                                        <div class="col-sm-7">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control subtotal_riel input-sm"
+                                                       id="subtotal_usd"
+                                                       value="{{sale.subTotalFormatted}}" readonly>
+                                                <span class="input-group-addon"><b>{{baseCurrency.symbol}}</b></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="total_discount" class="col-sm-5 control-label">Discount</label>
+
+                                        <div class="col-sm-7">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control validation input-sm"
+                                                       id="total_discount"
+                                                       value="{{sale.discount}}">
+                                                <span class="input-group-addon"><b>%</b></span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="total_discount_amount"
+                                               class="col-sm-5 control-label">Discount</label>
+
+                                        <div class="col-sm-7">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control validation input-sm"
+                                                       id="total_discount_amount"
+                                                       value="{{sale.discountAmount}}">
+                                                <span class="input-group-addon"><b>{{baseCurrency.symbol}}</b></span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="total_usd"
+                                               class="col-sm-5 control-label">Total {{baseCurrency._id}}</label>
+
+                                        <div class="col-sm-7">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control input-sm" id="total_usd"
+                                                       value="{{sale.totalFormatted}}"
+                                                       readonly>
+                                                <span class="input-group-addon"><b>{{baseCurrency.symbol}}</b></span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    {{#if hasTotal sale.total}}
+                                        {{#each exchangeRates.rates}}
+                                            <div class="form-group">
+                                                <label for="total_riel"
+                                                       class="col-sm-5 control-label">Total {{toCurrencyId}}</label>
+
+                                                <div class="col-sm-7">
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="text" class="form-control input-sm"
+                                                               value="{{multiply rate sale.total toCurrencyId}}"
+                                                               readonly>
+                                                        <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        {{/each}}
+                                    {{/if}}
+
+
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="pull-right">
+
+                <div class="btn-group dropup">
+                    <button type="button" class="btn btn-primary dropdown-toggle"
+                            data-toggle="dropdown"><i class="fa fa-undo"></i>&nbsp;Resume<span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        {{#each sales}}
+                            <!--onclick="Session.set('hasUpdate', false);"-->
+                            <li><a href="/pos/checkout/{{_id}}" class="resume" data-id="{{_id}}">{{_customer.name}}
+                                | {{_id}}</a></li>
+                        {{/each}}
+
+                    </ul>
+                </div>
+                <button type="button" id="suspend" class="btn btn-info"><i class="fa fa-archive"></i>&nbsp;Suspend
+                </button>
+                <a href="/pos/checkout/print/{{sale._id}}" id="btn-print" class="btn hidden btn-primary"
+                   target="_blank"><i
+                        class="fa fa-money"></i>&nbsp;Print</a>
+                <a id="print-invoice" class="btn btn-warning"><i
+                        class="fa fa-money"></i>&nbsp;Print</a>
+                <a id="save-without-pay" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Save</a>
+                <button type="button" class="btn btn-success" data-toggle="modal" id="btn-pay"><i
+                        class="fa fa-money"></i>&nbsp;Pay
+                </button>
+                <button type="button" class="btn btn-danger" id="cancel-sale"><i class="fa fa-trash-o"></i>&nbsp;Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="payment" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> Payment <span id="due-grand-total" class="hidden">{{sale.total}}</span>
+                    </h4>
+                </div>
+                <form class="form-horizontal">
+                    <div class="modal-body">
+
+                        <table id="payment-table" width="100%">
+                            <tbody id="payment-list">
+                            <tr>
+                                <td>Total {{baseCurrency._id}}
+                                    <div id="pay-format">
+                                        <input type="text" value="{{sale.totalFormatted}} {{baseCurrency.symbol}}"
+                                               readonly class="due-amount-total form-control">
+                                    </div>
+                                </td>
+                                <td>Pay in {{baseCurrency._id}}
+                                    <div id="pay-format">
+                                        <input type="text" class="pay-amount form-control">
+                                    </div>
+                                </td>
+                                <td>Change in {{baseCurrency._id}}
+                                    <div id="pay-format">
+                                        <input type="text" id="{{baseCurrency._id}}" class="return-amount form-control"
+                                               readonly>
+                                    </div>
+                                </td>
+                                <td class="hidden"><span class="currency-id">{{baseCurrency._id}}</span>
+
+                                    <div id="pay-format">
+                                        <input type="text" value="1" class="exchange-rate form-control" readonly>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            {{#each exchangeRates.rates}}
+                                <tr>
+                                    <td>Total {{toCurrencyId}}
+                                        <div id="pay-format">
+                                            <input type="text"
+                                                   value="{{multiply rate sale.total toCurrencyId}} {{getFileOfCurrency toCurrencyId "symbol"}}"
+                                                   class="due-amount-total form-control" readonly>
+                                        </div>
+                                    </td>
+
+                                    <td>Pay in {{toCurrencyId}}
+                                        <div id="pay-format">
+                                            <input type="text" class="pay-amount form-control">
+                                        </div>
+                                    </td>
+                                    <td>Change in {{toCurrencyId}}
+                                        <div id="pay-format">
+                                            <input type="text" id="{{toCurrencyId}}" class="return-amount form-control"
+                                                   readonly>
+                                        </div>
+                                    </td>
+                                    <td class="hidden">Exchange Rate From <span
+                                            class="currency-id">{{toCurrencyId}}</span>
+
+                                        <div id="pay-format">
+                                            <input type="text" class="exchange-rate form-control" value="{{rate}}"
+                                                   readonly>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="print-sale">Save and Print</button>
+                        <button type="button" class="btn btn-primary" id="save-sale">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal fade" id="imei" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> IMEI </h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="input-imei" placeholder="Add IMEI">
+                    <br>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>IMEI</th>
+                            <th style="width: 20%">Remove</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each imeis}}
+                            <tr>
+                                <td class="td-imei">{{this}}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger btn-remove-imei">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {{/each}}
+                        </tbody>
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</template>

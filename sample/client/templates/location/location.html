@@ -1,0 +1,67 @@
+<!--Index-->
+<template name="sample_location">
+    <p>
+        <button type="button" class="btn btn-primary js-insert">{{fa "plus"}} Add New</button>
+    </p>
+
+    {{> tabular table=Sample.TabularTable.Location selector=selector class=tabularClass}}
+</template>
+
+<!--Action-->
+<template name="sample_locationAction">
+    {{#tabularAction}}
+        <li><a href="#" class="js-update">{{fa "pencil"}} Edit</a></li>
+        <li><a href="#" class="js-remove">{{fa "remove"}} Remove</a></li>
+        <li><a href="#" class="js-show">{{fa "eye"}} Show</a></li>
+    {{/tabularAction}}
+</template>
+
+<!--Insert-->
+<template name="sample_locationInsert">
+    {{#autoForm collection=Sample.Collection.Location id="sample_locationInsert" type="insert"}}
+        <div class="row">
+            <div class="col-md-12">
+                {{> afQuickField name='name'}}
+
+                <button type="submit" class="btn btn-primary">{{fa "floppy-o"}} Save</button>
+                <button type="reset" class="btn btn-default">{{fa "refresh"}} Reset</button>
+            </div>
+        </div>
+    {{/autoForm}}
+</template>
+
+<!--Update-->
+<template name="sample_locationUpdate">
+    <!--Custom template sub ready by name-->
+    {{#if templateSubReady "subLocation"}}
+        {{#autoForm collection=Sample.Collection.Location id="sample_locationUpdate" doc=data type="update"}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name='name'}}
+
+                    <button type="submit" class="btn btn-primary">{{fa "floppy-o"}} Save</button>
+                    <button type="reset" class="btn btn-default">{{fa "refresh"}} Reset</button>
+                </div>
+            </div>
+        {{/autoForm}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
+</template>
+
+<!--Show-->
+<template name="sample_locationShow">
+    <!--Custom template sub ready by name-->
+    {{#if templateSubReady "subLocation"}}
+        {{#with data}}
+            <dl class="dl-horizontal">
+                <dt>Id</dt>
+                <dd>{{_id}}</dd>
+                <dt>Name</dt>
+                <dd>{{name}}</dd>
+            </dl>
+        {{/with}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
+</template>

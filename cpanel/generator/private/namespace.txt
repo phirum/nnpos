@@ -1,0 +1,13 @@
+// Namespace
+{{MODULE_NAME_CAP}} = {};
+
+Meteor.isClient && Template.registerHelper('{{MODULE_NAME_CAP}}', {{MODULE_NAME_CAP}});
+
+/* Collection */
+{{MODULE_NAME_CAP}}.Collection = {};
+
+/* Schema */
+{{MODULE_NAME_CAP}}.Schema = {};
+
+/* Tabular */
+{{MODULE_NAME_CAP}}.TabularTable = {};

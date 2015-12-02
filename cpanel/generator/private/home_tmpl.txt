@@ -1,0 +1,3 @@
+<template name="{{MODULE_NAME_CAM}}_home">
+    <h3>Welcome To {{MODULE_NAME_CAP}} Module!</h3>
+</template>

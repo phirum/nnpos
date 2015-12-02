@@ -1,0 +1,142 @@
+<!--Form-->
+<template name="pos_owesSupplierReport">
+    {{#autoForm schema=Pos.Schema.OwesSupplierReport id="pos_owesSupplierReport" action="owesSupplierReportGen" target="_blank"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='date'}}
+                {{> afQuickField name='branch'}}
+            </div>
+            <div class="col-md-6">
+                <!--{{> afQuickField name='staffId'}}-->
+                {{> afQuickField name='supplierId'}}
+
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>
+
+
+<!--Generate-->
+<template name="pos_owesSupplierReportGen1">
+
+    <!--Title-->
+    <div class="report-title">
+        <span class="report-company-name">{{reportHelper.companyName}}</span><br>
+        Branch Office: {{reportHelper.branch}}<br>
+        {{reportHelper.reportName}}<br>
+        Date: {{reportHelper.date}}<br>
+    </div>
+
+    <!--Header-->
+    <table width="100%" border="0">
+        {{#each reportHelper.header}}
+            <tr>
+                <td width="35%">{{col1}}</td>
+                <td width="35%">{{col2}}</td>
+                <td>{{col3}}</td>
+            </tr>
+        {{/each}}
+    </table>
+
+    <!--Content-->
+    <table class="report-content">
+        <thead class="report-content-header">
+        <tr>
+            <th>No</th>
+            <th>InvoiceId</th>
+            <th>Payment Date</th>
+            <th>Supplier</th>
+            <th>DueAmount</th>
+        </tr>
+        </thead>
+
+        <tbody class="report-content-body">
+        {{#each reportHelper.payments}}
+            <tr>
+                <td>{{order}}</td>
+                <td>{{purchaseId}}</td>
+                <td>{{paymentDate}}</td>
+                <td>{{supplierName}}</td>
+                <td>{{balanceAmount}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+
+    </table>
+
+    <!--Footer-->
+
+</template>
+
+
+<!--Generate-->
+<template name="pos_owesSupplierReportGen">
+    {{#if data}}
+        {{#reportTpl options}}
+            {{#with data}}
+                {{#with title}}
+                    <div class="title">
+                        <div class="title-1x-kh-muol">{{khName}}</div>
+                        <div class="title-1x">{{enName}}</div>
+                        <div style="text-decoration: underline;">Owes Supplier Report</div>
+                        <div class="title-2x">{{enAddress}}</div>
+                    </div>
+                {{/with}}
+                {{#with header}}
+                    <div style="width: 100%">
+                        <div style="width: 50%; float: left">
+                            <ul class="list-unstyled">
+                                <li><strong>Branch:</strong> {{branch}}</li>
+                            </ul>
+                        </div>
+
+                        <div style="width: 50%; float: right">
+                            <ul class="list-unstyled">
+                                <li><strong>Date:</strong> {{date}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                {{/with}}
+
+                <!--Content-->
+                <table class="report-content">
+                    <thead class="content-header">
+                    <tr>
+                        <th>No</th>
+                        <th>InvoiceId</th>
+                        <th>Sale Date</th>
+                        <th>Supplier</th>
+                        <th>Owed Amount</th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="content-body">
+                    {{#each content}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{_id}}</td>
+                            <td>{{purchaseDate}}</td>
+                            <td>{{_supplier.name}}</td>
+                            <td>{{owedAmount}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            {{/with}}
+            <!--Sign-->
+            {{> signFooter}}
+        {{/reportTpl}}
+
+        <!--Auto print-->
+        <!--{{autoprint close="true"}}-->
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+
+</template>
+
+
+

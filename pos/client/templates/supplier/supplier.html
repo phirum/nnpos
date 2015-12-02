@@ -1,0 +1,73 @@
+<!--Index-->
+<template name="pos_supplier">
+    <p>
+        <button type="button" class="btn btn-primary insert"><i class="fa fa-plus"></i> Add New Supplier</button>
+    </p>
+    <!--{{#if isSubReady "pos_supplier"}}-->
+      {{> tabular table=Pos.TabularTable.Suppliers selector=selector class="table table-striped table-bordered table-condensed table-hover"}}
+    <!--{{else}}
+        {{> loading}}
+    {{/if}}-->
+</template>
+
+<!--Action-->
+<template name="pos_supplierAction">
+    {{#tabularAction}}
+        <li><a  class="update"><i class="fa fa-pencil"></i> Update</a></li>
+        <li><a  class="remove"><i class="fa fa-remove"></i> Remove</a></li>
+        <li><a  class="show"><i class="fa fa-eye"></i> Show</a></li>
+    {{/tabularAction}}
+</template>
+
+<!--Insert-->
+<template name="pos_supplierInsert">
+    {{#autoForm collection=Pos.Collection.Suppliers id="pos_supplierInsert" type="insert"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='name'}}
+                {{> afQuickField name='phone'}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name='address'}}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>
+
+<!--Update-->
+<template name="pos_supplierUpdate">
+    {{#autoForm collection=Pos.Collection.Suppliers id="pos_supplierUpdate" doc=this type="update"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='name'}}
+                {{> afQuickField name='phone'}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name='address'}}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+
+</template>
+
+<!--Show-->
+<template name="pos_supplierShow">
+    <dl class="dl-horizontal">
+        <dt>Id:</dt>
+        <dd>{{_id}}</dd>
+        <dt>Name:</dt>
+        <dd>{{name}}</dd>
+        <dt>Phone:</dt>
+        <dd>{{phone}}</dd>
+        <dt>Address:</dt>
+        <dd>{{address}}</dd>
+        <dt>Has supplied:</dt>
+        <dd>{{_purchaseCount}}</dd>
+    </dl>
+</template>

@@ -1,0 +1,223 @@
+<template name="pos_locationTransfer">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>Location Transfer</b></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="locationTransfer-id"> <b>ID:</b></label>
+                            <input type="text" id="locationTransfer-id" class="form-control input-sm"
+                                   value="{{locationTransfer._id}}" readonly>
+                            <label for="locationTransfer-date"><b>Date <span style="color:red">*</span></b></label>
+
+                            <div class='input-group date' id='locationTransfer-date'>
+                                <input type='text' class="form-control input-sm locationTransfer-date"
+                                       id="input-locationTransfer-date" value="{{locationTransferDate}}"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <label for="from-location-id"> <b>From Location <span style="color:red">*</span></b></label>
+                            {{#if locationTransfer}}
+                                <input type="text"
+                                       value="{{locationTransfer.fromLocationId}}-{{locationTransfer._fromLocation.name}}"
+                                       class="form-control input-sm" readonly>
+                                <input type="text" value="{{locationTransfer.fromLocationId}}"
+                                       class="form-control input-sm hidden" id="from-location-id">
+                            {{else}}
+                                <div class="input-group select2-bootstrap-append">
+                                    <select id="from-location-id" class="form-control input-sm select-two">
+                                        <option value="">Select From Location</option>
+                                        {{#each locations}}
+                                            <option value="{{_id}}"
+                                                    selected="{{#if compareTwoValue _id locationTransfer.fromLocationId}}selected{{/if}}">{{_id}}
+                                                | {{name}}</option>
+                                        {{/each}}
+                                    </select>
+                                 <span class="input-group-addon locationInsertAddon">
+                            <a> <i class="fa fa-plus"></i> </a>
+                            </span>
+                                </div>
+                            {{/if}}
+                            <label for="to-location-id"> <b>To Location <span style="color:red">*</span></b></label>
+
+                            <div class="input-group select2-bootstrap-append">
+                                <select id="to-location-id" class="form-control input-sm select-two">
+                                    {{#each toLocations}}
+                                        <option value="{{_id}}"
+                                                selected="{{#if compareTwoValue _id locationTransfer.toLocationId}}selected{{/if}}">{{_id}}
+                                            | {{name}}</option>
+                                    {{/each}}
+                                </select>
+                                 <span class="input-group-addon locationInsertAddon">
+                            <a> <i class="fa fa-plus"></i> </a>
+                            </span>
+                            </div>
+                            <label for="staff-id"> <b>Staff <span style="color:red">*</span></b></label>
+                            <!--<div class="input-group select2-bootstrap-append">-->
+                            <select id="staff-id" class="form-control input-sm select-two">
+                                {{#each staffs}}
+                                    <option value="{{_id}}"
+                                            selected="{{#if compareTwoValue _id locationTransfer.staffId}}selected{{/if}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                            <!--  <span class="input-group-addon staffInsertAddon">
+                             <a > <i class="fa fa-plus"></i> </a>
+                             </span>
+                             </div>-->
+                            <div style="margin-top:5px">
+                                {{#if hasLocationTransferUpdate}}
+                                    <a class="btn btn-primary btn-sm" id="btn-update-locationTransfer-data">Update</a>
+                                {{/if}}
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-6"><h3 class="panel-title"><b>Product List</b></h3></div>
+                        <div class="col-md-6"><span class="pull-right"></span></div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="text" id="product-barcode" class="form-control input-sm" placeholder="Barcode"
+                                   autofocus>
+                        </div>
+                        <div class="col-md-5">
+                            <select id="product-id" class="form-control input-sm select-two">
+                                <option value="">(Select One)</option>
+                                {{#each products}}
+                                    <option value="{{_id}}">{{name}} ({{_unit.name}})</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="default-quantity" class="form-control input-sm"
+                                   placeholder="Quantity" value="1">
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-responsive table-condensed table-hover">
+                            <thead class="jumbotron">
+                            <tr>
+                                <th>Product Name</th>
+                                <th class="align-center">Unit</th>
+                                <th class="align-center">Quantity</th>
+                                <th class="align-center">&nbsp;&nbsp;Action&nbsp;&nbsp;</th>
+                            </tr>
+                            </thead>
+                            <tbody class="align-center" id="product-list">
+                            {{#each locationTransferDetails}}
+                                <tr data-id="{{_id}}">
+                                    <td align="left">
+                                        {{_product.name}}
+                                    </td>
+                                    <td>
+                                        <input type="text" class="la-box price validation" step="0.01"
+                                               value="{{_product._unit.name}}"/>
+
+                                    </td>
+                                    <td>
+                                        <input type="text" style="width: 100px;" min="1"
+                                               class="la-box quantity validation"
+                                               value="{{quantity}}"/>
+
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-xs" role="group" aria-label="">
+                                            <a href="" class="btn btn-warning btn-imei">IMEI</a>
+                                            <a href="" class="btn btn-danger btn-remove"><i
+                                                    class="fa fa-trash"></i></a>
+                                        </div>
+                                        <!-- <a href="" class="btn btn-xs btn-danger btn-remove"><i
+                                                 class="fa fa-trash"></i></a>-->
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="pull-right">
+                <div class="btn-group dropup">
+                    <button type="button" class="btn btn-primary dropdown-toggle"
+                            data-toggle="dropdown"><i class="fa fa-undo"></i>&nbsp;Resume<span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        {{#each locationTransfers}}
+                            <!--onclick="Session.set('hasUpdate', false);"-->
+                            <li><a href="/pos/locationTransfer/{{_id}}" class="resume"
+                                   data-id="{{_id}}">{{_staff.name}}
+                                | {{_id}}</a></li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <button type="button" id="suspend" class="btn btn-info"><i class="fa fa-archive"></i>&nbsp;Suspend
+                </button>
+                <a href="/pos/locationTransfer/print/{{locationTransfer._id}}" id="btn-print"
+                   class="btn hidden btn-primary"
+                   target="_blank"><i
+                        class="fa fa-money"></i>&nbsp;Print</a>
+                <a id="print-invoice" class="btn btn-warning"><i
+                        class="fa fa-money"></i>&nbsp;Print</a>
+                <a id="save-without-pay" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Save</a>
+                <button type="button" class="btn btn-danger" id="cancel-locationTransfer"><i class="fa fa-trash-o"></i>&nbsp;Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="imei" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> IMEI </h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="input-imei" placeholder="Add IMEI">
+                    <br>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>IMEI</th>
+                            <th style="width: 20%">Remove</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each imeis}}
+                            <tr>
+                                <td class="td-imei">{{this}}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger btn-remove-imei">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {{/each}}
+                        </tbody>
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</template>

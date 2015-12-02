@@ -1,0 +1,158 @@
+<!--Index-->
+<template name="pos_promotionQty">
+    <p>
+        <button type="button" class="btn btn-primary insert"><i class="fa fa-plus"></i> Add New PromotionQty</button>
+    </p>
+    <!--{{#if isSubReady "pos_promotionQty"}}-->
+        {{> tabular table=Pos.TabularTable.PromotionQuantities class="table table-striped table-bordered table-condensed table-hover"}}
+    <!--{{else}}
+        {{> loading}}
+    {{/if}}-->
+</template>
+
+<!--Action-->
+<template name="pos_promotionQtyAction">
+    {{#tabularAction}}
+        <li><a  class="update"><i class="fa fa-pencil"></i> Update</a></li>
+        <li><a  class="remove"><i class="fa fa-remove"></i> Remove</a></li>
+        <li><a  class="show"><i class="fa fa-eye"></i> Show</a></li>
+    {{/tabularAction}}
+</template>
+
+<!--Insert-->
+<template name="pos_promotionQtyInsert">
+    {{#autoForm collection=Pos.Collection.PromotionQuantities id="pos_promotionQtyInsert" type="insert"}}
+        <div class="row">
+            <div class="col-md-5">
+                {{> afQuickField name='name'}}
+                <!--<div class="form-group{{#if afFieldIsInvalid name='startDate'}} has-error{{/if}}" data-required="true">
+                    <label class="control-label" for="address">StartDate</label>
+                    <div class="input-group startDate">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name='startDate' class="set-due-date form-control" type="text" value="{{startDate}}"/>
+                    </div>
+                    {{#if afFieldIsInvalid name='startDate'}}
+                        <span class="help-block">{{afFieldMessage name='startDate'}}</span>
+                    {{/if}}
+                </div>
+                <div class="form-group{{#if afFieldIsInvalid name='endDate'}} has-error{{/if}}" data-required="true">
+                    <label class="control-label" for="address">StartDate</label>
+                    <div class="input-group endDate">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name='endDate' class="set-due-date form-control" type="text" value="{{endDate}}"/>
+                    </div>
+                    {{#if afFieldIsInvalid name='endDate'}}
+                        <span class="help-block">{{afFieldMessage name='endDate'}}</span>
+                    {{/if}}
+                </div>-->
+                {{> afQuickField name='startDate'}}
+                {{> afQuickField name='endDate'}}
+                {{> afQuickField name='startTime'}}
+                {{> afQuickField name='endTime'}}
+                {{> afQuickField name='productId' options=products type="select2"}}
+                {{> afQuickField name='quantity'}}
+                {{> afQuickField name='description'}}
+            </div>
+            <div class="col-md-7">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Promotion Items</h3>
+                    </div>
+                    <div class="panel-body">
+                        {{> pos_promotionQtyItem}}
+                    </div>
+                </div>
+                <!--{{> afQuickField name='promotionItems'}}-->
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>
+<!--Update-->
+<template name="pos_promotionQtyUpdate">
+    {{#autoForm collection=Pos.Collection.PromotionQuantities id="pos_promotionQtyUpdate" doc=this type="update"}}
+        <div class="row">
+            <div class="col-md-5">
+                {{> afQuickField name='name'}}
+                <!--<div class="form-group{{#if afFieldIsInvalid name='startDate'}} has-error{{/if}}" data-required="true">
+                    <label class="control-label" for="address">StartDate</label>
+                    <div class="input-group startDate">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name='startDate' class="set-due-date form-control" type="text" value="{{formatDate startDate}}"/>
+                    </div>
+                    {{#if afFieldIsInvalid name='startDate'}}
+                        <span class="help-block">{{afFieldMessage name='startDate'}}</span>
+                    {{/if}}
+                </div>
+                <div class="form-group{{#if afFieldIsInvalid name='endDate'}} has-error{{/if}}" data-required="true">
+                    <label class="control-label" for="address">StartDate</label>
+                    <div class="input-group endDate">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name='endDate' class="set-due-date form-control" type="text" value="{{formatDate endDate}}"/>
+                    </div>
+                    {{#if afFieldIsInvalid name='endDate'}}
+                        <span class="help-block">{{afFieldMessage name='endDate'}}</span>
+                    {{/if}}
+                </div>-->
+                {{> afQuickField name='startDate'}}
+                {{> afQuickField name='endDate'}}
+                {{> afQuickField name='startTime'}}
+                {{> afQuickField name='endTime'}}
+                {{> afQuickField name='productId' options=products type="select2"}}
+                {{> afQuickField name='quantity'}}
+                {{> afQuickField name='description'}}
+            </div>
+            <div class="col-md-7">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Promotion Items</h3>
+                    </div>
+                    <div class="panel-body">
+                        {{> pos_promotionQtyItem}}
+                    </div>
+                </div>
+                <!--{{> afQuickField name='promotionItems'}}-->
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>
+<!--Show-->
+<template name="pos_promotionQtyShow">
+    <dl class="dl-horizontal">
+        <dt>Id</dt>
+        <dd>{{_id}}</dd>
+        <dt>Name</dt>
+        <dd>{{name}}</dd>
+        <dt>Start Date</dt>
+        <dd>{{sDate}}</dd>
+        <dt>End Date</dt>
+        <dd>{{eDate}}</dd>
+        <dt>Start Time</dt>
+        <dd>{{startTime}}</dd>
+        <dt>End Time</dt>
+        <dd>{{endTime}}</dd>
+        <dt>Description</dt>
+        <dd>{{description}}</dd>
+    </dl>
+    <span style="text-align: center;font-weight: bold;">Promotion Free Items by quantity</span>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ProductId</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each promotionItems}}
+            <tr>
+                <td>{{productId}}</td>
+                <td>{{quantity}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</template>

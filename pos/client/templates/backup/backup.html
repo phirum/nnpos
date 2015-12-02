@@ -1,0 +1,14 @@
+<template name="pos_backup">
+    {{#autoForm schema=Pos.Schema.Backup id="pos_backup"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='branch'}}
+        </div>
+            <div class="col-md-6">
+                {{> afQuickField name='backupType'}}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" >Backup</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>

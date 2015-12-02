@@ -1,0 +1,94 @@
+a{
+    cursor:pointer;
+}
+
+.table img{
+    width: 36px;
+    height: 36px;
+}
+
+.input-group-addon{
+    cursor:pointer;
+}
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 40px;
+    /*height: 60px; */
+    /*background-color: #4a4a4a;*/
+    background-color: #f5f5f5;
+}
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+    padding: 60px 15px 0;
+}
+
+.container .text-muted {
+    margin: 0px 0;
+    /*margin: 20px 0;*/
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-top: 10px; /* add new */
+}
+
+code {
+    font-size: 80%;
+}
+
+.page-header {
+    padding-bottom: 9px;
+    margin: 20px 0 20px;
+    /*margin: 40px 0 20px;*/
+    border-bottom: 1px solid #eee;
+}
+
+/* BS3 modal
+------------------------*/
+.modal-body {
+    overflow-y: auto;
+}
+
+/* iron-router-progress
+-----------------------*/
+#iron-router-progress {
+    background-color: #ff6a07;
+    box-shadow: 0 0 5px rgba(255, 145, 50, 0.60);
+}
+
+#iron-router-progress.spinner:before {
+    border-color: #ff6a07;
+}
+/* align-center*/
+.align-center{
+    text-align: center;
+}
+/* Customize text box like label */
+.la-box {
+    border: none;
+    background-color: #fff;
+    background: transparent;
+    text-align: center;
+    width: 150px;
+}
+#pay-format{padding-right: 10px;}

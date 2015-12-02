@@ -1,0 +1,65 @@
+<!--SaleItem Temporary-->
+<template name="pos_promotionQtyItem">
+
+    <div class="row">
+        <!--<div class="col-sm-6">
+            <div class="form-group">
+                <input type="text" name="tmpName" class="form-control" placeholder="Name">
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="form-group">
+                <input type="text" name="tmpQty" class="form-control" placeholder="Qty">
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="form-group">
+                <button class="btn btn-primary" name="tmpQty">+</button>
+            </div>
+        </div>-->
+        <div class="col-sm-6">
+            <div class="form-group">
+                <select id="tmpProductId" class="tmpProductId form-control" name="tmpProductId" style="width: 100%;">
+                    <option value="">(Select One)</option>
+                    {{#each products}}
+                        <option value="{{_id}}">{{name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="form-group">
+                <input type="number" id="tmpQuantity" step="1" name="tmpQuantity" class="form-control tmpDr" placeholder="Quantity">
+            </div>
+        </div>
+
+        <div class="col-sm-1">
+            <button type="button" class="btn btn-primary addItem" disabled>+</button>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">
+            <label>Product</label>
+        </div>
+        <div class="col-sm-5">
+            <label>Quantity</label>
+        </div>
+        <div class="col-sm-1">
+        </div>
+    </div>
+    {{#each promotionQtyItems}}
+        <div class="row promotion-list">
+            <div class="col-sm-6">
+                {{> afQuickField name=indexProductId value=productId id=indexProductId readonly="true" label=false class="input-sm form-control"}}
+                <!--{{> afQuickField name=productId type="text" value=productId class="form-control input-sm" label=false}}-->
+            </div>
+            <div class="col-sm-5">
+                {{> afQuickField name=indexQuantity type="text" value=quantity class="form-control input-sm" label=false}}
+            </div>
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-danger removeItem input-sm">-</button>
+            </div>
+        </div>
+    {{/each}}
+</template>
