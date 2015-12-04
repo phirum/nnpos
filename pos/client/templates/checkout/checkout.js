@@ -824,7 +824,7 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
                 var unSavedSaleId = Pos.Collection.Sales.find({
                     status: "Unsaved",
                     branchId: Session.get('currentBranch'),
-                    saleId: {$ne: saleId}
+                    _id: {$ne: saleId}
                 }).map(function (s) {
                     return s._id;
                 });

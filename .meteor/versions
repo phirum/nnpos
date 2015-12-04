@@ -130,6 +130,7 @@ moonco:fixtures@0.1.6
 mpowaga:autoform-summernote@0.4.2
 msavin:fetcher@1.1.0
 natestrauser:animate-css@3.4.0
+natestrauser:select2@3.5.1
 netanelgilad:excel@0.2.4
 netanelgilad:mkdirp@0.0.1
 netanelgilad:node-uuid@1.0.2
@@ -198,7 +199,6 @@ theara:reactive-list@0.2.9
 theara:relation-exist@0.0.2
 theara:round-khr@0.0.3
 theara:scrollup@0.2.3
-theara:select2@4.0.1_1
 themeteorchef:bert@2.1.0
 tmeasday:publish-counts@0.7.2
 tomwasd:flow-router-seo@0.0.3
@@ -217,3 +217,4 @@ xamfoo:reactive-obj@0.5.0
 zimme:active-route@2.3.2
 zimme:collection-behaviours@1.1.3
 zimme:collection-softremovable@1.0.5
+zimme:select2-bootstrap3-css@1.4.6

@@ -528,7 +528,7 @@ function getValidatedValues(fieldName, val, branchId, locationTransferId) {
                 var unSavedLocationTransferId = Pos.Collection.LocationTransfers.find({
                     status: "Unsaved",
                     branchId: Session.get('currentBranch'),
-                    locationTransferId: {$ne: locationTransferId}
+                    _id: {$ne: locationTransferId}
                 }).map(function (s) {
                     return s._id;
                 });
