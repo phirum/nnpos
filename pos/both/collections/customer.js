@@ -6,6 +6,16 @@ Pos.Schema.Customers = new SimpleSchema({
         unique: true,
         max: 200
     },
+   /* locationId:{
+        type:String,
+        label:"Location",
+        autoform:{
+            type:"select2",
+            options:function(){
+                return Pos.List.locations();
+            }
+        }
+    },*/
     gender: {
         type: String,
         label: "Gender",

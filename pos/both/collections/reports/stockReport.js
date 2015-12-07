@@ -12,7 +12,7 @@ Pos.Schema.StockReport = new SimpleSchema({
         autoform: {
             type: "select2",
             options:function(){
-                return Pos.List.locations();
+                return Pos.ListForReport.locations();
             }
         }
     },

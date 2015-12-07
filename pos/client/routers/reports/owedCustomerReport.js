@@ -31,6 +31,10 @@ posRoutes.route('/owedCustomerReport', {
             'pos_customer',
             Meteor.subscribe('posCustomer')
         );
+        this.register(
+            'pos_location',
+            Meteor.subscribe('posLocation')
+        );
     },
     action: function (params, queryParams) {
         Layout.main('pos_owedCustomerReport');

@@ -36,6 +36,14 @@ posRoutes.route('/saleReport', {
             'pos_staff',
             Meteor.subscribe('posStaff')
         );
+        this.register(
+            'pos_location',
+            Meteor.subscribe('posLocation')
+        );
+        this.register(
+            'pos_category',
+            Meteor.subscribe('posCategory')
+        );
     },
     action: function (params, queryParams) {
         Layout.main('pos_saleReport');

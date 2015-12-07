@@ -5,6 +5,10 @@ posRoutes.route('/owesSupplierReport', {
             'pos_supplier',
             Meteor.subscribe('posSupplier')
         );
+        this.register(
+            'pos_location',
+            Meteor.subscribe('posLocation')
+        );
     },
     action: function (params, queryParams) {
         Layout.main('pos_owesSupplierReport');

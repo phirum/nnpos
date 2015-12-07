@@ -2,6 +2,26 @@
  * Schema
  */
 Pos.Schema.SaleDetailReport = new SimpleSchema({
+    locationId: {
+        type: String,
+        label: "Location",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return Pos.ListForReport.locations();
+            }
+        }
+    },
+    categoryId: {
+        type: String,
+        label: "Category",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return Pos.List.category();
+            }
+        }
+    },
     customerId:{
         type:String,
         label:"Customer",
