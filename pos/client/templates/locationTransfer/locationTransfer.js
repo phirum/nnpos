@@ -326,6 +326,7 @@ Template.pos_locationTransfer.events({
         return !(charCode > 31 && (charCode < 48 || charCode > 57));
     },
     'change .quantity': function (e) {
+
         var val = $(e.currentTarget).val();
         var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
 
@@ -344,14 +345,15 @@ Template.pos_locationTransfer.events({
 
         var locationId = this.fromLocationId;//$('#from-location-id').val();
         var branchId = Session.get('currentBranch');
-        var ltId = this._id;
+        var ltdId = this._id;
+        var ltId=$('#locationTransfer-id').val();
         var set = {};
         set.quantity = quantity;
         //set.amount = (this.price * quantity) * (1 - this.discount / 100);
 
         var data = locationTransferStock(this.productId, quantity, branchId, ltId, locationId);
         if (data.valid) {
-            Meteor.call('updateLocationTransferDetails', ltId, set);
+            Meteor.call('updateLocationTransferDetails', ltdId, set);
         } else {
             alertify.warning(data.message);
             $(e.currentTarget).val(firstQuantity);
@@ -432,6 +434,7 @@ function locationTransferStock(productId, newQty, branchId, locationTransferId, 
                 data.message = 'Product is out of stock. Quantity in stock is "' + inventory.remainQty + '".';
                 return data;
             }
+            debugger;
             var unSavedLocationTransferId = Pos.Collection.LocationTransfers.find({
                 status: "Unsaved",
                 branchId: Session.get('currentBranch'),
