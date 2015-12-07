@@ -141,10 +141,14 @@
                             href="{{pathFor 'pos.owedCustomerReport'}}">
                         <i class="fa fa-file-text"></i> Owed Customer</a>
                     </li>
+                    <li class="{{isActiveRoute name='pos.owesSupplierReport'}}"><a
+                            href="{{pathFor 'pos.owesSupplierReport'}}">
+                        <i class="fa fa-file-text"></i> Owes Supplier</a>
+                    </li>
 
                 </ul>
             </li>
-            <li class="dropdown">
+            <!--<li class="dropdown">
                 <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                     <i class="fa fa-wrench"></i> Tools <span class="caret"></span>
                 </a>
@@ -158,7 +162,7 @@
                     </li>
 
                 </ul>
-            </li>
+            </li>-->
         {{/if}}
     </ul>
 </template>
