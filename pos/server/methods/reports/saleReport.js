@@ -14,6 +14,7 @@ Meteor.methods({
         var customerId = arg.customerId;
         var staffId = arg.staffId;
         var branchId = arg.branch;
+        var locationId = arg.locationId;
         var branchIds = [];
         if (branchId == "" || branchId == null) {
             //var userId = Meteor.userId();
@@ -24,13 +25,23 @@ Meteor.methods({
         }
         /****** Title *****/
         data.title = Cpanel.Collection.Company.findOne();
-
+        var staff = "All", customer = "All", location = "All";
         if (fromDate != null && toDate != null) params.saleDate = {$gte: fromDate, $lte: toDate};
-        if (customerId != null && customerId != "") params.customerId = customerId;
-        if (staffId != null && staffId != "") params.staffId = staffId;
+        if (customerId != null && customerId != "") {
+            params.customerId = customerId;
+            customer = Pos.Collection.Customers.findOne(customerId).name;
+        }
+        if (staffId != null && staffId != "") {
+            params.staffId = staffId;
+            staff = Pos.Collection.Staffs.findOne(staffId).name;
+        }
+        if (locationId != null && locationId != "") {
+            params.locationId = locationId;
+            location = Pos.Collection.Locations.findOne(locationId).name;
+        }
         params.branchId = {$in: branchIds};
-        params.status = {$ne:"Unsaved"};
-        params.transactionType="Sale";
+        params.status = {$ne: "Unsaved"};
+        params.transactionType = "Sale";
         //params.status = "Owed";
         var sale = Pos.Collection.Sales.find(params);
 
@@ -41,20 +52,16 @@ Meteor.methods({
         });
         header.branch = branchNames.substr(0, branchNames.length - 2);
         header.date = arg.date;
-        var staff = "All", customer = "All";
-        if (customerId != null && customerId != "")
-            customer = Pos.Collection.Customers.findOne(customerId).name;
-        if (staffId != null && staffId != "")
-            staff = Pos.Collection.Staffs.findOne(staffId).name;
+        header.location = location;
         header.staff = staff;
         header.customer = customer;
 
         /****** Header *****/
         data.header = header;
         var content = calculateSaleHelper(sale);
-        data.grandTotal=content.grandTotal;
-        data.grandTotalCost=content.grandTotalCost;
-        data.grandTotalConvert =content.grandTotalConvert;
+        data.grandTotal = content.grandTotal;
+        data.grandTotalCost = content.grandTotalCost;
+        data.grandTotalConvert = content.grandTotalConvert;
         //return reportHelper;
         /****** Content *****/
         if (content.length > 0) {
@@ -72,17 +79,19 @@ function calculateSaleHelper(sl) {
     var i = 1;
     sl.forEach(function (s) {
         grandTotal += s.total;
-        grandTotalCost+= s.totalCost;
+        grandTotalCost += s.totalCost;
         s.order = i;
         s.exchangeRates = [];
-        var exchange= Pos.Collection.ExchangeRates.findOne(s.exchangeRateId);
+        var exchange = Pos.Collection.ExchangeRates.findOne(s.exchangeRateId);
         exchange.rates.forEach(function (ex) {
-                ex.exTotal = s.total * ex.rate;
-                if(grandTotalConvert[ex.toCurrencyId]==null){grandTotalConvert[ex.toCurrencyId]=0}
-                grandTotalConvert[ex.toCurrencyId]+= ex.exTotal;
-                s.exchangeRates.push(ex);
+            ex.exTotal = s.total * ex.rate;
+            if (grandTotalConvert[ex.toCurrencyId] == null) {
+                grandTotalConvert[ex.toCurrencyId] = 0
+            }
+            grandTotalConvert[ex.toCurrencyId] += ex.exTotal;
+            s.exchangeRates.push(ex);
 
-            });
+        });
         s.saleDate = moment(s.saleDate).format("DD-MM-YY, HH:mm");
         s.total = numeral(s.total).format('0,0.00');
         s.totalCost = numeral(s.totalCost).format('0,0.00');
@@ -91,15 +100,15 @@ function calculateSaleHelper(sl) {
         i++;
         saleList.push(s);
     });
-    saleList.grandTotalCost=numeral(grandTotalCost).format('0,0.00');
+    saleList.grandTotalCost = numeral(grandTotalCost).format('0,0.00');
     saleList.grandTotal = numeral(grandTotal).format('0,0.00');
-    saleList.grandTotalConvert=[];
-    for(var key in grandTotalConvert){
-        saleList.grandTotalConvert.push({toCurrencyId:key,totalConvert:grandTotalConvert[key]});
+    saleList.grandTotalConvert = [];
+    for (var key in grandTotalConvert) {
+        saleList.grandTotalConvert.push({toCurrencyId: key, totalConvert: grandTotalConvert[key]});
     }
     /*$.each(grandTotalConvert,function(key,value){
-        saleList.grandTotalConvert.push({toCurrencyId:key,totalConvert:value});
-    });*/
+     saleList.grandTotalConvert.push({toCurrencyId:key,totalConvert:value});
+     });*/
 
     return saleList;
 }

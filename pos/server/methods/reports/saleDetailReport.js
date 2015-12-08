@@ -39,7 +39,6 @@ Meteor.methods({
         branchIds.forEach(function (id) {
             branchNames += Cpanel.Collection.Branch.findOne(id).enName + ", ";
         });
-
         header.branch = branchNames.substr(0, branchNames.length - 2);
         header.date = arg.date;
         var staff = "All", customer = "All", location = "All", category = "All";

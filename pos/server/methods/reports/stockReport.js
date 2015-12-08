@@ -9,26 +9,37 @@ Meteor.methods({
         var params = {};
         // var date=new Date(this.date);
         var date = moment(arg.date + " 23:59:59").toDate();
-        var locationId=arg.locationId;
+        var locationId = arg.locationId;
+        var categoryId = arg.categoryId;
         var branchId = arg.branch;
+        var category = "All", location = "All";
         if (date != null) params.createdAt = {$lte: date};
         if (branchId != null && branchId != null) params.branchId = branchId;
+        if (locationId != null && locationId != "") {
+            params.locationId = locationId;
+            location = Pos.Collection.Locations.findOne(locationId).name;
+        }
+        if (categoryId != null && categoryId != "") {
+            location = Pos.Collection.Categories.findOne(categoryId).name;
+            var categoryIds = getCategoryIdAndChildrenIds(categoryId, [categoryId]);
+        }
         data.title = Cpanel.Collection.Company.findOne();
         var header = {};
+        header.category = category;
+        header.location = location;
         header.branch = Cpanel.Collection.Branch.findOne(branchId).enName;
         header.date = arg.date;
-
         data.header = header;
         var stockArray = [];
         var i = 1;
-        var products = Pos.Collection.Products.find();
+        var products = Pos.Collection.Products.find({categoryId:{$in:categoryIds}});
         var content = [];
         products.forEach(function (p) {
             var item = {};
             var inventory = Pos.Collection.FIFOInventory.findOne({
                 branchId: branchId,
                 productId: p._id,
-                locationId:locationId,
+                locationId: locationId,
                 createdAt: {$lte: date}
             }, {sort: {createdAt: -1, _id: -1}});
             if (inventory != null) {
@@ -67,3 +78,14 @@ Meteor.methods({
         return data;
     }
 });
+
+function getCategoryIdAndChildrenIds(id, arr) {
+    var categories = Pos.Collection.Categories.find({parentId: id});
+    if (categories != null) {
+        categories.forEach(function (cat) {
+            arr.push(cat._id);
+            return getCategoryIdAndChildrenIds(cat._id, arr);
+        });
+    }
+    return arr;
+}
