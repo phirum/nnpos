@@ -6,7 +6,6 @@ Meteor.methods({
             content: [{index: 'No Result'}],
             footer: {}
         };
-        console.log(arg);
         var params = {};
         var date = arg.date.split(" To ");
         var fromDate = moment(date[0] + " 00:00:00").toDate();
@@ -25,36 +24,35 @@ Meteor.methods({
             branchIds.push(branchId);
         }
         data.title = Cpanel.Collection.Company.findOne();
-        if (fromDate != null && toDate != null) params.purchaseDate = {$gte: fromDate, $lte: toDate};
-        if (supplierId != null && supplierId != "") params.supplierId = supplierId;
-        if (staffId != null && staffId != "") params.staffId = staffId;
+        var staff = "All", supplier = "All", location = "All", category = "All";
+        if (fromDate != null && toDate != null) {
+            params.purchaseDate = {$gte: fromDate, $lte: toDate};
+        }
+        if (supplierId != null && supplierId != "") {
+            params.supplierId = supplierId;
+            supplier = Pos.Collection.Suppliers.findOne(supplierId).name;
+        }
+        if (staffId != null && staffId != "") {
+            params.staffId = staffId;
+            staff = Pos.Collection.Staffs.findOne(staffId).name;
+        }
+        if (locationId != null && locationId != "") {
+            params.locationId = locationId;
+            location = Pos.Collection.Locations.findOne(locationId).name;
+        }
+        if (categoryId != null && categoryId != "") {
+            category = Pos.Collection.Categories.findOne(categoryId).name;
+        }
         params.branchId = {$in: branchIds};
         params.status = {$ne: "Unsaved"};
         params.transactionType = "Purchase";
-        if (locationId != null && locationId != "") params.locationId = locationId;
-        var categoryIds = getCategoryIdAndChildrenIds(categoryId, [categoryId]);
-        // if(categoryId!=null && categoryId !="") params.categoryId={$in:getCategoryIdAndChildrenIds(locationId,)}
-
         var header = {};
         var branchNames = "";
         branchIds.forEach(function (id) {
             branchNames += Cpanel.Collection.Branch.findOne(id).enName + ", ";
         });
-
-
         header.branch = branchNames.substr(0, branchNames.length - 2);
         header.date = arg.date;
-
-        var staff = "All", supplier = "All", location = "All", category = "All";
-        if (supplierId != null && supplierId != "")
-            supplier = Pos.Collection.Suppliers.findOne(supplierId).name;
-        if (staffId != null && staffId != "")
-            staff = Pos.Collection.Staffs.findOne(staffId).name;
-        if (locationId != null && locationId != "")
-            location = Pos.Collection.Locations.findOne(locationId).name;
-        if (categoryId != null && categoryId != "")
-            category = Pos.Collection.Categories.findOne(categoryId).name;
-
         header.staff = staff;
         header.supplier = supplier;
         header.location = location;
@@ -62,7 +60,7 @@ Meteor.methods({
         data.header = header;
 
 
-        var content = getPurchaseProducts(params, categoryIds);
+        var content = getPurchaseProducts(params, categoryId);
         data.grandTotal = content.grandTotal;
 
         if (content.length > 0) {
@@ -72,19 +70,26 @@ Meteor.methods({
     }
 });
 
-function getPurchaseProducts(params, categoryIds) {
+function getPurchaseProducts(params, categoryId) {
     var purchaseIds = Pos.Collection.Purchases.find(params, {fields: {_id: 1}}).map(function (purchase) {
         return purchase._id;
     });
-    var productIds = Pos.Collection.Products.find({
-        categoryId: {$in: categoryIds}
-    }, {fields: {_id: 1}}).map(function (p) {
-        return p._id;
-    });
+    var selectorObj = {};
+    selectorObj.purchaseId = {$in: purchaseIds};
+
+    if (categoryId != null && categoryId != "") {
+        var categoryIds = getCategoryIdAndChildrenIds(categoryId, [categoryId]);
+        var productIds = Pos.Collection.Products.find({
+            categoryId: {$in: categoryIds}
+        }, {fields: {_id: 1}}).map(function (p) {
+            return p._id;
+        });
+        selectorObj.productId = {$in: productIds};
+    }
 
     var result = [];
     var purchaseDetails = Pos.Collection.PurchaseDetails.find(
-        {purchaseId: {$in: purchaseIds},productId:{$in:productIds}},
+        selectorObj,
         {fields: {productId: 1, quantity: 1, price: 1, amount: 1}});
     (purchaseDetails.fetch()).reduce(function (res, value) {
         if (!res[value.productId]) {
@@ -121,8 +126,6 @@ function getPurchaseProducts(params, categoryIds) {
     arr.grandTotal = numeral(grandTotal).format('0,0.00');
     return arr;
 }
-
-
 function getCategoryIdAndChildrenIds(id, arr) {
     var categories = Pos.Collection.Categories.find({parentId: id});
     if (categories != null) {

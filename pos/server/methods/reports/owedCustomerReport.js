@@ -6,10 +6,10 @@ Meteor.methods({
             content: [{index: 'No Result'}],
             footer: {}
         };
-
         var params = {};
         var date = moment(arg.date + " 23:59:59").toDate();
         var customerId = arg.customerId;
+        var locationId = arg.locationId;
         //var staffId = arg.staffId;
         var branchId = arg.branch;
         var branchIds = [];
@@ -20,9 +20,15 @@ Meteor.methods({
         } else {
             branchIds.push(branchId);
         }
-        //if (date != null) params.paymentDate = {$lte: date};
-        if (customerId != null && customerId != "") params.customerId = customerId;
-        // if (staffId != null && staffId != "") params.staffId = staffId;
+        var customer = "All", location = "All";
+        if (customerId != null && customerId != "") {
+            params.customerId = customerId;
+            customer = Pos.Collection.Customers.findOne(customerId).name;
+        }
+        if (locationId != null && locationId != "") {
+            params.locationId = locationId;
+            location = Pos.Collection.Locations.findOne(locationId).name;
+        }
         params.branchId = {$in: branchIds};
         params.status = "Owed";
         params.saleDate = {$lte: date};
@@ -34,18 +40,16 @@ Meteor.methods({
         });
         header.branch = branchNames.substr(0, branchNames.length - 2);
         header.date = arg.date;
-        var customer = "All";
-        if (customerId != null && customerId != "")
-            customer = Pos.Collection.Customers.findOne(customerId).name;
+        header.location = location;
         header.customer = customer;
         data.header = header;
 
-        var content=[];
+        var content = [];
         var sales = Pos.Collection.Sales.find(params);
-        var i=1;
-        sales.forEach(function(s){
-            s.saleDate=moment(s.saleDate).format("DD-MM-YYYY HH:mm:ss");
-            s.order=i;
+        var i = 1;
+        sales.forEach(function (s) {
+            s.saleDate = moment(s.saleDate).format("DD-MM-YYYY HH:mm:ss");
+            s.order = i;
             i++;
             content.push(s);
         });

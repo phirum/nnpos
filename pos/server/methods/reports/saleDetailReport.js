@@ -13,6 +13,8 @@ Meteor.methods({
         var customerId = arg.customerId;
         var staffId = arg.staffId;
         var branchId = arg.branch;
+        var locationId = arg.locationId;
+        var categoryId = arg.categoryId;
         var branchIds = [];
         if (branchId == "" || branchId == null) {
             //var userId = Meteor.userId();
@@ -27,9 +29,10 @@ Meteor.methods({
         if (fromDate != null && toDate != null) params.saleDate = {$gte: fromDate, $lte: toDate};
         if (customerId != null && customerId != "") params.customerId = customerId;
         if (staffId != null && staffId != "") params.staffId = staffId;
+        if (locationId != null && locationId != "") params.locationId = locationId;
         params.branchId = {$in: branchIds};
-        params.status = {$ne:"Unsaved"};
-        params.transactionType="Sale";
+        params.status = {$ne: "Unsaved"};
+        params.transactionType = "Sale";
 
         var header = {};
         var branchNames = "";
@@ -39,19 +42,25 @@ Meteor.methods({
 
         header.branch = branchNames.substr(0, branchNames.length - 2);
         header.date = arg.date;
-        var staff = "All", customer = "All";
+        var staff = "All", customer = "All", location = "All", category = "All";
         if (customerId != null && customerId != "")
             customer = Pos.Collection.Customers.findOne(customerId).name;
         if (staffId != null && staffId != "")
             staff = Pos.Collection.Staffs.findOne(staffId).name;
+        if (locationId != null && locationId != "")
+            location = Pos.Collection.Locations.findOne(locationId).name;
+        if (categoryId != null && categoryId != "")
+            category = Pos.Collection.Categories.findOne(categoryId).name;
         header.staff = staff;
         header.customer = customer;
+        header.location = location;
+        header.category = category;
 
         /****** Header *****/
         data.header = header;
-        var content = getSaleProducts(params);
-        data.grandTotal=content.grandTotal;
-        data.grandTotalCost=content.grandTotalCost;
+        var content = getSaleProducts(params, categoryId);
+        data.grandTotal = content.grandTotal;
+        data.grandTotalCost = content.grandTotalCost;
         //return reportHelper;
         /****** Content *****/
         if (content.length > 0) {
@@ -62,19 +71,32 @@ Meteor.methods({
 });
 
 
-
-function getSaleProducts(params) {
+function getSaleProducts(params, categoryId) {
     var saleIds = Pos.Collection.Sales.find(params, {fields: {_id: 1}}).map(function (sale) {
         return sale._id;
     });
+
+    var selectorObj = {};
+    selectorObj.saleId = {$in: saleIds};
+
+    if (categoryId != null && categoryId != "") {
+        var categoryIds = getCategoryIdAndChildrenIds(categoryId, [categoryId]);
+        var productIds = Pos.Collection.Products.find({
+            categoryId: {$in: categoryIds}
+        }, {fields: {_id: 1}}).map(function (p) {
+            return p._id;
+        });
+        selectorObj.productId = {$in: productIds};
+    }
+
     var result = [];
     var saleDetails = Pos.Collection.SaleDetails.find(
-        {saleId: {$in: saleIds}},
-        {fields: {productId: 1, quantity: 1, price: 1, amount: 1,totalCost:1}});
+        selectorObj,
+        {fields: {productId: 1, quantity: 1, price: 1, amount: 1, totalCost: 1}});
     (saleDetails.fetch()).reduce(function (res, value) {
         if (!res[value.productId]) {
             res[value.productId] = {
-                totalCost:value.totalCost,
+                totalCost: value.totalCost,
                 amount: value.amount,
                 quantity: 0,
                 productId: value.productId
@@ -82,19 +104,19 @@ function getSaleProducts(params) {
             result.push(res[value.productId])
         } else {
             res[value.productId].amount += value.amount;
-            res[value.productId].totalCost+=value.totalCost;
+            res[value.productId].totalCost += value.totalCost;
         }
         res[value.productId].quantity += value.quantity;
         return res;
     }, {});
     var i = 1;
     var arr = [];
-    var granTotalCost=0;
+    var granTotalCost = 0;
     var grandTotal = 0;
     result.forEach(function (r) {
         var product = Pos.Collection.Products.findOne(r.productId);
         grandTotal += r.amount;
-        granTotalCost+= r.totalCost;
+        granTotalCost += r.totalCost;
         console.log(r.amount);
         var unit = Pos.Collection.Units.findOne(product.unitId).name;
         arr.push({
@@ -104,15 +126,24 @@ function getSaleProducts(params) {
             // price: numeral(r.price).format('0,0.00'),
             quantity: r.quantity,
             total: numeral(r.amount).format('0,0.00'),
-            totalCost:numeral(r.totalCost).format('0,0.00')
+            totalCost: numeral(r.totalCost).format('0,0.00')
         });
         i++;
     });
     arr.grandTotal = numeral(grandTotal).format('0,0.00');
-    arr.grandTotalCost=numeral(granTotalCost).format('0,0.00');
+    arr.grandTotalCost = numeral(granTotalCost).format('0,0.00');
     return arr;
 }
 
 
-
+function getCategoryIdAndChildrenIds(id, arr) {
+    var categories = Pos.Collection.Categories.find({parentId: id});
+    if (categories != null) {
+        categories.forEach(function (cat) {
+            arr.push(cat._id);
+            return getCategoryIdAndChildrenIds(cat._id, arr);
+        });
+    }
+    return arr;
+}
 
