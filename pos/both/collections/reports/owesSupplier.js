@@ -10,7 +10,8 @@ Pos.Schema.OwesSupplierReport = new SimpleSchema({
             options: function () {
                 return Pos.ListForReport.locations();
             }
-        }
+        },
+        optional:true
     },
     supplierId:{
         type:String,

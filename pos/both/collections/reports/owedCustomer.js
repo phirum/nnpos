@@ -10,7 +10,8 @@ Pos.Schema.OwedCustomerReport = new SimpleSchema({
             options: function () {
                 return Pos.ListForReport.locations();
             }
-        }
+        },
+        optional:true
     },
     customerId:{
         type:String,

@@ -10,7 +10,8 @@ Pos.Schema.SaleDetailReport = new SimpleSchema({
             options: function () {
                 return Pos.ListForReport.locations();
             }
-        }
+        },
+        optional:true
     },
     categoryId: {
         type: String,
@@ -18,9 +19,10 @@ Pos.Schema.SaleDetailReport = new SimpleSchema({
         autoform: {
             type: "select2",
             options: function () {
-                return Pos.List.category();
+                return Pos.List.category("All");
             }
-        }
+        },
+        optional:true
     },
     customerId:{
         type:String,

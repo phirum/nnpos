@@ -10,17 +10,8 @@ Pos.Schema.PurchaseReport = new SimpleSchema({
             options: function () {
                 return Pos.ListForReport.locations();
             }
-        }
-    },
-    categoryId: {
-        type: String,
-        label: "Category",
-        autoform: {
-            type: "select2",
-            options: function () {
-                return Pos.List.category();
-            }
-        }
+        },
+        optional:true
     },
     supplierId:{
         type:String,

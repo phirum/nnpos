@@ -40,10 +40,6 @@ posRoutes.route('/saleReport', {
             'pos_location',
             Meteor.subscribe('posLocation')
         );
-        this.register(
-            'pos_category',
-            Meteor.subscribe('posCategory')
-        );
     },
     action: function (params, queryParams) {
         Layout.main('pos_saleReport');

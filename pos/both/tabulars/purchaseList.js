@@ -7,6 +7,11 @@ Pos.TabularTable.Purchases = new Tabular.Table({
             tmpl: Meteor.isClient && Template.pos_purchaseAction
         },
         {data: "_id", title: "ID"},
+        {data: "purchaseDate", title: "Purchase Date",
+            render:function(val,type,doc){
+                return moment(val).format("DD-MM-YYYY HH:mm");
+            }
+        },
         {data: "_supplier.name", title: "Supplier"},
         {data: "_staff.name", title: "Staff"},
         {data: "total", title: "Total"},

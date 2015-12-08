@@ -51,8 +51,16 @@ var getCategoryList = function (selector, array, categories, alreadyUse) {
 
 Pos.ListForReport={
     locations:function(){
-        var list = [{label: "(Select One)", value: ""}];
-        Pos.Collection.Locations.find({branchId:Session.get('currentBranch')}).forEach(function (obj) {
+        var list = [{label: "All", value: ""}];
+        var branchIdSession = Session.get('branchIds');
+        var branchIds = [];
+        if (branchIdSession != null) {
+            branchIds = branchIdSession;
+        } else {
+            var userId = Meteor.userId();
+            branchIds = Meteor.users.findOne(userId).rolesBranch;
+        }
+        Pos.Collection.Locations.find({branchId: {$in: branchIds}}).forEach(function (obj) {
             list.push({label: obj._id + ' : ' + obj.name, value: obj._id});
         });
         return list;
