@@ -54,10 +54,12 @@ Meteor.methods({
                 if (inventory != null) {
                     item = inventory;
                     item.productName = inventory._product.name + ' (' + inventory._product._unit.name + ')';
-                    item.branchName = inventory._branch.enName;
+                    //item.branchName = inventory._branch.enName;
+                    item.locationName= inventory._location.name;
                 } else {
                     item.productName = p.name + ' (' + p._unit.name + ')';
-                    item.branchName = Cpanel.Collection.Branch.findOne(branchId).enName;
+                    //item.branchName = Cpanel.Collection.Branch.findOne(branchId).enName;
+                    item.locationName=Pos.Collection.Locations.findOne(locationIds[j]).name;
                     item.remainQty = 0;
                     item.price = p.purchasePrice;
                 }
