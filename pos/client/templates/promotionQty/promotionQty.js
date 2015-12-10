@@ -248,6 +248,7 @@ Template.pos_promotionQty.events({
         alertify.promotionQty(fa('plus','Add New PromotionQty'),renderTemplate(Template.pos_promotionQtyInsert)).maximize();
     },
     'click .update': function (e, t) {
+        debugger;
         promotionItemsState.clear();
         var data = Pos.Collection.PromotionQuantities.findOne(this._id);
         if (!_.isUndefined(data)) {
@@ -389,12 +390,16 @@ AutoForm.hooks({
         before: {
             insert: function (doc) {
                 doc.branchId = Session.get('currentBranch');
+                debugger;
                 if ($('[name="startDate"]').val() != '' && $('[name="endDate"]').val() != '') {
                     //doc.startDate = $('.startDate').data("DateTimePicker").date().toDate();
                     //doc.endDate = $('.endDate').data("DateTimePicker").date().toDate();
-                    doc.startDate = moment($('[name="startDate"]').val()).toDate();
-                    doc.endDate = moment($('[name="endDate"]').val() + ' 23:59:59').toDate();
-                    var selector =
+                    //doc.startDate = moment($('[name="startDate"]').val()).toDate();
+                    //doc.endDate = moment($('[name="endDate"]').val() + ' 23:59:59').toDate();
+                    var startDate = moment($('[name="startDate"]').val()).toDate();
+                    var endDate = moment($('[name="endDate"]').val() + ' 23:59:59').toDate();
+
+                   /* var selector =
                     {
                         $or: [
                             {startDate: {$lte: doc.startDate}, endDate: {$gte: doc.startDate}},
@@ -405,6 +410,22 @@ AutoForm.hooks({
                                     {startDate: {$lte: doc.endDate}},
                                     {endDate: {$gte: doc.startDate}},
                                     {endDate: {$lte: doc.endDate}}
+                                ]
+
+                            }
+                        ]
+                    };*/
+                    var selector =
+                    {
+                        $or: [
+                            {startDate: {$lte: startDate}, endDate: {$gte: startDate}},
+                            {startDate: {$lte: endDate}, endDate: {$gte: endDate}},
+                            {
+                                $and: [
+                                    {startDate: {$gte: startDate}},
+                                    {startDate: {$lte: endDate}},
+                                    {endDate: {$gte: startDate}},
+                                    {endDate: {$lte: endDate}}
                                 ]
 
                             }
@@ -421,6 +442,7 @@ AutoForm.hooks({
         },
         onSuccess: function (formType, result) {
             alertify.success('Success');
+            alertify.promotionQty().close();
         },
         onError: function (formType, error) {
             alertify.error(error.message);
@@ -429,6 +451,7 @@ AutoForm.hooks({
     pos_promotionQtyUpdate: {
         before: {
             update: function (doc) {
+                debugger;
                 if ($('[name="startDate"]').val() != '' && $('[name="endDate"]').val() != '') {
 
                     //doc.$set.startDate = $('.startDate').data("DateTimePicker").date().toDate();
@@ -465,7 +488,7 @@ AutoForm.hooks({
         },
         onSuccess: function (formType, result) {
             alertify.promotionQty().close();
-            alertify.success('Success');
+
         },
         onError: function (formType, error) {
             alertify.error(error.message);
