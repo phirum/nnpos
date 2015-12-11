@@ -22,10 +22,10 @@ posRoutes.route('/customer', {
             'pos_customer',
             Meteor.subscribe('posCustomer',{branchId:Session.get('currentBranch')})
         );
-        /*this.register(
+        this.register(
             'pos_location',
             Meteor.subscribe('posLocation',{branchId:Session.get('currentBranch')})
-        );*/
+        );
     },
     action: function (params, queryParams) {
         Layout.main('pos_customer');

@@ -6,7 +6,7 @@ Pos.Schema.Customers = new SimpleSchema({
         unique: true,
         max: 200
     },
-   /* locationId:{
+    locationId:{
         type:String,
         label:"Location",
         autoform:{
@@ -15,7 +15,7 @@ Pos.Schema.Customers = new SimpleSchema({
                 return Pos.List.locations();
             }
         }
-    },*/
+    },
     gender: {
         type: String,
         label: "Gender",
