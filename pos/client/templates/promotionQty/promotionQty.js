@@ -429,7 +429,8 @@ AutoForm.hooks({
                                 ]
 
                             }
-                        ]
+                        ],
+                        productId:doc.productId
                     };
                     var promotion = Pos.Collection.PromotionQuantities.find(selector);
                     if (promotion.count() > 0) {
@@ -474,7 +475,8 @@ AutoForm.hooks({
 
                             }
                         ],
-                        _id: {$ne: this.docId}
+                        _id: {$ne: this.docId},
+                        productId:doc.$set.productId
                     };
                     var promotion = Pos.Collection.PromotionQuantities.find(selector);
                     if (promotion.count() > 0) {
@@ -482,7 +484,6 @@ AutoForm.hooks({
                         return false;
                     }
                 }
-
                 return doc;
             }
         },
