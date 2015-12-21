@@ -688,11 +688,25 @@ function checkoutStock(productId, newQty, branchId, saleId, locationId) {
 
         if (inventory != null) {
             var remainQuantity = inventory.remainQty - newQty;
+            var saleDetails = Pos.Collection.SaleDetails.find({
+                productId: product._id,
+                saleId: saleId,
+                locationId: locationId
+            });
+            if (saleDetails.count > 0) {
+                var saleDetailQty = 0;
+                saleDetails.forEach(function (saleDetail) {
+                    saleDetailQty += saleDetail.quantity;
+                });
+                remainQuantity = remainQuantity - saleDetailQty;
+            }
+
             if (remainQuantity < 0) {
                 data.valid = false;
                 data.message = 'Product is out of stock. Quantity in stock is "' + inventory.remainQty + '".';
                 return data;
             }
+
             var unSavedSaleId = Pos.Collection.Sales.find({
                 status: "Unsaved",
                 branchId: Session.get('currentBranch'),
@@ -797,15 +811,19 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
     if (product != null) {
         var defaultQuantity = $('#default-quantity').val() == "" ? 1 : parseInt($('#default-quantity').val());
         if (product.productType == "Stock") {
-            var sd = Pos.Collection.SaleDetails.findOne({
+
+            var saleDetails = Pos.Collection.SaleDetails.find({
                 productId: product._id,
                 saleId: saleId,
                 locationId: locationId
             });
-            if (sd != null) {
-                defaultQuantity = defaultQuantity + sd.quantity;
+            if (saleDetails.count > 0) {
+                var saleDetailQty = 0;
+                saleDetails.forEach(function (saleDetail) {
+                    saleDetailQty += saleDetail.quantity;
+                });
+                defaultQuantity = defaultQuantity + saleDetailQty;
             }
-
             //---Open Inventory type block "FIFO Inventory"---
             var inventory = Pos.Collection.FIFOInventory.findOne({
                 branchId: branchId,

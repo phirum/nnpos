@@ -228,6 +228,7 @@ function checkPromotion(saleDetail, saleDate) {
                         saleDetailObj.productId = pro.productId;
                         saleDetailObj.quantity = promotionQuantity;
                         saleDetailObj.discount = 0;
+                        saleDetailObj.locationId=saleDetail.locationId;
                         //saleDetailObj.discount = 100;
                         saleDetailObj.price = 0;
                         //saleDetailObj.price = isRetail ? product.retailPrice : product.wholesalePrice;
