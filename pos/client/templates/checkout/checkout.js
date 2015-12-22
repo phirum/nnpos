@@ -777,21 +777,21 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
         return data;
     }
     var locationId = $('#location-id').val();
-    if (locationId == '') {
+    if (locationId == '' || locationId==null) {
         data.valid = false;
         data.message = "Please select location name.";
         return data;
     }
 
     var staffId = $('#staff-id').val();
-    if (staffId == '') {
+    if (staffId == '' || staffId==null) {
         data.valid = false;
         data.message = "Please select staff name.";
         return data;
     }
 
     var customerId = $('#customer-id').val();
-    if (customerId == "") {
+    if (customerId == "" || customerId==null) {
         data.valid = false;
         data.message = "Please select customer name.";
         return data;

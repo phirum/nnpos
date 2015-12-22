@@ -163,7 +163,7 @@ posPurchasePaymentInsertTPL.events({
     'change select[name="purchaseId"]': function (e) {
         var purchaseId = $(e.currentTarget).val();
         clearFormData();
-        if(purchaseId==""){
+        if (purchaseId == "") {
             Session.set('dueAmount', 0);
             return;
         }

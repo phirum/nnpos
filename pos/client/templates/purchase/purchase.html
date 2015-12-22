@@ -46,7 +46,7 @@
                             <label for="supplier-id"> <b>Supplier <span style="color:red">*</span></b></label>
 
                             <div class="input-group select2-bootstrap-append">
-                                <select id="supplier-id" value="" class="form-control input-sm select-two">
+                                <select id="supplier-id" class="form-control input-sm select-two">
                                     {{#each suppliers}}
                                         <option value="{{_id}}"
                                                 selected="{{#if compareTwoValue _id purchase.supplierId}}selected{{/if}}">{{name}}</option>

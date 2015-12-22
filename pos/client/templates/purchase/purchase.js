@@ -979,20 +979,20 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
         return data;
     }
     var locationId = $('#location-id').val();
-    if (locationId == '') {
+    if (locationId == '' || locationId==null) {
         data.valid = false;
         data.message = "Please select location name.";
         return data;
     }
 
     var staffId = $('#staff-id').val();
-    if (staffId == '') {
+    if (staffId == '' || staffId == null) {
         data.valid = false;
         data.message = "Please select staff name.";
         return data;
     }
     var supplierId = $('#supplier-id').val();
-    if (supplierId == "") {
+    if (supplierId == "" || supplierId == null) {
         data.valid = false;
         data.message = "Please select supplier name.";
         return data;
@@ -1014,7 +1014,7 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
         product.defaultPrice = defaultPrice;
         if (defaultPrice >= product.wholesalePrice) {
             alertify.alert('Are you sure to purchase this purchase? ' +
-                'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
+                    'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
                 .set({
                     /*oncancel: function (closeEvent) {
                      data.valid = false;
@@ -1025,7 +1025,7 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
                 });
         } else if (defaultPrice >= product.wholesalePrice) {
             alertify.alert('Are you sure to purchase this purchase? ' +
-                'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
+                    'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
                 .set({
                     /*oncancel: function (closeEvent) {
                      data.valid = false;

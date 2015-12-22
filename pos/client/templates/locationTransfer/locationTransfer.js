@@ -479,19 +479,19 @@ function getValidatedValues(fieldName, val, branchId, locationTransferId) {
     }
 
     var fromLocationId = $('#from-location-id').val();
-    if (fromLocationId == "") {
+    if (fromLocationId == "" || fromLocationId==null) {
         data.valid = false;
         data.message = "Please select From Location.";
         return data;
     }
     var toLocationId = $('#to-location-id').val();
-    if (toLocationId == "") {
+    if (toLocationId == "" || toLocationId==null) {
         data.valid = false;
         data.message = "Please select To Location.";
         return data;
     }
     var staffId = $('#staff-id').val();
-    if (staffId == '') {
+    if (staffId == '' || staffId==null) {
         data.valid = false;
         data.message = "Please select staff name.";
         return data;
