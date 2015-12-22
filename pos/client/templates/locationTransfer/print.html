@@ -1,0 +1,73 @@
+<template name="pos_printLocationTransfer">
+    {{#if data}}
+        {{#with data}}
+            <div align="center"
+                 style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:260px; margin: 0 auto;">
+                <table border="0">
+                    <tr>
+                        <td style="text-align: center;">
+                            <table width="100%">
+                                <tr>
+                                    <td width="25%">
+                                        <img src="/logo.jpg" class="logo" style="width:63px;"/>
+                                    </td>
+                                    <td width="75%" align="center" style="padding-top: 10px;">
+                                        <span style="font-family:'Khmer OS Muol';font-size: 14px;">{{company.khName}}</span><br><br>
+                                    </td>
+                                </tr>
+                            </table>
+                            Address: {{company.khAddress}}<br>
+                            Tel: {{company.telephone}}<br>
+						<span style="font-weight: bold;font-size: 15px;">
+                            Location Transfer(<span
+                                style="font-size: 13px;"> {{locationTransfer.InvoiceType}}</span>)</span>
+                            <hr>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table width="100%">
+                                <tr>
+                                    <td>LocationTransfer ID:{{locationTransfer._id}}</td>
+                                    <td align="right">Staff: {{locationTransfer._staff.name}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Date:{{locationTransfer.locationTransferDate}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table width="100%">
+                                <tr style="text-align: center; text-decoration: underline;">
+                                    <td align="left">N<sup><span style="text-decoration: underline;">o</span></sup></td>
+                                    <td align="left">Product</td>
+                                    <td align="right">Unit</td>
+                                    <td>Qty</td>
+                                </tr>
+                                {{#each locationTransferDetails}}
+                                    <tr>
+                                        <td>{{order}}</td>
+                                        <td>{{_product.name}}</td>
+                                        <td align="right">{{_product._unit.name}}</td>
+                                        <td align="center">{{quantity}}</td>
+                                    </tr>
+                                {{/each}}
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 10px; text-align: center;"><br><br><br>Powered by: Rabbit, Tel: 053 50 66
+                            777
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        {{/with}}
+        {{autoprint close="true"}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
+</template>

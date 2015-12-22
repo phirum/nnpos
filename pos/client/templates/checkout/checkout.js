@@ -593,7 +593,7 @@ Template.pos_checkout.events({
         set.quantity = quantity;
         set.amount = (this.price * quantity) * (1 - this.discount / 100);
 
-        var data = checkoutStock(this.productId, quantity, branchId, saleId, locationId);
+        var data = checkoutStock(this.productId, this._id, quantity, branchId, saleId, locationId);
         if (data.valid) {
             Meteor.call('updateSaleDetails', sdId, set);
         } else {
@@ -674,7 +674,7 @@ Template.pos_checkout.events({
         }
     }
 });
-function checkoutStock(productId, newQty, branchId, saleId, locationId) {
+function checkoutStock(productId, saleDetailId, newQty, branchId, saleId, locationId) {
     var data = {};
     var product = Pos.Collection.Products.findOne(productId);
     if (product.productType == "Stock") {
@@ -685,15 +685,16 @@ function checkoutStock(productId, newQty, branchId, saleId, locationId) {
             locationId: locationId
             //price: pd.price
         }, {sort: {createdAt: -1}});
-
+        debugger;
         if (inventory != null) {
-            var remainQuantity = inventory.remainQty - newQty;
+            var remainQuantity = inventory.remainQty-newQty;
             var saleDetails = Pos.Collection.SaleDetails.find({
+                _id: {$ne: saleDetailId},
                 productId: product._id,
                 saleId: saleId,
                 locationId: locationId
             });
-            if (saleDetails.count > 0) {
+            if (saleDetails.count() > 0) {
                 var saleDetailQty = 0;
                 saleDetails.forEach(function (saleDetail) {
                     saleDetailQty += saleDetail.quantity;
@@ -811,13 +812,12 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
     if (product != null) {
         var defaultQuantity = $('#default-quantity').val() == "" ? 1 : parseInt($('#default-quantity').val());
         if (product.productType == "Stock") {
-
             var saleDetails = Pos.Collection.SaleDetails.find({
                 productId: product._id,
                 saleId: saleId,
                 locationId: locationId
             });
-            if (saleDetails.count > 0) {
+            if (saleDetails.count() > 0) {
                 var saleDetailQty = 0;
                 saleDetails.forEach(function (saleDetail) {
                     saleDetailQty += saleDetail.quantity;
