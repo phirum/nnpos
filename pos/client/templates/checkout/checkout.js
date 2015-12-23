@@ -1,6 +1,7 @@
 Session.setDefault('isRetail', true);
 Session.setDefault('hasUpdate', false);
 Template.pos_checkout.onRendered(function () {
+    Meteor.typeahead.inject();
     createNewAlertify(["customer", "userStaff"]);
     Session.set('isRetail', true);
     $('#sale-date').datetimepicker({
@@ -22,6 +23,11 @@ Template.pos_checkout.onRendered(function () {
     }, 500);
 });
 Template.pos_checkout.helpers({
+    nba: function () {
+        return Pos.Collection.Products.find().fetch().map(function (it) {
+            return it.name;
+        });
+    },
     location: function () {
         var sale = Pos.Collection.Sales.findOne(FlowRouter.getParam('saleId'));
         if (sale != null) {
@@ -85,27 +91,38 @@ Template.pos_checkout.helpers({
         return total != null;
     },
     multiply: function (val1, val2, id) {
-        var value = (val1 * val2);
-        if (id != null && id == "KHR") {
-            value = roundRielCurrency(value);
+        if (val1 != null && val2 != null) {
+            var value = (val1 * val2);
+            if (id != null && id == "KHR") {
+                value = roundRielCurrency(value);
+                return numeral(value).format('0,0.00');
+            }
             return numeral(value).format('0,0.00');
         }
-        return numeral(value).format('0,0.00');
     },
     currencies: function () {
         var id = Cpanel.Collection.Setting.findOne().baseCurrency;
         return Cpanel.Collection.Currency.find({_id: {$ne: id}});
     },
     baseCurrency: function () {
-        var id = Cpanel.Collection.Setting.findOne().baseCurrency;
-        return Cpanel.Collection.Currency.findOne(id);
+        var setting = Cpanel.Collection.Setting.findOne();
+        if (setting != null) {
+            return Cpanel.Collection.Currency.findOne(setting.baseCurrency);
+        } else {
+            return {};
+        }
+
     },
     exchangeRates: function () {
         var sale = Pos.Collection.Sales.findOne(FlowRouter.getParam('saleId'));
         if (sale != null) {
             return Pos.Collection.ExchangeRates.findOne(sale.exchangeRateId);
         } else {
-            var id = Cpanel.Collection.Setting.findOne().baseCurrency;
+            var id = "";
+            var setting = Cpanel.Collection.Setting.findOne();
+            if (setting != null) {
+                id = setting.baseCurrency;
+            }
             return Pos.Collection.ExchangeRates.findOne({
                 base: id,
                 branchId: Session.get('currentBranch')
@@ -118,27 +135,35 @@ Template.pos_checkout.helpers({
     },
     sale: function () {
         var s = Pos.Collection.Sales.findOne(FlowRouter.getParam('saleId'));
-        s.saleDate = moment(s.saleDate).format("DD-MM-YY, hh:mm:ss a");
-        s.subTotalFormatted = numeral(s.subTotal).format('0,0.00');
-        s.totalFormatted = numeral(s.total).format('0,0.00');
-        return s;
+        if (s != null) {
+            s.saleDate = moment(s.saleDate).format("DD-MM-YY, hh:mm:ss a");
+            s.subTotalFormatted = numeral(s.subTotal).format('0,0.00');
+            s.totalFormatted = numeral(s.total).format('0,0.00');
+            return s;
+        } else {
+            return {};
+        }
     },
     saleDetails: function () {
         var saleDetailItems = [];
         var sD = Pos.Collection.SaleDetails.find({saleId: FlowRouter.getParam('saleId')});
-        var i = 1;
-        sD.forEach(function (sd) {
-            // var item = _.extend(sd,{});
-            /*var product = Pos.Collection.Products.findOne(sd.productId);
-             var unit = Pos.Collection.Units.findOne(product.unitId).name;
-             sd.productName = product.name + "(" + unit + ")";*/
-            sd.amountFormatted = numeral(sd.amount).format('0,0.00');
-            //sd.order = pad(i, 2);
-            sd.order = i;
-            i++;
-            saleDetailItems.push(sd);
-        });
-        return saleDetailItems;
+        if (sD.count() > 0) {
+            var i = 1;
+            sD.forEach(function (sd) {
+                // var item = _.extend(sd,{});
+                /*var product = Pos.Collection.Products.findOne(sd.productId);
+                 var unit = Pos.Collection.Units.findOne(product.unitId).name;
+                 sd.productName = product.name + "(" + unit + ")";*/
+                sd.amountFormatted = numeral(sd.amount).format('0,0.00');
+                //sd.order = pad(i, 2);
+                sd.order = i;
+                i++;
+                saleDetailItems.push(sd);
+            });
+            return saleDetailItems;
+        } else {
+            return [];
+        }
     },
     staffs: function () {
         var userStaff = Pos.Collection.UserStaffs.findOne({userId: Meteor.user()._id});
@@ -152,12 +177,14 @@ Template.pos_checkout.helpers({
         }
     },
     customers: function () {
-        return Pos.Collection.Customers.find({
-            branchId: Session.get('currentBranch')
-        });
+        return [{_id: "0001", name: "Test"}];
+        /* return Pos.Collection.Customers.find({
+         branchId: Session.get('currentBranch')
+         }, {fields: {_id: 1, name: 1}});*/
     },
     products: function () {
-        return Pos.Collection.Products.find({status: "enable"});
+        return [];
+        //return Pos.Collection.Products.find({status: "enable"}, {fields: {_id: 1, name: 1, _unit: 1}});
         /*.map(function (p) {
          var unit = Pos.Collection.Units.findOne(p.unitId).name;
          p.name = p.name + "(" + unit + ")";
@@ -687,7 +714,7 @@ function checkoutStock(productId, saleDetailId, newQty, branchId, saleId, locati
         }, {sort: {createdAt: -1}});
         debugger;
         if (inventory != null) {
-            var remainQuantity = inventory.remainQty-newQty;
+            var remainQuantity = inventory.remainQty - newQty;
             var saleDetails = Pos.Collection.SaleDetails.find({
                 _id: {$ne: saleDetailId},
                 productId: product._id,
@@ -777,21 +804,21 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
         return data;
     }
     var locationId = $('#location-id').val();
-    if (locationId == '' || locationId==null) {
+    if (locationId == '' || locationId == null) {
         data.valid = false;
         data.message = "Please select location name.";
         return data;
     }
 
     var staffId = $('#staff-id').val();
-    if (staffId == '' || staffId==null) {
+    if (staffId == '' || staffId == null) {
         data.valid = false;
         data.message = "Please select staff name.";
         return data;
     }
 
     var customerId = $('#customer-id').val();
-    if (customerId == "" || customerId==null) {
+    if (customerId == "" || customerId == null) {
         data.valid = false;
         data.message = "Please select customer name.";
         return data;

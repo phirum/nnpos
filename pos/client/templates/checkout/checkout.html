@@ -1,4 +1,12 @@
+
 <template name="pos_checkout">
+    <div class="row">
+        <input class="form-control typeahead" name="team" type="text"
+               placeholder="NBA teams"
+               autocomplete="off" spellcheck="off"
+               data-source="nba"/>
+    </div>
+
     <div class="row">
         <div class="col-md-3">
             <div class="panel panel-default">
@@ -30,7 +38,8 @@
                                 {{/each}}
                             </select>-->
                             <input type="text" class="form-control input-sm" value="{{location.name}}" readonly>
-                            <input type="text" id="location-id" class="form-control input-sm hidden" value="{{location._id}}" readonly>
+                            <input type="text" id="location-id" class="form-control input-sm hidden"
+                                   value="{{location._id}}" readonly>
 
 
                             <label for="staff-id"> <b>Staff <span style="color:red">*</span></b></label>

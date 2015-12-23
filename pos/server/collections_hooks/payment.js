@@ -1,5 +1,6 @@
 Pos.Collection.Payments.before.insert(function (userId, doc) {
     var prefix;
+    console.log(doc.saleId);
     prefix = doc.saleId ? doc.saleId + "S" : doc.purchaseId + "P";
     doc._id = idGenerator.genWithPrefix(Pos.Collection.Payments, prefix, 3);
 });
@@ -18,7 +19,6 @@ Pos.Collection.Payments.after.remove(function (userId, doc) {
             Pos.Collection.Purchases.direct.update(doc.purchaseId, {$set: purchaseObj});
         }
     });
-
 });
 
 Pos.Collection.Payments.after.insert(function (userId, doc) {
