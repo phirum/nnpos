@@ -177,14 +177,12 @@ Template.pos_checkout.helpers({
         }
     },
     customers: function () {
-        return [{_id: "0001", name: "Test"}];
-        /* return Pos.Collection.Customers.find({
+         return Pos.Collection.Customers.find({
          branchId: Session.get('currentBranch')
-         }, {fields: {_id: 1, name: 1}});*/
+         }, {fields: {_id: 1, name: 1},limit:10});
     },
     products: function () {
-        return [];
-        //return Pos.Collection.Products.find({status: "enable"}, {fields: {_id: 1, name: 1, _unit: 1}});
+       return Pos.Collection.Products.find({status: "enable"}, {fields: {_id: 1, name: 1, _unit: 1},limit:10});
         /*.map(function (p) {
          var unit = Pos.Collection.Units.findOne(p.unitId).name;
          p.name = p.name + "(" + unit + ")";

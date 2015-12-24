@@ -1,12 +1,31 @@
 Meteor.startup(function () {
-    /*var categories = Pos.Collection.Categories.find();
-    categories.forEach(function (c) {
-        var count = Pos.Collection.Categories.find({parentId: c._id}).count();
-        var productCount = Pos.Collection.Products.find({categoryId: c._id}).count();
-        Pos.Collection.Categories.direct.update(c._id,
-            {$set: {_categoryCount: count, _productCount: productCount}});
+    Pos.Collection.Categories._ensureIndex({parentId:1});
+    Pos.Collection.Staffs._ensureIndex({branchId:1,status:1});
+    Pos.Collection.UserStaffs._ensureIndex({branchId:1,userId:1});
+    Pos.Collection.Suppliers._ensureIndex({branchId:1});
+    Pos.Collection.Products._ensureIndex({barcode:1,status:1,name:1,categoryId:1,productType:1});
+    Pos.Collection.ExchangeRates._ensureIndex({branchId:1,base:1});
+    Pos.Collection.Sales._ensureIndex({status: 1, branchId: 1,locationId:1,voucher:1,productId:1});
+    Pos.Collection.SaleDetails._ensureIndex({isPromotion:1,productId:1,branchId: 1,totalCost:1,locationId:1,saleId:1});
+    Pos.Collection.Purchases._ensureIndex({productId:1,branchId:1,locationId:1,status:1,totalCost:1});
+    Pos.Collection.PurchaseDetails._ensureIndex({branchId:1,locationId:1,purchaseId:1,productId:1});
+    Pos.Collection.Payments._ensureIndex({branchId:1,saleId:1,purchaseId:1});
+    Pos.Collection.FIFOInventory._ensureIndex({branchId:1,locationId:1,productId:1,isSale:1});
+    Pos.Collection.Locations._ensureIndex({branchId:1});
+    Pos.Collection.LocationSettings._ensureIndex({branchId:1});
+    Pos.Collection.LocationTransfers._ensureIndex({branchId:1,locationId:1,productId:1,status:1,fromLocationId:1,toLocationId:1});
+    Pos.Collection.LocationTransferDetails._ensureIndex({branchId:1,productId:1,fromLocationId:1,toLocationId:1,locationTransferId:1});
 
-    });*/
+
+
+    /*var categories = Pos.Collection.Categories.find();
+     categories.forEach(function (c) {
+     var count = Pos.Collection.Categories.find({parentId: c._id}).count();
+     var productCount = Pos.Collection.Products.find({categoryId: c._id}).count();
+     Pos.Collection.Categories.direct.update(c._id,
+     {$set: {_categoryCount: count, _productCount: productCount}});
+
+     });*/
 
     /* var funcInputObj={};
      var mongoFuncName='hi';
