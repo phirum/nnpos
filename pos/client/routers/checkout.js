@@ -39,10 +39,10 @@ posRoutes.route('/checkout/:saleId?', {
             'pos_saleDetail',
             Meteor.subscribe('posSaleDetail',{branchId:branchId,totalCost:null})
         );
-        this.register(
+        /*this.register(
             'pos_product',
             Meteor.subscribe('posProduct')
-        );
+        );*/
         this.register(
             'pos_staff',
             Meteor.subscribe('posStaff',{branchId:branchId})

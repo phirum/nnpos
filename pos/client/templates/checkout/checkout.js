@@ -23,10 +23,40 @@ Template.pos_checkout.onRendered(function () {
     }, 500);
 });
 Template.pos_checkout.helpers({
-    nba: function () {
-        return Pos.Collection.Products.find().fetch().map(function (it) {
-            return it.name;
+    search: function (query, sync, callback) {
+        Meteor.call('searchProduct', query, {}, function (err, res) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            callback(res.map(function (product) {
+                return {
+                    value: product.name + ' | Barcode: ' + product.barcode,
+                    _id: product._id
+                };
+            }));
         });
+    },
+    selected: function (event, suggestion, dataSetName) {
+        // event - the jQuery event object
+        // suggestion - the suggestion object
+        // datasetName - the name of the dataset the suggestion belongs to
+        // TODO your event handler here
+        var id = suggestion._id;
+        if (id == "") return;
+        var isRetail = Session.get('isRetail');
+        var saleId = $('#sale-id').val();
+        var branchId = Session.get('currentBranch');
+        var data = getValidatedValues('id', id, branchId, saleId);
+        if (data.valid) {
+            addOrUpdateProducts(branchId, saleId, isRetail, data.product, data.saleObj);
+        } else {
+            alertify.warning(data.message);
+        }
+        $('#product-id').select2('val', '');
+        $('#product-barcode').val('');
+        $('#product-barcode').focus();
+
     },
     location: function () {
         var sale = Pos.Collection.Sales.findOne(FlowRouter.getParam('saleId'));
@@ -177,12 +207,12 @@ Template.pos_checkout.helpers({
         }
     },
     customers: function () {
-         return Pos.Collection.Customers.find({
-         branchId: Session.get('currentBranch')
-         }, {fields: {_id: 1, name: 1},limit:10});
+        return Pos.Collection.Customers.find({
+            branchId: Session.get('currentBranch')
+        }, {fields: {_id: 1, name: 1}, limit: 10});
     },
     products: function () {
-       return Pos.Collection.Products.find({status: "enable"}, {fields: {_id: 1, name: 1, _unit: 1},limit:10});
+        return Pos.Collection.Products.find({status: "enable"}, {fields: {_id: 1, name: 1, _unit: 1}, limit: 10});
         /*.map(function (p) {
          var unit = Pos.Collection.Units.findOne(p.unitId).name;
          p.name = p.name + "(" + unit + ")";

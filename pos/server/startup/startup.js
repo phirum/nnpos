@@ -16,8 +16,6 @@ Meteor.startup(function () {
     Pos.Collection.LocationTransfers._ensureIndex({branchId:1,locationId:1,productId:1,status:1,fromLocationId:1,toLocationId:1});
     Pos.Collection.LocationTransferDetails._ensureIndex({branchId:1,productId:1,fromLocationId:1,toLocationId:1,locationTransferId:1});
 
-
-
     /*var categories = Pos.Collection.Categories.find();
      categories.forEach(function (c) {
      var count = Pos.Collection.Categories.find({parentId: c._id}).count();
