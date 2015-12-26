@@ -297,7 +297,7 @@ Template.pos_purchase.events({
     //'click':function(){
     //    $('#product-barcode').focus();
     //},
-    'mouseout .form-control,.la-box': function () {
+    'mouseout .handle-mouseout,.la-box': function () {
         $('#product-barcode').focus();
     },
     'click #print-invoice': function () {
@@ -1043,7 +1043,12 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
     }
     var product;
     if (fieldName == 'id') {
-        product = Pos.Collection.Products.findOne(val);
+        //product = Pos.Collection.Products.findOne(val);
+        Meteor.call('findOneRecord',{_id:val},{},function(er,re){
+            if(re){
+
+            }
+        });
     } else {
         product = Pos.Collection.Products.findOne({barcode: val, status: "enable"});
     }
