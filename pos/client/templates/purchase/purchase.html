@@ -91,12 +91,16 @@
                             <input type="text" id="product-barcode" class="form-control input-sm" placeholder="Barcode">
                         </div>
                         <div class="col-md-4">
-                            <select id="product-id" class="form-control input-sm select-two">
+                            <input class="form-control typeahead input-sm" name="search" type="text" placeholder="Type to query"
+                                   autocomplete="on" spellcheck="off"
+                                   data-source="search" data-select='selected' data-highlight=true/>
+
+                           <!-- <select id="product-id" class="form-control input-sm select-two">
                                 <option value="">(Select One)</option>
                                 {{#each products}}
                                     <option value="{{_id}}">{{name}}({{_unit.name}})</option>
                                 {{/each}}
-                            </select>
+                            </select>-->
                         </div>
                         <div class="col-md-2">
                             <input type="text" id="default-price" class="form-control input-sm"

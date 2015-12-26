@@ -817,6 +817,7 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
         return data;
     } else {
         if (saleId == '') {
+            Meteor.call();
             var sale = Pos.Collection.Sales.findOne({voucher: voucher, branchId: branchId});
             if (sale != null) {
                 data.valid = false;

@@ -1,5 +1,6 @@
 Session.setDefault('purchaseHasUpdate', false);
 Template.pos_purchase.onRendered(function () {
+    Meteor.typeahead.inject();
     createNewAlertify(["supplier", "userStaff"]);
     // $('#product-id').select2();
     $('#product-barcode').focus();
@@ -21,6 +22,43 @@ Template.pos_purchase.onRendered(function () {
     }, 500);
 });
 Template.pos_purchase.helpers({
+    search: function (query, sync, callback) {
+        Meteor.call('searchProduct', query, {}, function (err, res) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            callback(res.map(function (product) {
+                return {
+                    value: product.name + ' | Barcode: ' + product.barcode,
+                    _id: product._id
+                };
+            }));
+        });
+    },
+    selected: function (event, suggestion, dataSetName) {
+        // event - the jQuery event object
+        // suggestion - the suggestion object
+        // datasetName - the name of the dataset the suggestion belongs to
+        // TODO your event handler here
+        var id = suggestion._id;
+        var purchaseId = $('#purchase-id').val();
+        if (id == "") {
+            return;
+        }
+        var branchId = Session.get('currentBranch');
+        var data = getValidatedValues('id', id, branchId, purchaseId);
+        if (data.valid) {
+            addOrUpdateProducts(branchId, purchaseId, data.product, data.purchaseObj);
+        } else {
+            alertify.warning(data.message);
+            $('#product-id').val('');
+            $('#product-barcode').val('');
+            $('#product-barcode').focus();
+            return;
+        }
+
+    },
     locations: function () {
         return Pos.Collection.Locations.find({branchId: Session.get('currentBranch')});
     },
@@ -979,7 +1017,7 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
         return data;
     }
     var locationId = $('#location-id').val();
-    if (locationId == '' || locationId==null) {
+    if (locationId == '' || locationId == null) {
         data.valid = false;
         data.message = "Please select location name.";
         return data;
