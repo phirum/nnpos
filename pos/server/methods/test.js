@@ -34,9 +34,14 @@ Meteor.methods({
 });
 
 
+
+
+
+/*
 Meteor.startup(function () {
     if (!Pos.Collection.Products.find().count()) {
         // fill BigCollection
     }
 });
+*/
 

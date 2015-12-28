@@ -11,7 +11,7 @@ Meteor.methods({
         // TODO fix regexp to support multiple tokens
         var regex = new RegExp(query, 'i');
         return Pos.Collection.Products.find({
-            $or: [{_id: {$regex: regex}}, {name: {$regex: regex}}, {barcode: {$regex: regex}}]
+            $or: [{_id: {$regex: regex}}, {name: {$regex: regex}}, {barcode: {$regex: regex}}], status: "enable"
         }, options).fetch();
     },
     search: function (collectionName, query, options) {

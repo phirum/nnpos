@@ -57,6 +57,10 @@ Template.pos_purchase.helpers({
             $('#product-barcode').focus();
             return;
         }
+        if (Session.get('purchaseProduct')) {
+            delete Session.keys['purchaseProduct']
+        }
+
 
     },
     locations: function () {
@@ -195,6 +199,9 @@ Template.pos_purchase.helpers({
     }
 });
 Template.pos_purchase.events({
+    'click .tt-input': function (e) {
+        $(e.currentTarget).focus().selected;
+    },
     'change #location-id': function () {
         checkPurchaseIsUpdate();
     },
@@ -1042,16 +1049,27 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
         return data;
     }
     var product;
+    debugger;
     if (fieldName == 'id') {
         //product = Pos.Collection.Products.findOne(val);
-        Meteor.call('findOneRecord',{_id:val},{},function(er,re){
-            if(re){
-
+        Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: val}, {}, function (er, re) {
+            if (re) {
+                Session.set('purchaseProduct', re);
             }
         });
     } else {
-        product = Pos.Collection.Products.findOne({barcode: val, status: "enable"});
+        Meteor.call('findOneRecord', 'Pos.Collection.Products', {
+            barcode: val,
+            status: "enable"
+        }, {}, function (er, re) {
+            if (re) {
+                Session.set('purchaseProduct', re);
+            }
+        });
+        // product = Pos.Collection.Products.findOne({barcode: val, status: "enable"});
     }
+
+    product = Session.get('purchaseProduct');
     if (product != null) {
         var defaultPrice = $('#default-price').val() == "" ? product.purchasePrice : parseFloat($('#default-price').val());
         product.defaultPrice = defaultPrice;
