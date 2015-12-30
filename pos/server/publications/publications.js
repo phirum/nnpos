@@ -188,10 +188,11 @@ Meteor.publish('posLocationSetting', function (selector) {
 });
 Meteor.publish('posOwedSale', function () {
     var lastWeek = new Date();
-    var a=lastWeek.setDate(lastWeek.getDate() - 7);
+    var a = lastWeek.setDate(lastWeek.getDate() - 7);
     Counts.publish(this, 'owedSale', Pos.Collection.Sales.find({
         status: 'Owed',
         saleDate: {$lte: lastWeek}
     }));
     this.ready();
 });
+

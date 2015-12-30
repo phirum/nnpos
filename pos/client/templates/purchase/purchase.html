@@ -1,4 +1,9 @@
 <!--Index-->
+<template name="repo">
+    <p class="repo-name">
+        <img src="{{url}}" width="120px" height="120px" class="img-circle"> | {{name}} </p>
+</template>
+
 <template name="pos_purchase">
     <div class="row">
         <div class="col-md-3">
@@ -56,7 +61,8 @@
                             <a> <i class="fa fa-plus"></i> </a>
                             </span>
                             </div>
-                            <label for="transaction-type"> <b>Transaction Type <span style="color:red">*</span></b></label>
+                            <label for="transaction-type"> <b>Transaction Type <span
+                                    style="color:red">*</span></b></label>
 
                             <!--<div class="input-group select2-bootstrap-append">-->
                             <select id="transaction-type" class="form-control input-sm select-two">
@@ -91,11 +97,12 @@
                             <input type="text" id="product-barcode" class="form-control input-sm" placeholder="Barcode">
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control typeahead input-sm" name="search" type="text" placeholder="Type to query"
-                                   autocomplete="on" spellcheck="off"
-                                   data-source="search" data-select='selected' data-highlight=true/>
+                            <input class="form-control typeahead input-sm" name="search" type="text"
+                                   placeholder="Type to query" autocomplete="on" spellcheck="off"
+                                   data-source="search" data-select='selected' data-highlight=true
+                                   data-template='repo'/>
 
-                           <!-- <select id="product-id" class="form-control input-sm select-two">
+                            <!-- <select id="product-id" class="form-control input-sm select-two">
                                 <option value="">(Select One)</option>
                                 {{#each products}}
                                     <option value="{{_id}}">{{name}}({{_unit.name}})</option>
@@ -250,7 +257,8 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         {{#each purchases}}
-                            <li><a href="/pos/purchase/{{_id}}" class="resume" data-id="{{_id}}">{{_supplier.name}} | {{_id}}</a></li>
+                            <li><a href="/pos/purchase/{{_id}}" class="resume" data-id="{{_id}}">{{_supplier.name}}
+                                | {{_id}}</a></li>
                         {{/each}}
                         <!--<li><a >hello</a></li>-->
                     </ul>
@@ -391,7 +399,7 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
 
             </div>

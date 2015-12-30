@@ -7,12 +7,21 @@ Meteor.methods({
         } else {
             options.limit = 50;
         }
-
         // TODO fix regexp to support multiple tokens
         var regex = new RegExp(query, 'i');
-        return Pos.Collection.Products.find({
+        var products = Pos.Collection.Products.find({
             $or: [{_id: {$regex: regex}}, {name: {$regex: regex}}, {barcode: {$regex: regex}}], status: "enable"
-        }, options).fetch();
+        }, options);
+        var arr = [];
+        products.forEach(function (product) {
+            if (product.picture) {
+                product.url = Images.findOne(product.picture).url();
+            } else {
+                product.url = '/no_image.jpg';
+            }
+            arr.push(product);
+        });
+        return arr;
     },
     search: function (collectionName, query, options) {
         collectionName = eval(collectionName);

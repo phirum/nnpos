@@ -1,0 +1,1 @@
+ProductState = new ReactiveObj();
