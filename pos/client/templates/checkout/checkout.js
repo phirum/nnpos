@@ -29,12 +29,7 @@ Template.pos_checkout.helpers({
                 console.log(err);
                 return;
             }
-            callback(res.map(function (product) {
-                return {
-                    value: product.name + ' | Barcode: ' + product.barcode,
-                    _id: product._id
-                };
-            }));
+            callback(res);
         });
     },
     selected: function (event, suggestion, dataSetName) {
@@ -42,20 +37,112 @@ Template.pos_checkout.helpers({
         // suggestion - the suggestion object
         // datasetName - the name of the dataset the suggestion belongs to
         // TODO your event handler here
+
         var id = suggestion._id;
-        if (id == "") return;
-        var isRetail = Session.get('isRetail');
-        var saleId = $('#sale-id').val();
-        var branchId = Session.get('currentBranch');
-        var data = getValidatedValues('id', id, branchId, saleId);
-        if (data.valid) {
-            addOrUpdateProducts(branchId, saleId, isRetail, data.product, data.saleObj);
-        } else {
-            alertify.warning(data.message);
-        }
-        $('#product-id').select2('val', '');
-        $('#product-barcode').val('');
-        $('#product-barcode').focus();
+        Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: id}, {}, function (error, product) {
+            if (product) {
+                var locationId=$('#location-id').val();
+                var isRetail = Session.get('isRetail');
+                var saleId = $('#sale-id').val();
+                var branchId = Session.get('currentBranch');
+                var defaultQuantity = $('#default-quantity').val() == "" ? 1 : parseInt($('#default-quantity').val());
+                if (product.productType == "Stock") {
+                    var saleDetails = Pos.Collection.SaleDetails.find({
+                        productId: product._id,
+                        saleId: saleId,
+                        locationId: locationId
+                    });
+                    if (saleDetails.count() > 0) {
+                        var saleDetailQty = 0;
+                        saleDetails.forEach(function (saleDetail) {
+                            saleDetailQty += saleDetail.quantity;
+                        });
+                        defaultQuantity = defaultQuantity + saleDetailQty;
+                    }
+                    //---Open Inventory type block "FIFO Inventory"---
+                    var inventory = Pos.Collection.FIFOInventory.findOne({
+                        branchId: branchId,
+                        productId: product._id,
+                        locationId: locationId
+                        //price: pd.price
+                    }, {sort: {createdAt: -1}});
+                    //---End Inventory type block "FIFO Inventory"---
+                    debugger;
+                    if (inventory != null) {
+                        var remainQuantity = inventory.remainQty - defaultQuantity;
+                        if (remainQuantity < 0) {
+                            data.valid = false;
+                            data.message = 'Product is out of stock. Quantity in stock is "' + inventory.remainQty + '".';
+                            return data;
+                        }
+                        var unSavedSaleId = Pos.Collection.Sales.find({
+                            status: "Unsaved",
+                            branchId: Session.get('currentBranch'),
+                            _id: {$ne: saleId}
+                        }).map(function (s) {
+                            return s._id;
+                        });
+                        var otherSaleDetails = Pos.Collection.SaleDetails.find({
+                            saleId: {$in: unSavedSaleId},
+                            productId: product._id,
+                            locationId: locationId
+                        });
+                        var otherQuantity = 0;
+                        if (otherSaleDetails != null) {
+                            otherSaleDetails.forEach(function (sd) {
+                                otherQuantity += sd.quantity;
+                            });
+                        }
+                        remainQuantity = remainQuantity - otherQuantity;
+                        if (remainQuantity < 0) {
+                            alertify.warning('Product is out of stock. Quantity in stock is "' +
+                                inventory.remainQty + '". And quantity on sale of other seller is "' + otherQuantity + '".');
+                            return;
+                        } else {
+                            var data = getValidatedValues();
+                            if (data.valid) {
+                                addOrUpdateProducts(branchId, saleId, isRetail, product, data.saleObj);
+                            }else{
+                                alertify.warning(data.message);
+                            }
+                        }
+
+                    } else {
+                        alertify.warning("Don't have product in stock.");
+                        return;
+                    }
+
+                }
+                else {
+                    var data = getValidatedValues();
+                    if (data.valid) {
+                        addOrUpdateProducts(branchId, saleId, isRetail, product, data.saleObj);
+                    }else{
+                        alertify.warning(data.message);
+                    }
+                }
+            }
+            else {
+                alertify.warning("Can't find this Product");
+
+            }
+        });
+
+
+        /* var id = suggestion._id;
+         if (id == "") return;
+         var isRetail = Session.get('isRetail');
+         var saleId = $('#sale-id').val();
+         var branchId = Session.get('currentBranch');
+         var data = getValidatedValues('id', id, branchId, saleId);
+         if (data.valid) {
+         addOrUpdateProducts(branchId, saleId, isRetail, data.product, data.saleObj);
+         } else {
+         alertify.warning(data.message);
+         }
+         $('#product-id').select2('val', '');
+         $('#product-barcode').val('');
+         $('#product-barcode').focus();*/
 
     },
     location: function () {
@@ -798,12 +885,12 @@ function checkoutStock(productId, saleDetailId, newQty, branchId, saleId, locati
     return data;
 
 }
-function getValidatedValues(fieldName, val, branchId, saleId) {
+function getValidatedValues() {
     var data = {};
     var id = Cpanel.Collection.Setting.findOne().baseCurrency;
     var exchangeRate = Pos.Collection.ExchangeRates.findOne({
         base: id,
-        branchId: branchId
+        branchId: Session.get('currentBranch')
     }, {sort: {_id: -1, createdAt: -1}});
     if (exchangeRate == null) {
         data.valid = false;
@@ -815,17 +902,18 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
         data.valid = false;
         data.message = "Please input voucher.";
         return data;
-    } else {
-        if (saleId == '') {
-            Meteor.call();
-            var sale = Pos.Collection.Sales.findOne({voucher: voucher, branchId: branchId});
-            if (sale != null) {
-                data.valid = false;
-                data.message = 'Voucher already exists. Please input the other one.';
-                return data;
-            }
-        }
     }
+    /*else {
+     if (saleId == '') {
+     Meteor.call();
+     var sale = Pos.Collection.Sales.findOne({voucher: voucher, branchId: branchId});
+     if (sale != null) {
+     data.valid = false;
+     data.message = 'Voucher already exists. Please input the other one.';
+     return data;
+     }
+     }
+     }*/
     var saleDate = $('#input-sale-date').val();
     if (saleDate == '') {
         data.valid = false;
@@ -859,80 +947,6 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
         return data;
     }
 
-    var product;
-    if (fieldName == 'id') {
-        product = Pos.Collection.Products.findOne(val);
-    } else {
-        product = Pos.Collection.Products.findOne({barcode: val, status: "enable"});
-    }
-    if (product != null) {
-        var defaultQuantity = $('#default-quantity').val() == "" ? 1 : parseInt($('#default-quantity').val());
-        if (product.productType == "Stock") {
-            var saleDetails = Pos.Collection.SaleDetails.find({
-                productId: product._id,
-                saleId: saleId,
-                locationId: locationId
-            });
-            if (saleDetails.count() > 0) {
-                var saleDetailQty = 0;
-                saleDetails.forEach(function (saleDetail) {
-                    saleDetailQty += saleDetail.quantity;
-                });
-                defaultQuantity = defaultQuantity + saleDetailQty;
-            }
-            //---Open Inventory type block "FIFO Inventory"---
-            var inventory = Pos.Collection.FIFOInventory.findOne({
-                branchId: branchId,
-                productId: product._id,
-                locationId: locationId
-                //price: pd.price
-            }, {sort: {createdAt: -1}});
-            //---End Inventory type block "FIFO Inventory"---
-            if (inventory != null) {
-                var remainQuantity = inventory.remainQty - defaultQuantity;
-                if (remainQuantity < 0) {
-                    data.valid = false;
-                    data.message = 'Product is out of stock. Quantity in stock is "' + inventory.remainQty + '".';
-                    return data;
-                }
-                var unSavedSaleId = Pos.Collection.Sales.find({
-                    status: "Unsaved",
-                    branchId: Session.get('currentBranch'),
-                    _id: {$ne: saleId}
-                }).map(function (s) {
-                    return s._id;
-                });
-                var otherSaleDetails = Pos.Collection.SaleDetails.find({
-                    saleId: {$in: unSavedSaleId},
-                    productId: product._id,
-                    locationId: locationId
-                });
-                var otherQuantity = 0;
-                if (otherSaleDetails != null) {
-                    otherSaleDetails.forEach(function (sd) {
-                        otherQuantity += sd.quantity;
-                    });
-                }
-                remainQuantity = remainQuantity - otherQuantity;
-                if (remainQuantity < 0) {
-                    data.valid = false;
-                    data.message = 'Product is out of stock. Quantity in stock is "' +
-                        inventory.remainQty + '". And quantity on sale of other seller is "' + otherQuantity + '".';
-                    return data;
-                }
-            } else {
-                data.valid = false;
-                data.message = "Don't have product in stock.";
-                return data;
-            }
-
-        }
-
-    } else {
-        data.valid = false;
-        data.message = "Can't find this Product";
-        return data;
-    }
     data.message = "Add product to list is successfully.";
     data.valid = true;
     data.saleObj = {
@@ -945,7 +959,7 @@ function getValidatedValues(fieldName, val, branchId, saleId) {
         voucher: voucher,
         locationId: locationId
     };
-    data.product = product;
+    //data.product = product;
     return data;
 }
 function addOrUpdateProducts(branchId, saleId, isRetail, product, saleObj) {

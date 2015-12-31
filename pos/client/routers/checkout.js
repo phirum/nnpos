@@ -59,15 +59,16 @@ posRoutes.route('/checkout/:saleId?', {
             'pos_exchangeRate',
             Meteor.subscribe('posExchangeRate', {branchId: branchId})
         );
+        this.register(
+            'pos_fifoInventory',
+            Meteor.subscribe('posFIFOInventory',{branchId:branchId})
+        );
         /*
          this.register(
          'pos_stock',
          Meteor.subscribe('posStock', {branchId: branchId})
          );
-         this.register(
-         'pos_fifoInventory',
-         Meteor.subscribe('posFIFOInventory',{branchId:branchId})
-         );
+
          this.register(
          'pos_lifoInventory',
          Meteor.subscribe('posLIFOInventory',{branchId:branchId})
