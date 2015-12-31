@@ -37,13 +37,12 @@ Template.pos_purchase.helpers({
         // datasetName - the name of the dataset the suggestion belongs to
         // TODO your event handler here
         var id = suggestion._id;
-        Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: id}, {}, function (error, product) {
-            if (product) {
-
-                var purchaseId = $('#purchase-id').val();
-                var branchId = Session.get('currentBranch');
-                var data = getValidatedValues();
-                if (data.valid) {
+        var data = getValidatedValues();
+        var purchaseId = $('#purchase-id').val();
+        var branchId = Session.get('currentBranch');
+        if (data.valid) {
+            Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: id}, {}, function (error, product) {
+                if (product) {
                     var defaultPrice = $('#default-price').val() == "" ? product.purchasePrice : parseFloat($('#default-price').val());
                     product.defaultPrice = defaultPrice;
                     addOrUpdateProducts(branchId, purchaseId, product, data.purchaseObj);
@@ -63,17 +62,19 @@ Template.pos_purchase.helpers({
                                 title: "Price should be changed."
                             });
                     }
+
                 } else {
-                    alertify.warning(data.message);
-                    $('#product-id').val('');
-                    $('#product-barcode').val('');
-                    $('#product-barcode').focus();
-                    return;
+                    alertify.warning("Cant't find this product.");
                 }
-            } else {
-                alertify.warning("Cant't find this product.");
-            }
-        });
+            });
+        } else {
+            alertify.warning(data.message);
+            $('#product-id').val('');
+            $('#product-barcode').val('');
+            $('#product-barcode').focus();
+            return;
+        }
+
     },
     locations: function () {
         return Pos.Collection.Locations.find({branchId: Session.get('currentBranch')});
@@ -516,55 +517,62 @@ Template.pos_purchase.events({
     },
     'change .price': function (e) {
         var val = $(e.currentTarget).val();
+        var self = this;
+        var firstPrice = self.price;
         var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
-
-        var firstPrice = this.price;
-        var product = Pos.Collection.Products.findOne(this.productId);
-        var wholesalePrice = product.wholesalePrice;
-        var retailPrice = product.retailPrice;
-        var price = parseFloat($(e.currentTarget).val() == "" ? 0 : $(e.currentTarget).val());
-        var pdId = this._id;
-        var set = {};
-        set.price = price;
-        set.amount = (price * this.quantity) * (1 - this.discount / 100);
+        var price = parseFloat(val == "" ? 0 : val);
         if (!numericReg.test(val) || price <= 0) {
             $(e.currentTarget).val(firstPrice);
             $(e.currentTarget).focus();
             return;
-        } else if (price > wholesalePrice) {
-            alertify.confirm("Are you sure? The price of this product is higher than the Wholesale Price,(" + wholesalePrice + ").")
-                .set({
-                    onok: function (closeEvent) {
-                        Meteor.call('updatePurchaseDetails', pdId, set);
-                    },
-                    title: "Product is out of stock.",
-                    oncancel: function () {
-                        $(e.currentTarget).val(firstPrice);
-                        $('#product-id').val('');
-                        $('#product-barcode').val('');
-                        $('#product-barcode').focus();
-                        return;
-                    }
-                });
-        } else if (price > retailPrice) {
-            alertify.confirm("Are you sure? The price of this product is higher than the Retail Price,(" + retailPrice + ").")
-                .set({
-                    onok: function (closeEvent) {
-                        Meteor.call('updatePurchaseDetails', pdId, set);
-                    },
-                    title: "Product is out of stock.",
-                    oncancel: function () {
-                        $(e.currentTarget).val(firstPrice);
-                        $('#product-id').val('');
-                        $('#product-barcode').val('');
-                        $('#product-barcode').focus();
-                        return;
-                    }
-                });
-        } else {
-            Meteor.call('updatePurchaseDetails', pdId, set);
         }
-        // updatePurchaseSubTotal(FlowRouter.getParam('purchaseId'));
+        var pdId = self._id;
+        Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: self.productId}, {}, function (error, product) {
+            if (product) {
+                debugger;
+                var wholesalePrice = product.wholesalePrice;
+                var retailPrice = product.retailPrice;
+                var set = {};
+                set.price = price;
+                set.amount = (price * self.quantity) * (1 - self.discount / 100);
+                if (price > wholesalePrice) {
+                    alertify.confirm("Are you sure? The price of this product is higher than the Wholesale Price,(" + wholesalePrice + ").")
+                        .set({
+                            onok: function (closeEvent) {
+                                Meteor.call('updatePurchaseDetails', pdId, set);
+                            },
+                            title: "Product is out of stock.",
+                            oncancel: function () {
+                                $(e.currentTarget).val(firstPrice);
+                                $('#product-id').val('');
+                                $('#product-barcode').val('');
+                                $('#product-barcode').focus();
+                                return;
+                            }
+                        });
+                }
+                else if (price > retailPrice) {
+                    alertify.confirm("Are you sure? The price of this product is higher than the Retail Price,(" + retailPrice + ").")
+                        .set({
+                            onok: function (closeEvent) {
+                                Meteor.call('updatePurchaseDetails', pdId, set);
+                            },
+                            title: "Product is out of stock.",
+                            oncancel: function () {
+                                $(e.currentTarget).val(firstPrice);
+                                $('#product-id').val('');
+                                $('#product-barcode').val('');
+                                $('#product-barcode').focus();
+                                return;
+                            }
+                        });
+                }
+                else {
+                    Meteor.call('updatePurchaseDetails', pdId, set);
+                }
+            }
+        });
+        //var product = Pos.Collection.Products.findOne(this.productId);
     },
     'change .quantity': function (e) {
         var val = $(e.currentTarget).val();
