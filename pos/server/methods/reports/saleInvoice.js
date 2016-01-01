@@ -1,5 +1,8 @@
 Meteor.methods({
     getSaleInvoiceData: function (saleId) {
+        if (! Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
         var data = {};
         var currencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
         data.baseCurrency = Cpanel.Collection.Currency.findOne(currencyId);
