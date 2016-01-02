@@ -3,6 +3,6 @@ Meteor.methods({
         collectionName = eval(collectionName);
         selector = selector == null ? {} : selector;
         option = option == null ? {} : option;
-        return collectionName.find(selector, option);
+        return collectionName.find(selector, option).fetch();
     }
 });
