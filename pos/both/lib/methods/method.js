@@ -1,13 +1,22 @@
 Meteor.methods({
     insertByCollection: function (collection,obj) {
+        if (! Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
         collection=eval(collection);
         collection.insert(obj);
     },
     directInsertByCollection: function (collection,obj) {
+        if (! Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
         collection=eval(collection);
         collection.direct.insert(obj);
     },
     updateByCollection: function (collection,id, set,unset) {
+        if (! Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
         collection=eval(collection);
         var updateObject = {};
         if (set != null) updateObject.$set = set;
@@ -15,6 +24,9 @@ Meteor.methods({
         collection.update(id, updateObject);
     },
     directUpdateByCollection:function(collection,id, set,unset) {
+        if (! Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
         collection=eval(collection);
         var updateObject = {};
         if (set != null) updateObject.$set = set;
@@ -22,6 +34,9 @@ Meteor.methods({
         collection.direct.update(id, updateObject);
     },
     getProductSaleReport: function () {
+        if (! Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
         var sD = Pos.Collection.SaleDetails.aggregate([{
             $group: {
                 _id: {productId: "$productId"}
@@ -37,6 +52,9 @@ Meteor.methods({
         return arr;
     },
     getCategory: function () {
+        if (! Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
         return Pos.Collection.Categories.find();
     }
 });

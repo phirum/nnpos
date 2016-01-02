@@ -1,5 +1,8 @@
 Meteor.methods({
     posStockReport: function (arg) {
+        if (! Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
         var data = {
             title: {},
             header: {},

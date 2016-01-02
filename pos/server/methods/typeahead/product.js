@@ -1,5 +1,8 @@
 Meteor.methods({
     searchProduct: function (query, options) {
+        if (! Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
         options = options || {};
         // guard against client-side DOS: hard limit to 50
         if (options.limit) {
@@ -24,6 +27,9 @@ Meteor.methods({
         return arr;
     },
     search: function (collectionName, query, options) {
+        if (! Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
         collectionName = eval(collectionName);
         options = options || {};
         // guard against client-side DOS: hard limit to 50
