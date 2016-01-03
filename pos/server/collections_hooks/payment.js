@@ -2,6 +2,7 @@ Pos.Collection.Payments.before.insert(function (userId, doc) {
     var prefix;
     console.log(doc.saleId);
     prefix = doc.saleId ? doc.saleId + "S" : doc.purchaseId + "P";
+    doc.paymentDate = doc.paymentDate ? doc.paymentDate : new Date();
     doc._id = idGenerator.genWithPrefix(Pos.Collection.Payments, prefix, 3);
 });
 
@@ -29,7 +30,7 @@ Pos.Collection.Payments.after.insert(function (userId, doc) {
             if (doc.balanceAmount <= 0) {
                 saleObj.status = "Paid";
                 saleObj.owedAmount = 0;
-               // saleObj.PaidAmount=
+                // saleObj.PaidAmount=
             } else {
                 saleObj.status = "Owed";
                 saleObj.owedAmount = doc.balanceAmount

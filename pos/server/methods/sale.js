@@ -79,5 +79,31 @@ Meteor.methods({
         var set = {};
         set.isRetail = true;
         Pos.Collection.Sales.update(saleId, {$set: set});
+    },
+    updateToRetailOrWholesale: function (saleId, isRetail) {
+        if (isRetail) {
+            Pos.Collection.SaleDetails.find({saleId: saleId}).forEach(function (sd) {
+                if (!sd.isPromotion) {
+                    var retailPrice = Pos.Collection.Products.findOne(sd.productId).retailPrice;
+                    var set = {};
+                    set.price = retailPrice;
+                    set.amount = (set.price * sd.quantity) * (1 - sd.discount / 100);
+                    Pos.Collection.SaleDetails.direct.update(sd._id, {$set: set});
+                }
+            });
+        } else {
+            Pos.Collection.SaleDetails.find({saleId: saleId}).forEach(function (sd) {
+                if (!sd.isPromotion) {
+                    var wholesalePrice = Pos.Collection.Products.findOne(sd.productId).wholesalePrice;
+                    var set = {};
+                    set.price = wholesalePrice;
+                    set.amount = (set.price * sd.quantity) * (1 - sd.discount / 100);
+                    Pos.Collection.SaleDetails.direct.update(sd._id, {$set: set});
+                }
+            });
+        }
+        var set = {};
+        set.isRetail = isRetail;
+        Pos.Collection.Sales.update(saleId, {$set: set});
     }
 });

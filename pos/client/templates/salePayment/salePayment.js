@@ -377,7 +377,6 @@ function pay(saleId) {
         );
     });
     var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
-    obj._id = idGenerator.genWithPrefix(Pos.Collection.Payments, saleId, 3);
     obj.paymentDate = moment($('[name="paymentDate"]').val()).toDate();
     obj.saleId = saleId;
     //obj.status = "firstPay";

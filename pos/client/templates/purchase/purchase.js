@@ -50,14 +50,14 @@ Template.pos_purchase.helpers({
                     product.defaultPrice = defaultPrice;
                     if (defaultPrice >= product.wholesalePrice) {
                         alertify.alert('Are you sure to purchase this purchase? ' +
-                                'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
+                            'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
                             .set({
                                 title: "Price should be changed."
                             });
                     }
                     else if (defaultPrice >= product.wholesalePrice) {
                         alertify.alert('Are you sure to purchase this purchase? ' +
-                                'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
+                            'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
                             .set({
                                 title: "Price should be changed."
                             });
@@ -729,14 +729,14 @@ Template.pos_purchase.events({
                         product.defaultPrice = defaultPrice;
                         if (defaultPrice >= product.wholesalePrice) {
                             alertify.alert('Are you sure to purchase this purchase? ' +
-                                    'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
+                                'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
                                 .set({
                                     title: "Price should be changed."
                                 });
                         }
                         else if (defaultPrice >= product.wholesalePrice) {
                             alertify.alert('Are you sure to purchase this purchase? ' +
-                                    'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
+                                'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
                                 .set({
                                     title: "Price should be changed."
                                 });
@@ -761,9 +761,7 @@ function addOrUpdateProducts(branchId, purchaseId, product, purchaseObj) {
     var defaultDiscount = $('#default-discount').val() == "" ? 0 : parseFloat($('#default-discount').val());
     debugger;
     if (purchaseId == '') {
-        var todayDate = moment(TimeSync.serverTime(null)).format('YYYYMMDD');
-        var prefix = branchId + "-" + todayDate;
-        var newId = idGenerator.genWithPrefix(Pos.Collection.Purchases, prefix, 4);
+
         // var exchange=parseFloat($('#last-exchange-rate').text());
         var totalDiscount = $('#total_discount').val() == "" ? 0 : parseFloat($('#total_discount').val());
         // var purchaseObj = {};
@@ -787,16 +785,20 @@ function addOrUpdateProducts(branchId, purchaseId, product, purchaseObj) {
         purchaseDetailObj.amount = (purchaseDetailObj.price * defaultQuantity) * (1 - defaultDiscount / 100);
         purchaseDetailObj.branchId = branchId;
         purchaseDetailObj.locationId = purchaseObj.locationId;
-        Meteor.call('insertPurchaseAndPurchaseDetail', purchaseObj, purchaseDetailObj);
-
-        // updatePurchaseSubTotal(newId);
-
-        $('#product-barcode').val('');
-        $('#product-barcode').focus();
-        $('#product-id').select2('val', '');
-        FlowRouter.go('pos.purchase', {purchaseId: newId});
-        $('#product-barcode').focus();
-        //
+        Meteor.call('insertPurchaseAndPurchaseDetail',
+            purchaseObj,
+            purchaseDetailObj,
+            function (error, purchaseId) {
+                if (purchaseId) {
+                    $('#product-barcode').val('');
+                    $('#product-barcode').focus();
+                    $('#product-id').select2('val', '');
+                    FlowRouter.go('pos.purchase', {purchaseId: purchaseId});
+                    $('#product-barcode').focus();
+                } else {
+                    alertify.error(error.message);
+                }
+            });
     } else {
         var purchaseDetail = Pos.Collection.PurchaseDetails.findOne({
             productId: product._id,
@@ -815,13 +817,17 @@ function addOrUpdateProducts(branchId, purchaseId, product, purchaseObj) {
             purchaseDetailObj.amount = (purchaseDetailObj.price * defaultQuantity) * (1 - defaultDiscount / 100);
             purchaseDetailObj.branchId = branchId;
             purchaseDetailObj.locationId = purchaseObj.locationId;
-            Meteor.call('insertPurchaseDetails', purchaseDetailObj);
+            Meteor.call('insertPurchaseDetails', purchaseDetailObj, function (error, result) {
+                if (error) alertify.error(error.message);
+            });
         } else {
             var purchaseDetailSetObj = {};
             purchaseDetailSetObj.discount = defaultDiscount;
             purchaseDetailSetObj.quantity = purchaseDetail.quantity + defaultQuantity;
             purchaseDetailSetObj.amount = (purchaseDetail.price * purchaseDetailSetObj.quantity) * (1 - defaultDiscount / 100);
-            Meteor.call('updatePurchaseDetails', purchaseDetail._id, purchaseDetailSetObj);
+            Meteor.call('updatePurchaseDetails', purchaseDetail._id, purchaseDetailSetObj, function (error, result) {
+                if (error) alertify.error(error.message);
+            });
         }
 
         $('#product-barcode').val('');
@@ -904,8 +910,6 @@ function pay(purchaseId) {
         );
     });
     var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
-    obj._id = idGenerator.genWithPrefix(Pos.Collection.Payments, purchaseId, 3);
-    obj.paymentDate = new Date();
     obj.purchaseId = purchaseId;
     //obj.status = "firstPay";
     obj.payAmount = numeral().unformat(numeral(totalPay).format('0,0.00'));

@@ -9,7 +9,7 @@ Template.pos_checkout.onRendered(function () {
     });
     //$('#product-id').select2();
     $('#product-barcode').focus();
-    setTimeout(function () {
+    Meteor.setTimeout(function () {
         $('.select-two').select2();
         var s = Pos.Collection.Sales.findOne({
             _id: FlowRouter.getParam('saleId'),
@@ -430,19 +430,11 @@ Template.pos_checkout.events({
         } else {
             // var sale=Pos.Collection.Sales.findOne(saleId);
             Session.set('isRetail', true);
-            var set = {};
-            set.isRetail = true;
-            Meteor.call('updateSale', saleId, set);
-            Pos.Collection.SaleDetails.find({saleId: saleId}).forEach(function (sd) {
-                if (!sd.isPromotion) {
-                    var retailPrice = Pos.Collection.Products.findOne(sd.productId).retailPrice;
-                    var set = {};
-                    set.price = retailPrice;
-                    set.amount = (set.price * sd.quantity) * (1 - sd.discount / 100);
-                    Meteor.call('updateSaleDetails', sd._id, set);
+            Meteor.call('updateToRetailOrWholesale', saleId, true, function (error, result) {
+                if (error) {
+                    alertify.error(error.message);
                 }
             });
-            // updateSaleSubTotal(saleId);
         }
     },
     'click #wholesale': function (e) {
@@ -457,19 +449,11 @@ Template.pos_checkout.events({
             Session.set('isRetail', false);
         } else {
             Session.set('isRetail', false);
-            var set = {};
-            set.isRetail = false;
-            Meteor.call('updateSale', saleId, set);
-            Pos.Collection.SaleDetails.find({saleId: saleId}).forEach(function (sd) {
-                if (!sd.isPromotion) {
-                    var wholesalePrice = Pos.Collection.Products.findOne(sd.productId).wholesalePrice;
-                    var set = {};
-                    set.price = wholesalePrice;
-                    set.amount = (set.price * sd.quantity) * (1 - sd.discount / 100);
-                    Meteor.call('updateSaleDetails', sd._id, set);
+            Meteor.call('updateToRetailOrWholesale', saleId, false, function (error, result) {
+                if (error) {
+                    alertify.error(error.message);
                 }
             });
-            // updateSaleSubTotal(saleId);
         }
     },
     'mouseout .la-box,#total_discount,#total_discount_amount': function () {
@@ -690,36 +674,28 @@ Template.pos_checkout.events({
     'change .quantity': function (e) {
         var val = $(e.currentTarget).val();
         var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+        var self = this;
 
-        var firstQuantity = this.quantity;
+        var firstQuantity = self.quantity;
         var quantity = parseInt($(e.currentTarget).val() == "" ? 0 : $(e.currentTarget).val());
         if (!numericReg.test(val) || quantity <= 0) {
             $(e.currentTarget).val(firstQuantity);
             $(e.currentTarget).focus();
             return;
         }
-        if (this.imei.count() > quantity) {
+        if (self.imei.count() > quantity) {
             alertify.warning("Quantity can't be less than number of IMEI.");
             $(e.currentTarget).val(firstQuantity);
             return;
         }
+        var data = checkoutStock(self, firstQuantity, quantity, e);
+        /*  if (data.valid) {
+         Meteor.call('updateSaleDetails', sdId, set);
+         } else {
+         alertify.warning(data.message);
+         $(e.currentTarget).val(firstQuantity);
+         }*/
 
-        var saleId = $('#sale-id').val();
-        var branchId = Session.get('currentBranch');
-        var sdId = this._id;
-        var locationId = $('#location-id').val();
-        var set = {};
-        set.quantity = quantity;
-        set.amount = (this.price * quantity) * (1 - this.discount / 100);
-
-        var data = checkoutStock(this.productId, this._id, quantity, branchId, saleId, locationId);
-        if (data.valid) {
-            Meteor.call('updateSaleDetails', sdId, set);
-        } else {
-            alertify.warning(data.message);
-            $(e.currentTarget).val(firstQuantity);
-        }
-        // updateSaleSubTotal(FlowRouter.getParam('saleId'));
     },
     'change .discount': function (e) {
         var val = $(e.currentTarget).val();
@@ -789,22 +765,28 @@ Template.pos_checkout.events({
         }
     }
 });
-function checkoutStock(productId, saleDetailId, newQty, branchId, saleId, locationId) {
-    var data = {};
-    var product = Pos.Collection.Products.findOne(productId);
-    Meteor.call('findOneRecord', 'Pos.Collection.Products', {}, {}, function (error, product) {
+function checkoutStock(self, oldQty, newQty, e) {
+    var saleId = $('#sale-id').val();
+    var branchId = Session.get('currentBranch');
+    var sdId = self._id;
+    var locationId = $('#location-id').val();
+    var set = {};
+    set.quantity = newQty;
+    set.amount = (self.price * newQty) * (1 - self.discount / 100);
+    //var product = Pos.Collection.Products.findOne(productId);
+    Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: self.productId}, {}, function (error, product) {
         if (product) {
             if (product.productType == "Stock") {
                 //---Open Inventory type block "FIFO Inventory"---
                 Meteor.call('findOneRecord', 'Pos.Collection.FIFOInventory', {
                     branchId: branchId,
-                    productId: productId,
+                    productId: product._id,
                     locationId: locationId
                 }, {sort: {createdAt: -1}}, function (error, inventory) {
                     if (inventory) {
                         var remainQuantity = inventory.remainQty - newQty;
                         var saleDetails = Pos.Collection.SaleDetails.find({
-                            _id: {$ne: saleDetailId},
+                            _id: {$ne: self._id},
                             productId: product._id,
                             saleId: saleId,
                             locationId: locationId
@@ -818,6 +800,7 @@ function checkoutStock(productId, saleDetailId, newQty, branchId, saleId, locati
                         }
                         if (remainQuantity < 0) {
                             alertify.warning('Product is out of stock. Quantity in stock is "' + inventory.remainQty + '".');
+                            $(e.currentTarget).val(oldQty);
                         } else {
                             var unSavedSaleId = Pos.Collection.Sales.find({
                                 status: "Unsaved",
@@ -841,22 +824,24 @@ function checkoutStock(productId, saleDetailId, newQty, branchId, saleId, locati
                                 alertify.warning('Product is out of stock. Quantity in stock is "' +
                                     inventory.remainQty + '". And quantity on sale of other seller is "' + otherQuantity + '".');
 
+                            } else {
+                                Meteor.call('updateSaleDetails', self._id, set);
                             }
                         }
                     } else {
                         alertify.warning("Don't have product in stock.");
+                        $(e.currentTarget).val(oldQty);
                     }
                 });
+            } else {
+                Meteor.call('updateSaleDetails', self._id, set);
             }
         }
         else {
-            //Update
+            alertify.warning("Can't find this product.");
+            $(e.currentTarget).val(oldQty);
         }
     });
-
-    data.valid = true;
-    data.message = "Product is OK.";
-    return data;
 
 }
 function getValidatedValues() {
@@ -959,17 +944,17 @@ function addOrUpdateProducts(branchId, saleId, isRetail, product, saleObj) {
         saleDetailObj.amount = (saleDetailObj.price * defaultQuantity) * (1 - defaultDiscount / 100);
         saleDetailObj.branchId = branchId;
         saleDetailObj.locationId = saleObj.locationId;
-        Meteor.call('insertSaleAndSaleDetail', saleObj, saleDetailObj, function (e, r) {
-            $('#product-barcode').focus();
-            if (e) {
-                alertify.error("Can't make a sale.");
-            } else {
-                // updateSaleSubTotal(newId);
+        Meteor.call('insertSaleAndSaleDetail', saleObj, saleDetailObj, function (error, saleId) {
+            if (saleId) {
                 $('#product-barcode').val('');
                 $('#product-barcode').focus();
                 $('#product-id').select2('val', '');
-                FlowRouter.go('pos.checkout', {saleId: r});
+                FlowRouter.go('pos.checkout', {saleId: saleId});
+            } else {
+                alertify.error(error.message);
+                $('#product-barcode').focus();
             }
+
         });
     } else {
         var saleDetail = Pos.Collection.SaleDetails.findOne({
@@ -989,14 +974,18 @@ function addOrUpdateProducts(branchId, saleId, isRetail, product, saleObj) {
             saleDetailObj.branchId = branchId;
             saleDetailObj.locationId = saleObj.locationId;
             saleDetailObj.imei = [];
-            Meteor.call('insertSaleDetails', saleDetailObj);
+            Meteor.call('insertSaleDetails', saleDetailObj, function (error, result) {
+                if (error) alertify.error(error.message);
+            });
         } else {
             var set = {};
             //need to checkout
             set.discount = defaultDiscount;
             set.quantity = (saleDetail.quantity + defaultQuantity);
             set.amount = (saleDetail.price * set.quantity) * (1 - defaultDiscount / 100);
-            Meteor.call('updateSaleDetails', saleDetail._id, set);
+            Meteor.call('updateSaleDetails', saleDetail._id, set, function (error, result) {
+                if (error) alertify.error(error.message);
+            });
         }
         $('#product-barcode').val('');
         $('#product-barcode').focus();
@@ -1057,7 +1046,7 @@ function addOrUpdateProductsOld(saleId, product, isRetail) {
         saleDetailObj.price = isRetail ? product.retailPrice : product.wholesalePrice;
         saleDetailObj.amount = (saleDetailObj.price * defaultQuantity) * (1 - defaultDiscount / 100);
         saleDetailObj.branchId = branchId;
-        Meteor.call('insertSaleAndSaleDetail', saleObj, saleDetailObj, function (e, r) {
+        Meteor.call('insertSaleAndSaleDetail', saleObj, saleDetailObj, function (error, saleId) {
             $('#product-barcode').focus();
             if (e) {
                 alertify.error("Can't make a sale.");
@@ -1066,7 +1055,7 @@ function addOrUpdateProductsOld(saleId, product, isRetail) {
                 $('#product-barcode').val('');
                 $('#product-barcode').focus();
                 $('#product-id').select2('val', '');
-                FlowRouter.go('pos.checkout', {saleId: r});
+                FlowRouter.go('pos.checkout', {saleId: saleId});
             }
         });
 
@@ -1179,10 +1168,7 @@ function pay(saleId) {
      return;
      }*/
     var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
-    obj._id = idGenerator.genWithPrefix(Pos.Collection.Payments, saleId, 3);
-    obj.paymentDate = new Date();
     obj.saleId = saleId;
-
     obj.payAmount = totalPay;
     obj.payAmount = numeral().unformat(numeral(totalPay).format('0,0.00'));
     obj.dueAmount = parseFloat($('#due-grand-total').text().trim());
@@ -1190,31 +1176,12 @@ function pay(saleId) {
     //obj.balanceAmount = numeral().unformat($('#' + baseCurrencyId).val());
     obj.status = obj.balanceAmount >= 0 ? "Paid" : "Owed";
     obj.branchId = branchId;
-    Meteor.call('insertPayment', obj);
-
-    Meteor.call('saleManageStock', saleId, branchId, function (er, re) {
-        if (er) alertify(er.message);
+    Meteor.call('insertPayment', obj, function (error, result) {
+        if (error) alertify.error(error.message);
     });
-    /*   var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
-     var prefix = branchId + "-";
-     saleDetails.forEach(function (sd) {
-     var product = Pos.Collection.Products.findOne(sd.productId);
-     if (product.productType == "Stock") {
-     var stock = Pos.Collection.Stocks.findOne({productId: sd.productId, branchId: branchId});
-     if (stock == null) {
-     var obj = {};
-     obj._id = idGenerator.genWithPrefix(Pos.Collection.Stocks, prefix, 6);
-     obj.productId = sd.productId;
-     obj.branchId = branchId;
-     obj.quantity = 0 - sd.quantity;
-     Meteor.call('insertStock', obj);
-     } else {
-     var set = {};
-     set.quantity = stock.quantity - sd.quantity;
-     Meteor.call('updateStock', stock._id, set);
-     }
-     }
-     });*/
+    Meteor.call('saleManageStock', saleId, branchId, function (error, result) {
+        if (error) alertify.error(error.message);
+    });
 }
 function checkIsUpdate() {
     var saleId = $('#sale-id').val();
@@ -1239,7 +1206,7 @@ function checkIsUpdate() {
     Session.set('hasUpdate', hasUpdate);
 }
 function prepareForm() {
-    setTimeout(function () {
+    Meteor.setTimeout(function () {
         Session.set('isRetail', true);
         Session.set('hasUpdate', false);
         $('#input-sale-date').val('');
