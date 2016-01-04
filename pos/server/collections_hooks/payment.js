@@ -1,6 +1,5 @@
 Pos.Collection.Payments.before.insert(function (userId, doc) {
     var prefix;
-    console.log(doc.saleId);
     prefix = doc.saleId ? doc.saleId + "S" : doc.purchaseId + "P";
     doc.paymentDate = doc.paymentDate ? doc.paymentDate : new Date();
     doc._id = idGenerator.genWithPrefix(Pos.Collection.Payments, prefix, 3);
