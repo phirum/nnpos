@@ -1,6 +1,7 @@
 Session.setDefault('hasLocationTransferUpdate', false);
 Session.setDefault('fromLocationId', '');
 Template.pos_locationTransfer.onRendered(function () {
+    Meteor.typeahead.inject();
     createNewAlertify(["location", "userStaff"]);
     $('#locationTransfer-date').datetimepicker({
         format: "MM/DD/YYYY hh:mm:ss A"
@@ -20,6 +21,31 @@ Template.pos_locationTransfer.onRendered(function () {
     }, 500);
 });
 Template.pos_locationTransfer.helpers({
+    search: function (query, sync, callback) {
+        Meteor.call('searchProduct', query, {}, function (err, res) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            callback(res);
+        });
+    },
+    selected: function (event, suggestion, dataSetName) {
+        var id = suggestion._id;
+        if (id == "") return;
+        var locationTransferId = $('#locationTransfer-id').val();
+        var branchId = Session.get('currentBranch');
+        var data = getValidatedValues('id', id, branchId, locationTransferId);
+        if (data.valid) {
+            addOrUpdateProducts(branchId, locationTransferId, data.product, data.locationTransferObj);
+        } else {
+            alertify.warning(data.message);
+        }
+        $('#product-id').select2('val', '');
+        $('#product-barcode').val('');
+        $('#product-barcode').focus();
+
+    },
     imeis: function () {
         var locationTransferDetailId = Session.get('locationTransferDetailId');
         if (locationTransferDetailId != null) {
@@ -346,7 +372,7 @@ Template.pos_locationTransfer.events({
         var locationId = this.fromLocationId;//$('#from-location-id').val();
         var branchId = Session.get('currentBranch');
         var ltdId = this._id;
-        var ltId=$('#locationTransfer-id').val();
+        var ltId = $('#locationTransfer-id').val();
         var set = {};
         set.quantity = quantity;
         //set.amount = (this.price * quantity) * (1 - this.discount / 100);
@@ -479,19 +505,19 @@ function getValidatedValues(fieldName, val, branchId, locationTransferId) {
     }
 
     var fromLocationId = $('#from-location-id').val();
-    if (fromLocationId == "" || fromLocationId==null) {
+    if (fromLocationId == "" || fromLocationId == null) {
         data.valid = false;
         data.message = "Please select From Location.";
         return data;
     }
     var toLocationId = $('#to-location-id').val();
-    if (toLocationId == "" || toLocationId==null) {
+    if (toLocationId == "" || toLocationId == null) {
         data.valid = false;
         data.message = "Please select To Location.";
         return data;
     }
     var staffId = $('#staff-id').val();
-    if (staffId == '' || staffId==null) {
+    if (staffId == '' || staffId == null) {
         data.valid = false;
         data.message = "Please select staff name.";
         return data;
