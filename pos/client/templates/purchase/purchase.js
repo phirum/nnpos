@@ -50,14 +50,14 @@ Template.pos_purchase.helpers({
                     product.defaultPrice = defaultPrice;
                     if (defaultPrice >= product.wholesalePrice) {
                         alertify.alert('Are you sure to purchase this purchase? ' +
-                            'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
+                                'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
                             .set({
                                 title: "Price should be changed."
                             });
                     }
                     else if (defaultPrice >= product.wholesalePrice) {
                         alertify.alert('Are you sure to purchase this purchase? ' +
-                            'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
+                                'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
                             .set({
                                 title: "Price should be changed."
                             });
@@ -247,7 +247,8 @@ Template.pos_purchase.events({
     },
     'keyup #input-imei': function (e) {
         if (e.which == 13) {
-            var imei = $(e.currentTarget).val().trim();
+            var element = $(e.currentTarget);
+            var imei = element.val().trim();
             if (imei == "") {
                 return;
             }
@@ -263,19 +264,31 @@ Template.pos_purchase.events({
                 return;
             }
             else {
-                imeis.push(imei);
-            }
-            obj.imei = imeis;
-            Meteor.call('updatePurchaseDetails', purchaseDetailId, obj,
-                function (er, re) {
-                    if (er) {
-                        alertify.error(er.message);
+                Meteor.call('isExistIMEI', imei, function (error, exist) {
+                    if (error) {
+                        alertify.error(error.message);
                     } else {
-                        $(e.currentTarget).val('');
-                        $(e.currentTarget).focus();
+                        if (!exist) {
+                            imeis.push(imei);
+                            obj.imei = imeis;
+                            Meteor.call('updatePurchaseDetails', purchaseDetailId, obj,
+                                function (er, re) {
+                                    if (er) {
+                                        alertify.error(er.message);
+                                    } else {
+                                        element.val('');
+                                        element.focus();
+                                    }
+                                }
+                            );
+                        } else {
+                            alertify.warning('IMEI already Exist.');
+                        }
+
                     }
-                }
-            );
+                });
+            }
+
         }
     },
     'click .btn-imei': function () {
@@ -729,14 +742,14 @@ Template.pos_purchase.events({
                         product.defaultPrice = defaultPrice;
                         if (defaultPrice >= product.wholesalePrice) {
                             alertify.alert('Are you sure to purchase this purchase? ' +
-                                'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
+                                    'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
                                 .set({
                                     title: "Price should be changed."
                                 });
                         }
                         else if (defaultPrice >= product.wholesalePrice) {
                             alertify.alert('Are you sure to purchase this purchase? ' +
-                                'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
+                                    'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
                                 .set({
                                     title: "Price should be changed."
                                 });
@@ -765,7 +778,7 @@ function addOrUpdateProducts(branchId, purchaseId, product, purchaseObj) {
         // var exchange=parseFloat($('#last-exchange-rate').text());
         var totalDiscount = $('#total_discount').val() == "" ? 0 : parseFloat($('#total_discount').val());
         // var purchaseObj = {};
-        purchaseObj._id = newId;
+        //purchaseObj._id = newId;
         //purchaseObj.supplierId = supplierId;
         //purchaseObj.staffId = staffId;
         purchaseObj.status = "Unsaved";

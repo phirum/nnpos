@@ -5,7 +5,7 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         var todayDate = moment().format('YYYYMMDD');
-        var prefix = sale.branchId + "-" + todayDate;
+        var prefix = purchase.branchId + "-" + todayDate;
         var purchaseId = idGenerator.genWithPrefix(Pos.Collection.Purchases, prefix, 4);
         purchase._id = purchaseId;
         Pos.Collection.Purchases.insert(purchase);
@@ -77,5 +77,10 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         Pos.Collection.Purchases.remove(purchaseId);
+    },
+    isExistIMEI: function (imei) {
+        var saleDetail = Pos.Collection.SaleDetails.findOne({imei: {"$in": [imei]}});
+        var inventory = Pos.Collection.FIFOInventory.findOne({imei: {"$in": [imei]}});
+        return (saleDetail || inventory);
     }
 });
