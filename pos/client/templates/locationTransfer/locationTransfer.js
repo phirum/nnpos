@@ -81,7 +81,7 @@ function checkBeforeAddOrUpdate(selector, data) {
                 //---End Inventory type block "FIFO Inventory"---
             }
             else {
-                addOrUpdateProducts(branchId, locationTransferId, product, data.locationTransferObj);
+                alertify.warning('This Product is non-stock type.')
             }
 
         }
@@ -435,7 +435,7 @@ Template.pos_locationTransfer.events({
 
         var val = $(e.currentTarget).val();
         var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
-
+        var self = this;
         var firstQuantity = this.quantity;
         var quantity = parseInt($(e.currentTarget).val() == "" ? 0 : $(e.currentTarget).val());
         if (!numericReg.test(val) || quantity <= 0) {
@@ -443,27 +443,12 @@ Template.pos_locationTransfer.events({
             $(e.currentTarget).focus();
             return;
         }
-        if (this.imei.count() > quantity) {
+        if (self.imei.count() > quantity) {
             alertify.warning("Quantity can't be less than number of IMEI.");
             $(e.currentTarget).val(firstQuantity);
             return;
         }
-
-        var locationId = this.fromLocationId;//$('#from-location-id').val();
-        var branchId = Session.get('currentBranch');
-        var ltdId = this._id;
-        var ltId = $('#locationTransfer-id').val();
-        var set = {};
-        set.quantity = quantity;
-        //set.amount = (this.price * quantity) * (1 - this.discount / 100);
-
-        var data = locationTransferStock(this.productId, quantity, branchId, ltId, locationId);
-        if (data.valid) {
-            Meteor.call('updateLocationTransferDetails', ltdId, set);
-        } else {
-            alertify.warning(data.message);
-            $(e.currentTarget).val(firstQuantity);
-        }
+        locationTransferStock(self, firstQuantity, quantity, e);
         // updateLocationTransferSubTotal(FlowRouter.getParam('locationTransferId'));
     },
     'click .btn-remove': function () {
@@ -515,64 +500,78 @@ Template.pos_locationTransfer.events({
             } else {
                 alertify.warning(data.message);
             }
-
             $('#product-barcode').val('');
             $('#product-barcode').focus();
         }
     }
 });
-function locationTransferStock(productId, newQty, branchId, locationTransferId, locationId) {
-    var data = {};
-    var product = Pos.Collection.Products.findOne(productId);
-    if (product.productType == "Stock") {
-        //---Open Inventory type block "FIFO Inventory"---
-        var inventory = Pos.Collection.FIFOInventory.findOne({
-            branchId: branchId,
-            productId: productId,
-            locationId: locationId
-            //price: pd.price
-        }, {sort: {createdAt: -1}});
-        if (inventory != null) {
-            var remainQuantity = inventory.remainQty - newQty;
-            if (remainQuantity < 0) {
-                data.valid = false;
-                data.message = 'Product is out of stock. Quantity in stock is "' + inventory.remainQty + '".';
-                return data;
-            }
-            debugger;
-            var unSavedLocationTransferId = Pos.Collection.LocationTransfers.find({
-                status: "Unsaved",
-                branchId: Session.get('currentBranch'),
-                _id: {$ne: locationTransferId}
-            }).map(function (s) {
-                return s._id;
-            });
-            var otherLocationTransferDetails = Pos.Collection.LocationTransferDetails.find({
-                locationTransferId: {$in: unSavedLocationTransferId},
-                productId: product._id
-            });
-            var otherQuantity = 0;
-            if (otherLocationTransferDetails != null) {
-                otherLocationTransferDetails.forEach(function (sd) {
-                    otherQuantity += sd.quantity;
-                });
-            }
-            remainQuantity = remainQuantity - otherQuantity;
-            if (remainQuantity < 0) {
-                data.valid = false;
-                data.message = 'Product is out of stock. Quantity in stock is "' +
-                    inventory.remainQty + '". And quantity on locationTransfer of other seller is "' + otherQuantity + '".';
-                return data;
+function locationTransferStock(self, oldQty, newQty, e) {
+    var productId = self.productId;
+    var locationId = self.fromLocationId;//$('#from-location-id').val();
+    var branchId = Session.get('currentBranch');
+    var locationTransferDetailId = self._id;
+    var locationTransferId = $('#locationTransfer-id').val();
+    Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: productId}, {}, function (error, product) {
+        if (product) {
+            if (product.productType == "Stock") {
+                //---Open Inventory type block "FIFO Inventory"---
+                Meteor.call('findOneRecord', 'Pos.Collection.FIFOInventory',
+                    {
+                        branchId: branchId,
+                        productId: productId,
+                        locationId: locationId
+                    }, {sort: {createdAt: -1}}, function (error, inventory) {
+                        if (inventory) {
+                            var remainQuantity = inventory.remainQty - newQty;
+                            if (remainQuantity < 0) {
+                                $(e.currentTarget).val(oldQty);
+                                alertify.warning('Product is out of stock. Quantity in stock is "' + inventory.remainQty + '".');
+                            } else {
+                                var unSavedLocationTransferId = Pos.Collection.LocationTransfers.find({
+                                    status: "Unsaved",
+                                    branchId: Session.get('currentBranch'),
+                                    _id: {$ne: locationTransferId}
+                                }).map(function (s) {
+                                    return s._id;
+                                });
+                                var otherLocationTransferDetails = Pos.Collection.LocationTransferDetails.find({
+                                    locationTransferId: {$in: unSavedLocationTransferId},
+                                    productId: product._id
+                                });
+                                var otherQuantity = 0;
+                                if (otherLocationTransferDetails.count() > 0) {
+                                    otherLocationTransferDetails.forEach(function (sd) {
+                                        otherQuantity += sd.quantity;
+                                    });
+                                }
+                                remainQuantity = remainQuantity - otherQuantity;
+                                if (remainQuantity < 0) {
+                                    $(e.currentTarget).val(oldQty);
+                                    alertify.warning('Product is out of stock. Quantity in stock is "' +
+                                        inventory.remainQty + '". And quantity on locationTransfer of other seller is "' + otherQuantity + '".');
+                                } else {
+                                    var set = {};
+                                    set.quantity = newQty;
+                                    Meteor.call('updateLocationTransferDetails', locationTransferDetailId, set);
+                                }
+                            }
+                        } else {
+                            $(e.currentTarget).val(oldQty);
+                            alertify.warning("Don't have product in stock.");
+                        }
+                    });
+
+            } else {
+                $(e.currentTarget).val(oldQty);
+                alertify.warning('This Product is non-stock type.');
             }
         } else {
-            data.valid = false;
-            data.message = "Don't have product in stock.";
-            return data;
+            alertify.warning("Can't find this product.");
+            $(e.currentTarget).val(oldQty);
         }
-    }
-    data.valid = true;
-    data.message = "Product is OK.";
-    return data;
+
+    });
+
 }
 function getValidatedValues() {
     var data = {};

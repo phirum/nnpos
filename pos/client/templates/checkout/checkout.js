@@ -699,7 +699,7 @@ Template.pos_checkout.events({
             $(e.currentTarget).val(firstQuantity);
             return;
         }
-        var data = checkoutStock(self, firstQuantity, quantity, e);
+        checkoutStock(self, firstQuantity, quantity, e);
         /*  if (data.valid) {
          Meteor.call('updateSaleDetails', sdId, set);
          } else {
@@ -834,6 +834,7 @@ function checkoutStock(self, oldQty, newQty, e) {
                             }
                             remainQuantity = remainQuantity - otherQuantity;
                             if (remainQuantity < 0) {
+                                $(e.currentTarget).val(oldQty);
                                 alertify.warning('Product is out of stock. Quantity in stock is "' +
                                     inventory.remainQty + '". And quantity on sale of other seller is "' + otherQuantity + '".');
 
