@@ -13,9 +13,10 @@ posProductTPL.events({
         alertify.product(fa("plus", "Add New Product"), renderTemplate(posProductInsertTPL)).maximize();
     },
     'click .update': function (e, t) {
-        Session.set('CategoryIdSession', null);
-        var data = Pos.Collection.Products.findOne(this._id);
-        alertify.product(fa('pencil', 'Update Existing Product'), renderTemplate(posProductUpdateTPL, data)).maximize();
+        Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: this._id}, {}, function (error, product) {
+            Session.set('CategoryIdSession', null);
+            alertify.product(fa('pencil', 'Update Existing Product'), renderTemplate(posProductUpdateTPL, product)).maximize();
+        });
     },
     'click .remove': function (e, t) {
         var id = this._id;

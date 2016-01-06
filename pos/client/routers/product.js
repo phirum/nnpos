@@ -19,10 +19,11 @@ posRoutes.route('/product', {
             'pos_image',
             Meteor.subscribe('images')
         );
-        this.register(
-            'pos_product',
-            Meteor.subscribe('posProduct')
-        );
+        /*
+         this.register(
+         'pos_product',
+         Meteor.subscribe('posProduct')
+         );*/
         this.register(
             'pos_category',
             Meteor.subscribe('posCategory')

@@ -80,6 +80,11 @@ Pos.Schema.Products = new SimpleSchema({
         }
     }
     ,
+    description: {
+        type: String,
+        label: "Description",
+        optional: true
+    },
     /*subCategoryId: {
         type: String,
         label: "Sub Category",

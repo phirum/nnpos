@@ -3,7 +3,7 @@ var posSaleShow = Template.pos_saleShow;
 
 
 posSaleListTPL.onRendered(function () {
-    createNewAlertify(['saleShow'],{size:'lg'});
+    createNewAlertify(['saleShow'], {size: 'lg'});
 });
 
 posSaleListTPL.helpers({
