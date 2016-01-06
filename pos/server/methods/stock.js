@@ -256,6 +256,7 @@ Meteor.methods({
                 fifoInventoryInsert(branchId, pd, prefix);
             });
             //--- End Inventory type block "FIFO Inventory"---
+            Pos.Collection.PurchaseDetails.direct.update({purchaseId: purchaseId}, {$set: {status: "Saved"}}, {multi: true});
         });
     },
     saleManageStock: function (saleId, branchId) {
@@ -310,6 +311,7 @@ Meteor.methods({
                     var setObj = {};
                     setObj.transaction = transaction;
                     setObj.totalCost = 0;
+                    setObj.status = "Saved";
                     if (transaction.count() > 0) {
                         transaction.forEach(function (t) {
                             setObj.totalCost += parseFloat(t.price) * parseFloat(t.quantity);
@@ -389,6 +391,7 @@ Meteor.methods({
                     }
                     var setObj = {};
                     setObj.transaction = transaction;
+                    setObj.status = "Saved";
                     Pos.Collection.LocationTransferDetails.direct.update(
                         ltd._id,
                         {$set: setObj}
@@ -453,6 +456,5 @@ Meteor.methods({
             //--- End Inventory type block "FIFO Inventory"---
         });
     }
-})
-;
+});
 

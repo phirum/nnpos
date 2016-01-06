@@ -67,11 +67,11 @@ posRoutes.route('/purchase/:purchaseId?', {
         );
         this.register(
             'pos_purchase',
-            Meteor.subscribe('posPurchase', {branchId: branchId})
+            Meteor.subscribe('posPurchase', {branchId: branchId, status: "Unsaved"})
         );
         this.register(
             'pos_purchaseDetail',
-            Meteor.subscribe('posPurchaseDetail', {branchId: branchId})
+            Meteor.subscribe('posPurchaseDetail', {branchId: branchId, status: "Unsaved"})
         );
         /* this.register(
          'pos_product',

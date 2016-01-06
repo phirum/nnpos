@@ -958,6 +958,7 @@ function addOrUpdateProducts(branchId, saleId, isRetail, product, saleObj) {
         saleDetailObj.amount = (saleDetailObj.price * defaultQuantity) * (1 - defaultDiscount / 100);
         saleDetailObj.branchId = branchId;
         saleDetailObj.locationId = saleObj.locationId;
+        saleDetailObj.status = "Unsaved";
         Meteor.call('insertSaleAndSaleDetail', saleObj, saleDetailObj, function (error, saleId) {
             if (saleId) {
                 $('#product-barcode').val('');
@@ -988,6 +989,7 @@ function addOrUpdateProducts(branchId, saleId, isRetail, product, saleObj) {
             saleDetailObj.branchId = branchId;
             saleDetailObj.locationId = saleObj.locationId;
             saleDetailObj.imei = [];
+            saleDetailObj.status = "Unsaved";
             Meteor.call('insertSaleDetails', saleDetailObj, function (error, result) {
                 if (error) alertify.error(error.message);
             });

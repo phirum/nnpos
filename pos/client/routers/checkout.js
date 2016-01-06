@@ -37,7 +37,7 @@ posRoutes.route('/checkout/:saleId?', {
         );
         this.register(
             'pos_saleDetail',
-            Meteor.subscribe('posSaleDetail', {branchId: branchId, totalCost: null})
+            Meteor.subscribe('posSaleDetail', {branchId: branchId, status: "Unsaved"})
         );
         /*this.register(
          'pos_product',

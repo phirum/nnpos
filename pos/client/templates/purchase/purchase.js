@@ -43,24 +43,28 @@ Template.pos_purchase.helpers({
         if (data.valid) {
             Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: id}, {}, function (error, product) {
                 if (product) {
-                    var defaultPrice = $('#default-price').val() == "" ? product.purchasePrice : parseFloat($('#default-price').val());
-                    product.defaultPrice = defaultPrice;
-                    addOrUpdateProducts(branchId, purchaseId, product, data.purchaseObj);
-                    var defaultPrice = $('#default-price').val() == "" ? product.purchasePrice : parseFloat($('#default-price').val());
-                    product.defaultPrice = defaultPrice;
-                    if (defaultPrice >= product.wholesalePrice) {
-                        alertify.alert('Are you sure to purchase this purchase? ' +
-                                'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
-                            .set({
-                                title: "Price should be changed."
-                            });
-                    }
-                    else if (defaultPrice >= product.wholesalePrice) {
-                        alertify.alert('Are you sure to purchase this purchase? ' +
-                                'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
-                            .set({
-                                title: "Price should be changed."
-                            });
+                    if (product.productType == "Stock") {
+                        var defaultPrice = $('#default-price').val() == "" ? product.purchasePrice : parseFloat($('#default-price').val());
+                        product.defaultPrice = defaultPrice;
+                        addOrUpdateProducts(branchId, purchaseId, product, data.purchaseObj);
+                        var defaultPrice = $('#default-price').val() == "" ? product.purchasePrice : parseFloat($('#default-price').val());
+                        product.defaultPrice = defaultPrice;
+                        if (defaultPrice >= product.wholesalePrice) {
+                            alertify.alert('Are you sure to purchase this purchase? ' +
+                                    'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
+                                .set({
+                                    title: "Price should be changed."
+                                });
+                        }
+                        else if (defaultPrice >= product.wholesalePrice) {
+                            alertify.alert('Are you sure to purchase this purchase? ' +
+                                    'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
+                                .set({
+                                    title: "Price should be changed."
+                                });
+                        }
+                    } else {
+                        alertify.warning('This Product is non-stock type.');
                     }
 
                 } else {
@@ -731,35 +735,40 @@ Template.pos_purchase.events({
             var barcode = $('#product-barcode').val();
             Meteor.call('findOneRecord', 'Pos.Collection.Products', {barcode: barcode}, {}, function (error, product) {
                 if (product) {
-                    var purchaseId = $('#purchase-id').val();
-                    var branchId = Session.get('currentBranch');
-                    var data = getValidatedValues();
-                    if (data.valid) {
-                        var defaultPrice = $('#default-price').val() == "" ? product.purchasePrice : parseFloat($('#default-price').val());
-                        product.defaultPrice = defaultPrice;
-                        addOrUpdateProducts(branchId, purchaseId, product, data.purchaseObj);
-                        var defaultPrice = $('#default-price').val() == "" ? product.purchasePrice : parseFloat($('#default-price').val());
-                        product.defaultPrice = defaultPrice;
-                        if (defaultPrice >= product.wholesalePrice) {
-                            alertify.alert('Are you sure to purchase this purchase? ' +
-                                    'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
-                                .set({
-                                    title: "Price should be changed."
-                                });
+                    if (product.productType == "Stock") {
+                        var purchaseId = $('#purchase-id').val();
+                        var branchId = Session.get('currentBranch');
+                        var data = getValidatedValues();
+                        if (data.valid) {
+                            var defaultPrice = $('#default-price').val() == "" ? product.purchasePrice : parseFloat($('#default-price').val());
+                            product.defaultPrice = defaultPrice;
+                            addOrUpdateProducts(branchId, purchaseId, product, data.purchaseObj);
+                            var defaultPrice = $('#default-price').val() == "" ? product.purchasePrice : parseFloat($('#default-price').val());
+                            product.defaultPrice = defaultPrice;
+                            if (defaultPrice >= product.wholesalePrice) {
+                                alertify.alert('Are you sure to purchase this purchase? ' +
+                                        'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
+                                    .set({
+                                        title: "Price should be changed."
+                                    });
+                            }
+                            else if (defaultPrice >= product.wholesalePrice) {
+                                alertify.alert('Are you sure to purchase this purchase? ' +
+                                        'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
+                                    .set({
+                                        title: "Price should be changed."
+                                    });
+                            }
+                        } else {
+                            alertify.warning(data.message);
+                            $('#product-id').val('');
+                            $('#product-barcode').val('');
+                            $('#product-barcode').focus();
+                            return;
                         }
-                        else if (defaultPrice >= product.wholesalePrice) {
-                            alertify.alert('Are you sure to purchase this purchase? ' +
-                                    'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
-                                .set({
-                                    title: "Price should be changed."
-                                });
-                        }
-                    } else {
-                        alertify.warning(data.message);
-                        $('#product-id').val('');
-                        $('#product-barcode').val('');
-                        $('#product-barcode').focus();
-                        return;
+                    }
+                    else {
+                        alertify.warning('This Product is non-stock type.');
                     }
                 } else {
                     alertify.warning("Cant't find this product.");
@@ -774,7 +783,6 @@ function addOrUpdateProducts(branchId, purchaseId, product, purchaseObj) {
     var defaultDiscount = $('#default-discount').val() == "" ? 0 : parseFloat($('#default-discount').val());
     debugger;
     if (purchaseId == '') {
-
         // var exchange=parseFloat($('#last-exchange-rate').text());
         var totalDiscount = $('#total_discount').val() == "" ? 0 : parseFloat($('#total_discount').val());
         // var purchaseObj = {};
@@ -798,6 +806,7 @@ function addOrUpdateProducts(branchId, purchaseId, product, purchaseObj) {
         purchaseDetailObj.amount = (purchaseDetailObj.price * defaultQuantity) * (1 - defaultDiscount / 100);
         purchaseDetailObj.branchId = branchId;
         purchaseDetailObj.locationId = purchaseObj.locationId;
+        purchaseDetailObj.status = "Unsaved";
         Meteor.call('insertPurchaseAndPurchaseDetail',
             purchaseObj,
             purchaseDetailObj,
@@ -830,6 +839,7 @@ function addOrUpdateProducts(branchId, purchaseId, product, purchaseObj) {
             purchaseDetailObj.amount = (purchaseDetailObj.price * defaultQuantity) * (1 - defaultDiscount / 100);
             purchaseDetailObj.branchId = branchId;
             purchaseDetailObj.locationId = purchaseObj.locationId;
+            purchaseDetailObj.status = "Unsaved";
             Meteor.call('insertPurchaseDetails', purchaseDetailObj, function (error, result) {
                 if (error) alertify.error(error.message);
             });

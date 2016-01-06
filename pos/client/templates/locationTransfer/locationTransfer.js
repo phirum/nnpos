@@ -81,7 +81,7 @@ function checkBeforeAddOrUpdate(selector, data) {
                 //---End Inventory type block "FIFO Inventory"---
             }
             else {
-                alertify.warning('This Product is non-stock type.')
+                alertify.warning('This Product is non-stock type.');
             }
 
         }
@@ -224,50 +224,49 @@ Template.pos_locationTransfer.events({
     'keyup #input-imei': function (e) {
         if (e.which == 13) {
             var branchId = Session.get('currentBranch');
-            var imei = $(e.currentTarget).val().trim();
+            var element = $(e.currentTarget);
+            var imei = element.val().trim();
             if (imei == "") {
                 return;
             }
             var locationTransferDetailId = Session.get('locationTransferDetailId');
             var locationTransferDetail = Pos.Collection.LocationTransferDetails.findOne(locationTransferDetailId);
-            var inventoryType = 1;
-            var inventory;
-            if (inventoryType == 1) {
-                inventory = Pos.Collection.FIFOInventory.findOne({
-                    branchId: branchId,
-                    productId: locationTransferDetail.productId
-                    //price: pd.price
-                }, {sort: {createdAt: -1}});
-            }
-            if (inventory != null) {
-                if (inventory.imei == null || inventory.imei.indexOf(imei) == -1) {
-                    alertify.warning("Can't find this IMEI.");
-                    return;
+
+            //---Open Inventory type block "FIFO Inventory"---
+            Meteor.call('findOneRecord', 'Pos.Collection.FIFOInventory', {
+                branchId: branchId,
+                productId: locationTransferDetail.productId
+                //price: pd.price
+            }, {sort: {createdAt: -1}}, function (error, inventory) {
+                if (inventory) {
+                    if (inventory.imei == null || inventory.imei.indexOf(imei) == -1) {
+                        alertify.warning("Can't find this IMEI.");
+                    } else {
+                        var obj = {};
+                        var imeis = locationTransferDetail.imei == null ? [] : locationTransferDetail.imei;
+                        if (imeis.indexOf(imei) != -1) {
+                            alertify.warning('IMEI is already exist.');
+                        } else if (locationTransferDetail.imei.count() == locationTransferDetail.quantity) {
+                            alertify.warning("Number of IMEI can't greater than Quantity.");
+                        } else {
+                            imeis.push(imei);
+                            obj.imei = imeis;
+                            Meteor.call('updateLocationTransferDetails', locationTransferDetailId, obj, function (er, re) {
+                                if (er) {
+                                    alertify.error(er.message);
+                                } else {
+                                    element.val('');
+                                    element.focus();
+                                }
+                            });
+                        }
+                    }
                 }
-            } else {
-                alertify.error("Product is out of stock.");
-                return;
-            }
-            var obj = {};
-            var imeis = locationTransferDetail.imei == null ? [] : locationTransferDetail.imei;
-            if (imeis.indexOf(imei) != -1) {
-                alertify.warning('IMEI is already exist.');
-                return;
-            } else if (locationTransferDetail.imei.count() == locationTransferDetail.quantity) {
-                alertify.warning("Number of IMEI can't greater than Quantity.");
-                return;
-            } else {
-                imeis.push(imei);
-            }
-            obj.imei = imeis;
-            Meteor.call('updateLocationTransferDetails', locationTransferDetailId, obj, function (er, re) {
-                if (er) {
-                    alertify.error(er.message);
-                } else {
-                    $(e.currentTarget).val('');
-                    $(e.currentTarget).focus();
+                else {
+                    alertify.error("Product is out of stock.");
                 }
             });
+            //---Open Inventory type block "FIFO Inventory"---
         }
     },
     'click .btn-imei': function () {
@@ -625,6 +624,7 @@ function addOrUpdateProducts(branchId, locationTransferId, product, locationTran
         locationTransferDetailObj.fromLocationId = locationTransferObj.fromLocationId;
         locationTransferDetailObj.toLocationId = locationTransferObj.toLocationId;
         locationTransferDetailObj.imei = [];
+        locationTransferDetailObj.status="Unsaved";
         Meteor.call('insertLocationTransferAndLocationTransferDetail', locationTransferObj, locationTransferDetailObj, function (e, r) {
             $('#product-barcode').focus();
             if (e) {
@@ -652,6 +652,7 @@ function addOrUpdateProducts(branchId, locationTransferId, product, locationTran
             locationTransferDetailObj.fromLocationId = locationTransferObj.fromLocationId;
             locationTransferDetailObj.toLocationId = locationTransferObj.toLocationId;
             locationTransferDetailObj.imei = [];
+            locationTransferDetailObj.status="Unsaved";
             Meteor.call('insertLocationTransferDetails', locationTransferDetailObj);
         } else {
             var set = {};

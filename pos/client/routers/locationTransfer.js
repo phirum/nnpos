@@ -4,16 +4,16 @@ posRoutes.route('/locationTransfer/:locationTransferId?', {
         var branchId = Session.get('currentBranch');
         this.register(
             'pos_locationTransfer',
-            Meteor.subscribe('posLocationTransfer', {branchId: branchId})
+            Meteor.subscribe('posLocationTransfer', {branchId: branchId, status: "Unsaved"})
         );
         this.register(
             'pos_locationTransferDetail',
-            Meteor.subscribe('posLocationTransferDetail', {branchId: branchId})
+            Meteor.subscribe('posLocationTransferDetail', {branchId: branchId, status: "Unsaved"})
         );
-        this.register(
-            'pos_product',
-            Meteor.subscribe('posProduct')
-        );
+        /*this.register(
+         'pos_product',
+         Meteor.subscribe('posProduct')
+         );*/
         this.register(
             'pos_staff',
             Meteor.subscribe('posStaff', {branchId: branchId})
@@ -30,22 +30,22 @@ posRoutes.route('/locationTransfer/:locationTransferId?', {
             'pos_exchangeRate',
             Meteor.subscribe('posExchangeRate', {branchId: branchId})
         );
-        this.register(
-            'pos_stock',
-            Meteor.subscribe('posStock', {branchId: branchId})
-        );
-        this.register(
-            'pos_fifoInventory',
-            Meteor.subscribe('posFIFOInventory', {branchId: branchId})
-        );
-        this.register(
-            'pos_lifoInventory',
-            Meteor.subscribe('posLIFOInventory', {branchId: branchId})
-        );
-        this.register(
-            'pos_averageInventory',
-            Meteor.subscribe('posAverageInventory', {branchId: branchId})
-        );
+        /* this.register(
+         'pos_stock',
+         Meteor.subscribe('posStock', {branchId: branchId})
+         );
+         this.register(
+         'pos_fifoInventory',
+         Meteor.subscribe('posFIFOInventory', {branchId: branchId})
+         );
+         this.register(
+         'pos_lifoInventory',
+         Meteor.subscribe('posLIFOInventory', {branchId: branchId})
+         );
+         this.register(
+         'pos_averageInventory',
+         Meteor.subscribe('posAverageInventory', {branchId: branchId})
+         );*/
         this.register(
             'pos_location',
             Meteor.subscribe('posLocation')
