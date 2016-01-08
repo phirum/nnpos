@@ -5,7 +5,7 @@
             <img src="{{url}}" width="80px" height="80px" class="img-circle">
         </div>
         <div class="col-lg-9">
-           <b style="font-size: 18px;">{{name}}</b></p>
+            <p><b style="font-size: 18px;">{{name}}</b></p>
             <p>
                 {{description}}
             </p>
@@ -85,6 +85,7 @@
                             <label for="description">Description</label>
                             <textarea id="description" class="form-control"
                                       rows="4">{{purchase.description}}</textarea>
+
                             <div style="margin-top:5px">
                                 {{#if purchaseHasUpdate}}
                                     <a class="btn btn-primary btn-sm" id="btn-update-purchase-data">Update</a>

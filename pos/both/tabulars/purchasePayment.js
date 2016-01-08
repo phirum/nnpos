@@ -1,6 +1,6 @@
 Pos.TabularTable.PurchasePayments = new Tabular.Table({
     name: "posPurchasePaymentList",
-    collection: Pos.Collection.Payments,
+    collection: Pos.Collection.PurchasePayments,
     columns: [
         // {data: "_id", title: "ID"},
         {

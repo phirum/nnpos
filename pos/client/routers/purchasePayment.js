@@ -15,13 +15,13 @@ var subs = new SubsManager();
 posRoutes.route('/purchasePayment', {
     name: 'pos.purchasePayment',
     subscriptions: function (params, queryParams) {
-        this.register(
+        /*this.register(
             'pos_purchasePayment',
             Meteor.subscribe('posPayment',{branchId:Session.get('currentBranch')})
-        );
+        );*/
         this.register(
             'pos_purchase',
-            Meteor.subscribe('posPurchase',{branchId:Session.get('currentBranch')})
+            Meteor.subscribe('posPurchase',{branchId:Session.get('currentBranch'),status:"Owed"})
         );
         this.register(
             'pos_supplier',

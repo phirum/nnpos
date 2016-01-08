@@ -41,10 +41,19 @@ Template.pos_purchaseList.events({
     },
     'click .show': function (e, t) {
         //var purchase = Pos.Collection.Purchases.findOne(this._id);
-        this.pDate = moment(this.purchaseDate).format("YYYY-MM-DD HH:mm:ss");
-        this.saleDetails = Pos.Collection.PurchaseDetails.find({purchaseId: this._id});
-        this.retail = this.isRetail ? "Retail" : "Wholesale";
-        alertify.purchaseShow(fa('eye', 'Purchase Detail'),
-            renderTemplate(Template.pos_purchaseShow, this));
+        var self = this;
+        self.pDate = moment(this.purchaseDate).format("YYYY-MM-DD HH:mm:ss");
+        //this.saleDetails = Pos.Collection.PurchaseDetails.find({purchaseId: this._id});
+        self.retail = this.isRetail ? "Retail" : "Wholesale";
+        Meteor.call('findRecords', 'Pos.Collection.PurchaseDetails', {purchaseId: this._id}, {},
+            function (error, purchaseDetails) {
+                if (purchaseDetails) {
+                    self.purchaseDetails = purchaseDetails;
+                    alertify.purchaseShow(fa('eye', 'Purchase Detail'),
+                        renderTemplate(Template.pos_purchaseShow, self));
+                }
+
+            })
+
     }
 });

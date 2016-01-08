@@ -36,14 +36,14 @@ var subs = new SubsManager();
 posRoutes.route('/purchaseList', {
     name: 'pos.purchaseList',
     subscriptions: function (params, queryParams) {
-        this.register(
+        /*this.register(
             'pos_purchase',
             subs.subscribe('posPurchase')
         );
         this.register(
             'pos_purchaseDetail',
             subs.subscribe('posPurchaseDetail')
-        );
+        );*/
     },
     action: function (params, queryParams) {
         Layout.main('pos_purchaseList');

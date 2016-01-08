@@ -48,11 +48,20 @@ posSaleListTPL.events({
     },
     'click .show': function (e, t) {
         //var sale=Pos.Collection.Sales.findOne(this._id);
-        this.sDate = moment(this.saleDate).format("YYYY-MM-DD HH:mm:ss");
-        this.saleDetails = Pos.Collection.SaleDetails.find({saleId: this._id});
-        this.retail = this.isRetail ? "Retail" : "Wholesale";
+        var self = this;
+        self.sDate = moment(this.saleDate).format("YYYY-MM-DD HH:mm:ss");
+        //self.saleDetails = Pos.Collection.SaleDetails.find({saleId: this._id});
+        self.retail = this.isRetail ? "Retail" : "Wholesale";
+        Meteor.call('findRecords', 'Pos.Collection.SaleDetails', {saleId: this._id}, {},
+            function (error, saleDetails) {
+                if (saleDetails) {
+                    self.saleDetails = saleDetails;
+                    alertify.saleShow(fa('eye', 'Sale Detail'), renderTemplate(posSaleShow, self));
+                } else {
+                    alertify.error(error.message);
+                }
+            });
 
-        alertify.saleShow(fa('eye', 'Sale Detail'), renderTemplate(posSaleShow, this));
 
     }
 });
