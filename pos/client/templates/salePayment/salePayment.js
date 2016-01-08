@@ -9,7 +9,7 @@ posSalePaymentTPL.onRendered(function () {
 posSalePaymentTPL.helpers({
     selector: function () {
         var selector = {};
-        selector.purchaseId = null;
+        //selector.purchaseId = null;
         selector.branchId = Session.get('currentBranch');
         return selector;
     }
@@ -19,48 +19,87 @@ posSalePaymentTPL.events({
         alertify.salePayment(fa('plus', 'Add New Payment'), renderTemplate(posSalePaymentInsertTPL)).maximize();
     },
     'click .update': function (e, t) {
-        var data = Pos.Collection.Payments.findOne(this._id);
-        Session.set('paymentObj', data);
-        var payment = Pos.Collection.Payments.findOne({
-                saleId: data.saleId,
-                branchId: Session.get('currentBranch')
-            },
-            {
-                sort: {_id: -1, paymentDate: -1}
-
-            });
-        if (data._id == payment._id && data.status != "firstPay") {
-            alertify.salePayment(fa('pencil', 'Update Existing Payment'), renderTemplate(posSalePaymentUpdateTPL, data)).maximize()
-        } else {
-            alertify.warning("This payment not the last one");
-        }
+        var id = this._id;
+        Meteor.call('findOneRecord', 'Pos.Collection.Payments', {_id: id}, {}, function (error, payment) {
+            if (payment) {
+                Session.set('paymentObj', payment);
+                Meteor.call('findOneRecord', 'Pos.Collection.Payments', {
+                    saleId: data.saleId,
+                    branchId: Session.get('currentBranch')
+                }, {sort: {_id: -1, paymentDate: -1}}, function (err, lastPayment) {
+                    if (payment._id == lastPayment._id) {
+                        alertify.salePayment(fa('pencil', 'Update Existing Payment'), renderTemplate(posSalePaymentUpdateTPL, payment)).maximize()
+                    } else {
+                        alertify.warning("This payment not the last one");
+                    }
+                });
+            } else {
+                alertify.error(error.message);
+            }
+        });
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        var data = Pos.Collection.Payments.findOne(id);
-        var payment = Pos.Collection.Payments.findOne({
-                saleId: data.saleId,
-                branchId: Session.get('currentBranch')
-            },
-            {sort: {_id: -1, paymentDate: -1}}
-        );
-        if (data._id == payment._id && data.status != "firstPay") {
-            alertify.confirm("Are you sure to delete [" + id + "]?")
-                .set({
-                    onok: function (closeEvent) {
-                        Pos.Collection.Payments.remove(id, function (error) {
-                            if (error) {
-                                alertify.error(error.message);
-                            } else {
-                                alertify.success("Success");
-                            }
-                        });
-                    },
-                    title: '<i class="fa fa-remove"></i> Delete Payment'
+        Meteor.call('findOneRecord', 'Pos.Collection.Payments', {_id: id}, {}, function (error, payment) {
+            if (payment) {
+                Meteor.call('findOneRecord', 'Pos.Collection.Payments', {
+                    saleId: payment.saleId,
+                    branchId: Session.get('currentBranch')
+                }, {sort: {_id: -1, paymentDate: -1}}, function (err, lastPayment) {
+                    if (lastPayment) {
+                        if (payment._id == lastPayment._id) {
+                            alertify.confirm("Are you sure to delete [" + id + "]?")
+                                .set({
+                                    onok: function (closeEvent) {
+                                        Pos.Collection.Payments.remove(id, function (e) {
+                                            if (e) {
+                                                alertify.error(e.message);
+                                            } else {
+                                                alertify.success("Success");
+                                            }
+                                        });
+                                    },
+                                    title: '<i class="fa fa-remove"></i> Delete Payment'
+                                });
+                        } else {
+                            alertify.warning("This payment not the last one");
+                        }
+                    } else {
+                        alertify.error(err.message);
+                    }
                 });
-        } else {
-            alertify.warning("This payment not the last one");
-        }
+            }
+            else {
+                alertify.error(error.message);
+            }
+        });
+
+
+        /*
+         var data = Pos.Collection.Payments.findOne(id);
+         var payment = Pos.Collection.Payments.findOne({
+         saleId: data.saleId,
+         branchId: Session.get('currentBranch')
+         },
+         {sort: {_id: -1, paymentDate: -1}}
+         );
+         if (data._id == payment._id && data.status != "firstPay") {
+         alertify.confirm("Are you sure to delete [" + id + "]?")
+         .set({
+         onok: function (closeEvent) {
+         Pos.Collection.Payments.remove(id, function (error) {
+         if (error) {
+         alertify.error(error.message);
+         } else {
+         alertify.success("Success");
+         }
+         });
+         },
+         title: '<i class="fa fa-remove"></i> Delete Payment'
+         });
+         } else {
+         alertify.warning("This payment not the last one");
+         }*/
 
     },
     'click .show': function (e, t) {
@@ -117,6 +156,17 @@ posSalePaymentInsertTPL.events({
             alertify.error('Please input all requirement input.');
             return;
         }
+        Meteor.call('findOneRecord', 'Pos.Collection.Payments', {
+            saleId: saleId,
+            branchId: Session.get('currentBranch')
+        }, {sort: {_id: -1, paymentDate: -1}}, function (error, payment) {
+            if (payment) {
+
+            } else {
+
+            }
+
+        });
         var payment = Pos.Collection.Payments.findOne({
                 saleId: saleId,
                 branchId: Session.get('currentBranch')

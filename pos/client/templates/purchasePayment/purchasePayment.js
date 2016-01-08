@@ -49,15 +49,15 @@ posPurchasePaymentTPL.events({
                 Meteor.call('findOneRecord', 'Pos.Collection.PurchasePayments', {
                     purchaseId: payment.purchaseId,
                     branchId: Session.get('currentBranch')
-                }, {sort: {_id: -1, paymentDate: -1}}, function (error, lastPayment) {
+                }, {sort: {_id: -1, paymentDate: -1}}, function (err, lastPayment) {
                     if (lastPayment) {
                         if (payment._id == lastPayment._id) {
                             alertify.confirm("Are you sure to delete [" + id + "]?")
                                 .set({
                                     onok: function (closeEvent) {
-                                        Pos.Collection.PurchasePayments.remove(id, function (error) {
-                                            if (error) {
-                                                alertify.error(error.message);
+                                        Pos.Collection.PurchasePayments.remove(id, function (e) {
+                                            if (e) {
+                                                alertify.error(e.message);
                                             } else {
                                                 alertify.success("Success");
                                             }
@@ -69,7 +69,7 @@ posPurchasePaymentTPL.events({
                             alertify.warning("This payment not the last one");
                         }
                     } else {
-                        alertify.error(error.message);
+                        alertify.error(err.message);
                     }
                 });
             } else {
@@ -131,23 +131,24 @@ posPurchasePaymentInsertTPL.events({
             alertify.error('Please input all requirement input.');
             return;
         }
-        var payment = Pos.Collection.PurchasePayments.findOne({
+        Meteor.call('findOneRecord', 'Pos.Collection.PurchasePayments',
+            {
                 purchaseId: purchaseId,
                 branchId: Session.get('currentBranch')
-                //balanceAmount: {$gt: 0}
-            },
-            {
-                sort: {_id: -1, paymentDate: -1}
-            }
-        );
-        if (payment != null) {
-            paymentDate = moment(paymentDate).toDate();
-            if (paymentDate < payment.paymentDate) {
-                alertify.alert("Payment date can't less than the Last payment date.");
-                return;
-            }
-        }
-        pay(purchaseId);
+            }, {sort: {_id: -1, paymentDate: -1}}, function (error, payment) {
+                if (payment) {
+                    paymentDate = moment(paymentDate).toDate();
+                    if (paymentDate < payment.paymentDate) {
+                        alertify.alert("Payment date can't less than the Last payment date.");
+                    } else {
+                        pay(purchaseId);
+                    }
+                } else {
+                    pay(purchaseId);
+                }
+
+            });
+
     },
     'mouseleave .pay-amount': function (e) {
         var value = $(e.currentTarget).val();
@@ -181,25 +182,45 @@ posPurchasePaymentInsertTPL.events({
             Session.set('dueAmount', 0);
             return;
         }
-
-        var payment = Pos.Collection.Payments.findOne({
+        Meteor.call('findOneRecord', 'Pos.Collection.PurchasePayments', {
                 purchaseId: purchaseId,
                 branchId: Session.get('currentBranch')
-                //balanceAmount: {$gt: 0}
-            },
-            {
-                sort: {_id: -1, paymentDate: -1}
-            }
-        );
-        if (payment == null) {
-            var purchase = Pos.Collection.Purchases.findOne(purchaseId);
-            Session.set('dueAmount', purchase.total);
-        } else if (payment.balanceAmount <= 0) {
-            alertify.alert('Paid');
-            Session.set('dueAmount', null);
-        } else {
-            Session.set('dueAmount', payment.balanceAmount);
-        }
+            }, {sort: {_id: -1, paymentDate: -1}},
+            function (error, payment) {
+                if (!payment) {
+                    Meteor.call('findOneRecord', 'Pos.Collection.Purchases', {_id: purchaseId}, {}, function (err, purchase) {
+                        if (purchase) {
+                            Session.set('dueAmount', purchase.total);
+                        } else {
+                            alertify.error(err.message);
+                        }
+                    });
+                } else if (payment.balanceAmount <= 0) {
+                    alertify.alert('Paid');
+                    Session.set('dueAmount', null);
+                } else {
+                    Session.set('dueAmount', payment.balanceAmount);
+                }
+            });
+
+        /*var payment = Pos.Collection.Payments.findOne({
+         purchaseId: purchaseId,
+         branchId: Session.get('currentBranch')
+         //balanceAmount: {$gt: 0}
+         },
+         {
+         sort: {_id: -1, paymentDate: -1}
+         }
+         );
+         if (payment == null) {
+         var purchase = Pos.Collection.Purchases.findOne(purchaseId);
+         Session.set('dueAmount', purchase.total);
+         } else if (payment.balanceAmount <= 0) {
+         alertify.alert('Paid');
+         Session.set('dueAmount', null);
+         } else {
+         Session.set('dueAmount', payment.balanceAmount);
+         }*/
     }
 });
 posPurchasePaymentUpdateTPL.helpers({
@@ -291,24 +312,31 @@ posPurchasePaymentUpdateTPL.events({
     'change select[name="purchaseId"]': function (e) {
         var purchaseId = $(e.currentTarget).val();
         clearFormData();
-        var payment = Pos.Collection.Payments.findOne({
-                purchaseId: purchaseId,
-                branchId: Session.get('currentBranch')
-                //balanceAmount: {$gt: 0}
-            },
-            {
-                sort: {_id: -1, paymentDate: -1}
+        Meteor.call('findOneRecord', 'Pos.Collection.Payments', {
+            purchaseId: purchaseId,
+            branchId: Session.get('currentBranch')
+        }, {sort: {_id: -1, paymentDate: -1}}, function (error, payment) {
+            if (payment) {
+                if (payment.balanceAmount <= 0) {
+                    alertify.alert('DueAmount <=0 : ' + payment.balanceAmount);
+                    Session.set('updatedDueAmount', null);
+                } else {
+                    Session.set('updatedDueAmount', payment.balanceAmount);
+                }
+            } else {
+                alertify.error(error.message);
             }
-        );
-        if (payment == null) {
-            return false;
-        }
-        if (payment.balanceAmount <= 0) {
-            alertify.alert('DueAmount <=0 : ' + payment.balanceAmount);
-            Session.set('updatedDueAmount', null);
-        } else {
-            Session.set('updatedDueAmount', payment.balanceAmount);
-        }
+        });
+        /* var payment = Pos.Collection.Payments.findOne({
+         purchaseId: purchaseId,
+         branchId: Session.get('currentBranch')
+         //balanceAmount: {$gt: 0}
+         },
+         {
+         sort: {_id: -1, paymentDate: -1}
+         }
+         );*/
+
     }
 });
 
