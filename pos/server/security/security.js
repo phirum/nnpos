@@ -15,6 +15,7 @@ Security.permit(['insert', 'update', 'remove']).collections([
     Pos.Collection.Sales,
     Pos.Collection.SaleDetails,
     Pos.Collection.Payments,
+    Pos.Collection.PurchasePayments,
     Pos.Collection.Purchases,
     Pos.Collection.PurchaseDetails,
     Pos.Collection.Stocks,
