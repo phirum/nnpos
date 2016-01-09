@@ -9,7 +9,7 @@ posPurchasePaymentTPL.onRendered(function () {
 posPurchasePaymentTPL.helpers({
     selector: function () {
         var selector = {};
-        selector.saleId = null;
+        //selector.saleId = null;
         selector.branchId = Session.get('currentBranch');
         return selector;
     }

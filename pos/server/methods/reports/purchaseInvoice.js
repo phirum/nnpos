@@ -1,6 +1,6 @@
 Meteor.methods({
     getPurchaseInvoiceData: function (purchaseId) {
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
         var data = {};
@@ -9,7 +9,7 @@ Meteor.methods({
         data.company = Cpanel.Collection.Company.findOne();
         data.purchase = getPurchase(purchaseId);
         data.purchaseDetails = getPurchaseDetail(purchaseId);
-        data.paymentObj = Pos.Collection.Payments.findOne({purchaseId: purchaseId}, {sort: {_id: 1}});
+        data.paymentObj = Pos.Collection.PurchasePayments.findOne({purchaseId: purchaseId}, {sort: {_id: 1}});
         data.hasPayment = data.paymentObj != null;
         return data;
     }
@@ -20,7 +20,7 @@ function getPurchase(purchaseId) {
     s.purchaseDate = moment(s.purchaseDate).format("DD-MM-YYYY, HH:mm");
     s.subTotalFormatted = numeral(s.subTotal).format('0,0.00');
     s.totalFormatted = numeral(s.total).format('0,0.00');
-     return s;
+    return s;
 }
 function getPurchaseDetail(purchaseId) {
     var purchaseDetailItems = [];

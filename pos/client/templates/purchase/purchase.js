@@ -941,7 +941,7 @@ function pay(purchaseId) {
     //obj.balanceAmount = numeral().unformat($('#' + baseCurrencyId).val());
     obj.status = obj.balanceAmount >= 0 ? "Paid" : "Owed";
     obj.branchId = branchId;
-    Meteor.call('insertPayment', obj);
+    Meteor.call('insertPurchasePayment', obj);
     Meteor.call('purchaseManageStock', purchaseId, branchId, function (er, re) {
         if (er) alertify(er.message);
     });
