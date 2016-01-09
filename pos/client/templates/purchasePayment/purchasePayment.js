@@ -443,10 +443,11 @@ function pay(purchaseId) {
     obj.balanceAmount = numeral().unformat(numeral(obj.dueAmount - obj.payAmount).format('0,0.00'));
     obj.status = obj.balanceAmount > 0 ? "Owed" : "Paid";
     obj.branchId = branchId;
+    debugger;
 
-    Meteor.call('insertPurchasePayment', obj, function (error, result) {
-        if (error != null) {
-            alertify.error(error.message);
+    Meteor.call('insertPurchasePayment', obj, function (err, result) {
+        if (err) {
+            alertify.error(err.message);
         } else {
             alertify.success("payment is successfully.");
             alertify.purchasePayment().close();

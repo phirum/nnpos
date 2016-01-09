@@ -24,7 +24,7 @@ posSalePaymentTPL.events({
             if (payment) {
                 Session.set('paymentObj', payment);
                 Meteor.call('findOneRecord', 'Pos.Collection.Payments', {
-                    saleId: data.saleId,
+                    saleId: payment.saleId,
                     branchId: Session.get('currentBranch')
                 }, {sort: {_id: -1, paymentDate: -1}}, function (err, lastPayment) {
                     if (payment._id == lastPayment._id) {
