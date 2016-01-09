@@ -160,30 +160,23 @@ posSalePaymentInsertTPL.events({
             saleId: saleId,
             branchId: Session.get('currentBranch')
         }, {sort: {_id: -1, paymentDate: -1}}, function (error, payment) {
-            if (payment) {
-
+            if (error) {
+                alertify.error(error.message);
             } else {
-
+                if (payment) {
+                    paymentDate = moment(paymentDate).toDate();
+                    if (paymentDate < payment.paymentDate) {
+                        alertify.alert("Payment date can't less than the Last payment date.");
+                    } else {
+                        pay(saleId);
+                    }
+                } else {
+                    pay(saleId);
+                }
             }
 
         });
-        var payment = Pos.Collection.Payments.findOne({
-                saleId: saleId,
-                branchId: Session.get('currentBranch')
-                //balanceAmount: {$gt: 0}
-            },
-            {
-                sort: {_id: -1, paymentDate: -1}
-            }
-        );
-        if (payment != null) {
-            paymentDate = moment(paymentDate).toDate();
-            if (paymentDate < payment.paymentDate) {
-                alertify.alert("Payment date can't less than the Last payment date.");
-                return;
-            }
-        }
-        pay(saleId);
+
     },
     'mouseleave .pay-amount': function (e) {
         var value = $(e.currentTarget).val();
@@ -216,24 +209,31 @@ posSalePaymentInsertTPL.events({
         if (saleId == "") {
             Session.set('dueAmount', 0);
         }
-        var payment = Pos.Collection.Payments.findOne({
-                saleId: saleId,
-                branchId: Session.get('currentBranch')
-                //balanceAmount: {$gt: 0}
-            },
-            {
-                sort: {_id: -1, paymentDate: -1}
+        Meteor.call('findOneRecord', 'Pos.Collection.Payments', {
+            saleId: saleId,
+            branchId: Session.get('currentBranch')
+        }, {sort: {_id: -1, paymentDate: -1}}, function (error, payment) {
+            if (error) {
+                alertify.error(error.message);
+            } else {
+                if (payment == null) {
+                    Meteor.call('findOneRecord', 'Pos.Collection.Sales', {
+                        _id: saleId
+                    }, {}, function (err, sale) {
+                        if (sale) {
+                            Session.set('dueAmount', sale.total);
+                        } else {
+                            Session.set('dueAmount', null);
+                        }
+                    });
+                } else if (payment.balanceAmount <= 0) {
+                    alertify.alert('Paid');
+                    Session.set('dueAmount', null);
+                } else {
+                    Session.set('dueAmount', payment.balanceAmount);
+                }
             }
-        );
-        if (payment == null) {
-            var sale = Pos.Collection.Sales.findOne(saleId);
-            Session.set('dueAmount', sale.total);
-        } else if (payment.balanceAmount <= 0) {
-            alertify.alert('Paid');
-            Session.set('dueAmount', null);
-        } else {
-            Session.set('dueAmount', payment.balanceAmount);
-        }
+        });
     }
 });
 posSalePaymentUpdateTPL.helpers({
@@ -324,25 +324,27 @@ posSalePaymentUpdateTPL.events({
     'change select[name="saleId"]': function (e) {
         var saleId = $(e.currentTarget).val();
         clearFormData();
-        var payment = Pos.Collection.Payments.findOne({
-                saleId: saleId,
-                branchId: Session.get('currentBranch')
-                //balanceAmount: {$gt: 0}
-            },
-            {
-                sort: {_id: -1, paymentDate: -1}
+        Meteor.call('findOneRecord', 'Pos.Collection.Payments', {
+            saleId: saleId,
+            branchId: Session.get('currentBranch')
+        }, {sort: {_id: -1, paymentDate: -1}}, function (error, payment) {
+            if (payment) {
+                if (payment.balanceAmount <= 0) {
+                    alertify.alert('DueAmount <=0 : ' + payment.balanceAmount);
+                    Session.set('updatedDueAmount', null);
+                } else {
+                    Session.set('updatedDueAmount', payment.balanceAmount);
+                }
             }
-        );
-        if (payment == null) {
-            return false;
-        } else if (payment.balanceAmount <= 0) {
-            alertify.alert('DueAmount <=0 : ' + payment.balanceAmount);
-            Session.set('updatedDueAmount', null);
-        } else {
-            Session.set('updatedDueAmount', payment.balanceAmount);
-        }
+            else {
+                Session.set('updatedDueAmount', null);
+                alertify.error(error.message);
+            }
+        });
+
     }
-});
+})
+;
 AutoForm.hooks({
     pos_salePaymentInsert: {
         onSuccess: function (formType, result) {

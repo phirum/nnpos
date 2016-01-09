@@ -136,15 +136,19 @@ posPurchasePaymentInsertTPL.events({
                 purchaseId: purchaseId,
                 branchId: Session.get('currentBranch')
             }, {sort: {_id: -1, paymentDate: -1}}, function (error, payment) {
-                if (payment) {
-                    paymentDate = moment(paymentDate).toDate();
-                    if (paymentDate < payment.paymentDate) {
-                        alertify.alert("Payment date can't less than the Last payment date.");
+                if (error) {
+                    alertify.error(error.message);
+                } else {
+                    if (payment) {
+                        paymentDate = moment(paymentDate).toDate();
+                        if (paymentDate < payment.paymentDate) {
+                            alertify.alert("Payment date can't less than the Last payment date.");
+                        } else {
+                            pay(purchaseId);
+                        }
                     } else {
                         pay(purchaseId);
                     }
-                } else {
-                    pay(purchaseId);
                 }
 
             });
@@ -187,19 +191,23 @@ posPurchasePaymentInsertTPL.events({
                 branchId: Session.get('currentBranch')
             }, {sort: {_id: -1, paymentDate: -1}},
             function (error, payment) {
-                if (!payment) {
-                    Meteor.call('findOneRecord', 'Pos.Collection.Purchases', {_id: purchaseId}, {}, function (err, purchase) {
-                        if (purchase) {
-                            Session.set('dueAmount', purchase.total);
-                        } else {
-                            alertify.error(err.message);
-                        }
-                    });
-                } else if (payment.balanceAmount <= 0) {
-                    alertify.alert('Paid');
-                    Session.set('dueAmount', null);
+                if (error) {
+                    alertify.error(error.message);
                 } else {
-                    Session.set('dueAmount', payment.balanceAmount);
+                    if (payment == null) {
+                        Meteor.call('findOneRecord', 'Pos.Collection.Purchases', {_id: purchaseId}, {}, function (err, purchase) {
+                            if (purchase) {
+                                Session.set('dueAmount', purchase.total);
+                            } else {
+                                Session.set('dueAmount', null);
+                            }
+                        });
+                    } else if (payment.balanceAmount <= 0) {
+                        alertify.alert('Paid');
+                        Session.set('dueAmount', null);
+                    } else {
+                        Session.set('dueAmount', payment.balanceAmount);
+                    }
                 }
             });
 
@@ -324,6 +332,7 @@ posPurchasePaymentUpdateTPL.events({
                     Session.set('updatedDueAmount', payment.balanceAmount);
                 }
             } else {
+                Session.set('updatedDueAmount', null);
                 alertify.error(error.message);
             }
         });
