@@ -158,8 +158,10 @@ Template.pos_checkout.helpers({
             s.saleDate = moment(s.saleDate).format("DD-MM-YY, hh:mm:ss a");
             s.subTotalFormatted = numeral(s.subTotal).format('0,0.00');
             s.totalFormatted = numeral(s.total).format('0,0.00');
-            //s.discountFormatted = numeral(s.discount).format('0,0.00');
-            //s.discountAmountFormatted = numeral(s.discountAmount).format('0,0.00');
+            //s.discountFormatted = numeral(s.discount).format('0.00');
+            //s.discountAmountFormatted = numeral(s.discountAmount).format('0.00');
+            s.discount = numeral(s.discount).format('0.00');
+            s.discountAmount = numeral(s.discountAmount).format('0.00');
             return s;
         } else {
             return {};

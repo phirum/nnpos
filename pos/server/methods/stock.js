@@ -327,7 +327,7 @@ Meteor.methods({
             );
             Pos.Collection.Sales.direct.update(
                 saleId,
-                {$set: {totalCost: saleTotalCost, status: "Saved"}}
+                {$set: {totalCost: saleTotalCost}}
             );
             //--- End Inventory type block "FIFO Inventory"---
         });
