@@ -158,6 +158,8 @@ Template.pos_checkout.helpers({
             s.saleDate = moment(s.saleDate).format("DD-MM-YY, hh:mm:ss a");
             s.subTotalFormatted = numeral(s.subTotal).format('0,0.00');
             s.totalFormatted = numeral(s.total).format('0,0.00');
+            //s.discountFormatted = numeral(s.discount).format('0,0.00');
+            //s.discountAmountFormatted = numeral(s.discountAmount).format('0,0.00');
             return s;
         } else {
             return {};
@@ -1192,6 +1194,7 @@ function pay(saleId) {
     //obj.balanceAmount = numeral().unformat($('#' + baseCurrencyId).val());
     obj.status = obj.balanceAmount >= 0 ? "Paid" : "Owed";
     obj.branchId = branchId;
+    debugger;
     Meteor.call('insertPayment', obj, function (error, result) {
         if (error) alertify.error(error.message);
     });
