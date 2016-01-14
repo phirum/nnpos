@@ -23,26 +23,36 @@ posLocationTPL.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        var canRemove = (this._productCount == null || this._productCount == 0);
         alertify.confirm("Are you sure to delete [" + id + "]?")
             .set({
                 onok: function (closeEvent) {
-                    /* var relation = relationExist(
-                     [
-                     {collection: Pos.Collection.Products, selector: {locationId:id}}
-                     ]
-                     );*/
-                    if (canRemove) {
-                        Pos.Collection.Locations.remove(id, function (error) {
-                            if (error) {
-                                alertify.error(error.message);
+                    var arr = [
+                        {collection: 'Pos.Collection.FIFOInventory', selector: {locationId: id}},
+                        {collection: 'Pos.Collection.Sales', selector: {locationId: id}},
+                        {collection: 'Pos.Collection.Purchases', selector: {locationId: id}},
+                        {
+                            collection: 'Pos.Collection.LocationTransfers',
+                            selector: {$or: [{fromLocationId: id}, {toLocationId: id}]}
+                        }
+                    ];
+                    Meteor.call('isRelationExist', arr, function (error, result) {
+                        if (error) {
+                            alertify.error(error.message);
+                        } else {
+                            if (result) {
+                                alertify.warning("Data has been used. Can't remove.");
                             } else {
-                                alertify.success("Success");
+                                Pos.Collection.Locations.remove(id, function (err) {
+                                    if (err) {
+                                        alertify.error(err.message);
+                                    } else {
+                                        alertify.success("Success");
+                                    }
+                                });
                             }
-                        });
-                    } else {
-                        alertify.warning("Data has been used. Can't remove.");
-                    }
+                        }
+                    });
+
                 },
                 title: '<i class="fa fa-remove"></i> Delete Location'
             });

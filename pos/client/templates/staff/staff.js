@@ -21,29 +21,32 @@ posStaffTPL.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        var canRemove = (this._purchaseCount == null || this._purchaseCount == 0)
-            && (this._saleCount == null || this._saleCount == 0)
-            && (this._adjustmentCount == null || this._adjustmentCount == 0);
         alertify.confirm("Are you sure to delete [" + id + "]?")
             .set({
                 onok: function (closeEvent) {
-                    /* var relation = relationExist(
-                     [
-                     {collection: Pos.Collection.Sales, selector: {staffId:id}},
-                     {collection: Pos.Collection.Purchases, selector: {staffId:id}}
-                     ]
-                     );*/
-                    if (canRemove) {
-                        Pos.Collection.Staffs.remove(id, function (error) {
-                            if (error) {
-                                alertify.error(error.message);
+                    var arr = [
+                        {collection: 'Pos.Collection.Sales', selector: {staffId: id}},
+                        {collection: 'Pos.Collection.Purchases', selector: {staffId: id}},
+                        {collection: 'Pos.Collection.LocationTransfers', selector: {staffId: id}},
+                        {collection: 'Pos.Collection.UserStaffs', selector: {staffIds: {"$in": [id]}}}
+                    ];
+                    Meteor.call('isRelationExist', arr, function (error, result) {
+                        if (error) {
+                            alertify.error(error.message);
+                        } else {
+                            if (result) {
+                                alertify.warning("Data has been used. Can't remove.");
                             } else {
-                                alertify.success("Success");
+                                Pos.Collection.Staffs.remove(id, function (err) {
+                                    if (err) {
+                                        alertify.error(err.message);
+                                    } else {
+                                        alertify.success("Success");
+                                    }
+                                });
                             }
-                        });
-                    } else {
-                        alertify.warning("Data has been used. Can't remove.");
-                    }
+                        }
+                    });
                 },
                 title: '<i class="fa fa-remove"></i> Delete Staff'
             });

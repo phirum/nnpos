@@ -21,26 +21,29 @@ posSaleListTPL.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        var canRemove = (this._paymentCount == null || this._paymentCount == 0);
         alertify.confirm("Are you sure to delete [" + id + "]?")
             .set({
                 onok: function (closeEvent) {
-                    /*  var relation = relationExist(
-                     [
-                     {collection: Pos.Collection.Payments, selector: {saleId: id}}
-                     ]
-                     );*/
-                    if (canRemove) {
-                        Pos.Collection.Sales.remove(id, function (error) {
-                            if (error) {
-                                alertify.error(error.message);
+                    var arr = [
+                        {collection: 'Pos.Collection.Payments', selector: {saleId: id}}
+                    ];
+                    Meteor.call('isRelationExist', arr, function (error, result) {
+                        if (error) {
+                            alertify.error(error.message);
+                        } else {
+                            if (result) {
+                                alertify.warning("Data has been used. Can't remove.");
                             } else {
-                                alertify.success("Success");
+                                Pos.Collection.Sales.remove(id, function (err) {
+                                    if (err) {
+                                        alertify.error(err.message);
+                                    } else {
+                                        alertify.success("Success");
+                                    }
+                                });
                             }
-                        });
-                    } else {
-                        alertify.warning("Data has been used. Can't remove.");
-                    }
+                        }
+                    });
                 },
                 title: '<i class="fa fa-remove"></i> Delete Sale'
             });

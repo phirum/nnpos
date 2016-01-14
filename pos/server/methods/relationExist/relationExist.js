@@ -1,10 +1,10 @@
 Meteor.methods({
-    relationExist: function (objects) {
+    isRelationExist: function (arr) {
         //var objects = [
         //    {collection: App.Collection.Test, selector: {_id: "001"}},
         //    {collection: App.Collection.Test2, selector: {_id: "002"}}
         //];
-        var getObjects = _.isArray(objects) ? objects : [];
+        var getArray = _.isArray(arr) ? arr : [];
         var exist = false;
         /*for (var i = 0; i < getObjects.length - 1; i++) {
          var collection = eval(getObjects[i].collection);
@@ -14,7 +14,7 @@ Meteor.methods({
          break;
          }
          }*/
-        getObjects.forEach(function (obj) {
+        getArray.forEach(function (obj) {
             var collection = eval(obj.collection);
             var getRelation = collection.findOne(obj.selector);
             if (getRelation) {

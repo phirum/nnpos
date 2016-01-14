@@ -4,7 +4,7 @@ var posCustomerUpdateTPL = Template.pos_customerUpdate;
 var posCustomerShowTPL = Template.pos_customerShow;
 
 posCustomerTPL.onRendered(function () {
-    createNewAlertify(['customer','customerShow']);
+    createNewAlertify(['customer', 'customerShow']);
 });
 posCustomerTPL.helpers({
     selector: function () {
@@ -19,32 +19,40 @@ posCustomerTPL.events({
     },
     'click .update': function (e, t) {
         var data = Pos.Collection.Customers.findOne(this._id);
-        alertify.customer(fa('pencil','Update Existing Customer'),renderTemplate(posCustomerUpdateTPL, data)).maximize();
+        alertify.customer(fa('pencil', 'Update Existing Customer'), renderTemplate(posCustomerUpdateTPL, data)).maximize();
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        var canRemove = (this._saleCount == null || this._saleCount == 0);
         alertify.confirm("Are you sure to delete [" + id + "]?")
             .set({
                 onok: function (closeEvent) {
-                    if (canRemove) {
-                        Pos.Collection.Customers.remove(id, function (error) {
-                            if (error) {
-                                alertify.error(error.message);
+                    var arr = [
+                        {collection: 'Pos.Collection.Sales', selector: {customerId: id}}
+                    ];
+                    Meteor.call('isRelationExist', arr, function (error, result) {
+                        if (error) {
+                            alertify.error(error.message);
+                        } else {
+                            if (result) {
+                                alertify.warning("Data has been used. Can't remove.");
                             } else {
-                                alertify.success("Success");
+                                Pos.Collection.Customers.remove(id, function (err) {
+                                    if (err) {
+                                        alertify.error(err.message);
+                                    } else {
+                                        alertify.success("Success");
+                                    }
+                                });
                             }
-                        });
-                    } else {
-                        alertify.warning("Data has been used. Can't remove.");
-                    }
+                        }
+                    });
                 },
                 title: '<i class="fa fa-remove"></i> Delete Customer'
             });
 
     },
     'click .show': function (e, t) {
-        alertify.customerShow(fa('eye','Customer Detail'),renderTemplate(posCustomerShowTPL, this));
+        alertify.customerShow(fa('eye', 'Customer Detail'), renderTemplate(posCustomerShowTPL, this));
     }
 });
 
