@@ -81,6 +81,7 @@ Meteor.methods({
     isExistIMEI: function (imei) {
         //var saleDetail = Pos.Collection.SaleDetails.findOne({imei: {"$in": [imei]}});
         var inventory = Pos.Collection.FIFOInventory.findOne({imei: {"$in": [imei]}});
-        return (saleDetail || inventory);
+        return inventory;
+        //return (saleDetail || inventory);
     }
 });
