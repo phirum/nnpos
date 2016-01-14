@@ -1,47 +1,31 @@
 var posLocationTransferListTPL = Template.pos_locationTransferList;
 var posLocationTransferShow = Template.pos_locationTransferShow;
 
-
 posLocationTransferListTPL.onRendered(function () {
-    createNewAlertify(['locationTransferShow'], {size: 'lg'});
+    createNewAlertify(['locationTransferShow']);
 });
-
 posLocationTransferListTPL.helpers({
     selector: function () {
         return {branchId: Session.get('currentBranch')}
     }
 });
-
 posLocationTransferListTPL.events({
     'click .insert': function (e, t) {
-        FlowRouter.go('pos.checkout');
+        FlowRouter.go('pos.locationTransfer');
     },
     'click .update': function (e, t) {
-        FlowRouter.go('pos.checkout', {locationTransferId: this._id});
+        FlowRouter.go('pos.locationTransfer', {locationTransferId: this._id});
     },
     'click .remove': function (e, t) {
         var id = this._id;
         alertify.confirm("Are you sure to delete [" + id + "]?")
             .set({
                 onok: function (closeEvent) {
-                    var arr = [
-                        {collection: 'Pos.Collection.Payments', selector: {locationTransferId: id}}
-                    ];
-                    Meteor.call('isRelationExist', arr, function (error, result) {
-                        if (error) {
-                            alertify.error(error.message);
+                    Pos.Collection.LocationTransfers.remove(id, function (err) {
+                        if (err) {
+                            alertify.error(err.message);
                         } else {
-                            if (result) {
-                                alertify.warning("Data has been used. Can't remove.");
-                            } else {
-                                Pos.Collection.LocationTransfers.remove(id, function (err) {
-                                    if (err) {
-                                        alertify.error(err.message);
-                                    } else {
-                                        alertify.success("Success");
-                                    }
-                                });
-                            }
+                            alertify.success("Success");
                         }
                     });
                 },

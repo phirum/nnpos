@@ -15,8 +15,8 @@ Pos.TabularTable.LocationTransfers = new Tabular.Table({
         },
         {data: "_staff.name", title: "Staff"},
         {data: "status", title: "Status"},
-        {data: "fromLocationTransfer", title: "From"},
-        {data: "toLocationTransfer", title: "To"}
+        {data: "_fromLocation.name", title: "From"},
+        {data: "_toLocation.name", title: "To"}
     ],
     order: [['1', 'desc']]
     ,
