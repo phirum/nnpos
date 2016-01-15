@@ -2,11 +2,12 @@ Pos.TabularTable.SalePayments = new Tabular.Table({
     name: "posSalePaymentList",
     collection: Pos.Collection.Payments,
     columns: [
-        // {data: "_id", title: "ID"},
+
         {
             title: '<i class="fa fa-bars"></i>',
             tmpl: Meteor.isClient && Template.pos_salePaymentAction
         },
+        {data: "_id", title: "ID"},
         {data: "saleId", title: "Sale ID"},
         {data: "_sale._customer.name", title: "Customer Name"},
         {

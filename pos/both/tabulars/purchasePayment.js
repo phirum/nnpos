@@ -2,11 +2,12 @@ Pos.TabularTable.PurchasePayments = new Tabular.Table({
     name: "posPurchasePaymentList",
     collection: Pos.Collection.PurchasePayments,
     columns: [
-        // {data: "_id", title: "ID"},
+
         {
             title: '<i class="fa fa-bars"></i>',
             tmpl: Meteor.isClient && Template.pos_purchasePaymentAction
         },
+        {data: "_id", title: "ID"},
         {data: "purchaseId", title: "Purchase ID"},
         {data: "_purchase._supplier.name", title: "Supplier Name"},
         {

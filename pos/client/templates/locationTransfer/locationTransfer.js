@@ -603,7 +603,7 @@ function getValidatedValues() {
     data.message = "Add product to list is successfully.";
     data.valid = true;
     data.locationTransferObj = {
-        locationTransferDate: moment(locationTransferDate).toDate(),
+        locationTransferDate: moment(locationTransferDate,'MM/DD/YYYY hh:mm:ss a').toDate(),
         staffId: staffId,
         fromLocationId: fromLocationId,
         toLocationId: toLocationId

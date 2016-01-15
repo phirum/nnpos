@@ -1068,7 +1068,7 @@ function getValidatedValues() {
     data.message = "Add product to list is successfully.";
     data.valid = true;
     data.purchaseObj = {
-        purchaseDate: moment(purchaseDate).toDate(),
+        purchaseDate: moment(purchaseDate, 'MM/DD/YYYY hh:mm:ss a').toDate(),
         staffId: staffId,
         supplierId: supplierId,
         exchangeRateId: exchangeRate._id,
