@@ -1,8 +1,8 @@
-Pos.Collection.PurchasePayments.before.insert(function (userId, doc) {
+/*Pos.Collection.PurchasePayments.before.insert(function (userId, doc) {
     var prefix = doc.purchaseId;
     doc.paymentDate = doc.paymentDate ? doc.paymentDate : new Date();
     doc._id = idGenerator.genWithPrefix(Pos.Collection.PurchasePayments, prefix, 3);
-});
+});*/
 
 Pos.Collection.PurchasePayments.after.remove(function (userId, doc) {
     Meteor.defer(function () {

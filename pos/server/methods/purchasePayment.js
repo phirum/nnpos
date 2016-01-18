@@ -3,6 +3,9 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
+        var prefix = obj.purchaseId;
+        obj.paymentDate = obj.paymentDate ? obj.paymentDate : new Date();
+        obj._id = idGenerator.genWithPrefix(Pos.Collection.PurchasePayments, prefix, 3);
         Pos.Collection.PurchasePayments.insert(obj);
     },
     directInsertPurchasePayment: function (obj) {
