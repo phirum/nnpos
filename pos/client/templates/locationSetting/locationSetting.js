@@ -63,6 +63,7 @@ AutoForm.hooks({
             }
         },
         onSuccess: function (formType, result) {
+            alertify.locationSetting().close();
             alertify.success('Success');
         },
         onError: function (formType, error) {

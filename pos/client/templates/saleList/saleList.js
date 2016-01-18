@@ -1,9 +1,11 @@
 var posSaleListTPL = Template.pos_saleList;
 var posSaleShow = Template.pos_saleShow;
+var posSaleUpdate = Template.pos_saleUpdate;
 
 
 posSaleListTPL.onRendered(function () {
     createNewAlertify(['saleShow'], {size: 'lg'});
+    createNewAlertify(['saleUpdate']);
 });
 
 posSaleListTPL.helpers({
@@ -17,7 +19,20 @@ posSaleListTPL.events({
         FlowRouter.go('pos.checkout');
     },
     'click .update': function (e, t) {
-        FlowRouter.go('pos.checkout', {saleId: this._id});
+        var id = this._id;
+        Meteor.call('findOneRecord', 'Pos.Collection.Sales', {_id: id}, {}, function (error, sale) {
+            if (error) {
+                alertify.error(error.message);
+            } else {
+                if (sale.status != "Unsaved") {
+                    alertify.saleUpdate(fa('pencil', 'Update Existing Sale'), renderTemplate(posSaleUpdate, sale));
+                } else {
+                    FlowRouter.go('pos.checkout', {saleId: id});
+                }
+            }
+
+        });
+
     },
     'click .remove': function (e, t) {
         var id = this._id;
@@ -68,3 +83,17 @@ posSaleListTPL.events({
 
     }
 });
+
+
+AutoForm.hooks({
+    pos_saleUpdate: {
+        onSuccess: function (formType, result) {
+            alertify.saleUpdate().close();
+            alertify.success('Success');
+        },
+        onError: function (formType, error) {
+            alertify.error(error.message);
+        }
+    }
+});
+

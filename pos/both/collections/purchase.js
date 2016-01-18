@@ -1,24 +1,23 @@
 Pos.Collection.Purchases = new Mongo.Collection("pos_purchases");
-/*
-Pos.Schema.Sales = new SimpleSchema({
-    saleDate: {
+Pos.Schema.Purchases = new SimpleSchema({
+    purchaseDate: {
         type: Date,
         label: "Sale Date"
     },
     discount: {
         type: Number,
         label: "Discount",
-        decimal:true
+        decimal: true
     },
     subTotal: {
         type: Number,
         label: "SubTotal",
-        decimal:true
+        decimal: true
     },
     total: {
         type: Number,
         label: "Total",
-        decimal:true
+        decimal: true
     },
     staffId: {
         type: String,
@@ -29,50 +28,19 @@ Pos.Schema.Sales = new SimpleSchema({
         type: String,
         label: "Status"
     },
-    customerId: {
+    supplierId: {
         type: String,
-        label: "Phone"
+        label: "Supplier"
     },
-    //tableId: {
-    //    type: String,
-    //    label: "Table"
-    //},
-    createdAt: {
-        type: Date,
-        label: "Created Date",
-        autoValue: function () {
-            if (this.isInsert)
-                return new Date;
-        },
-        denyUpdate: true,
-        optional: true
-    },
-    updatedAt: {
-        type: Date,
-        label: "Updated Date",
-        autoValue: function () {
-            return new Date();
-        },
-        optional: true
-    },
-    createdUserId: {
+    transactionType: {
         type: String,
-        label: "Created by",
-        autoValue: function () {
-            if (this.isInsert)
-                return Meteor.user()._id;
-        },
-        denyUpdate: true,
-        optional: true
+        label: "Transaction Type"
     },
-    updatedUserId: {
-        type: String,
-        label: "Updated by",
-        autoValue: function () {
-            return Meteor.user()._id;
-        },
-        optional: true
+    description:{
+        type:String,
+        label:"Description",
+        optional:true
     }
 });
-Pos.Collection.Sales.attachSchema(Pos.Schema.Sales);
-*/
+Pos.Collection.Purchases.attachSchema(Pos.Schema.Purchases);
+

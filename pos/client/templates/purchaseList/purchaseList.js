@@ -1,3 +1,5 @@
+var posPurchaseUpdate = Template.pos_purchaseUpdate;
+
 Template.pos_purchaseList.helpers({
     selector: function () {
         return {branchId: Session.get('currentBranch')}
@@ -5,13 +7,26 @@ Template.pos_purchaseList.helpers({
 });
 Template.pos_purchaseList.onRendered(function () {
     createNewAlertify(['purchaseShow']);
+    createNewAlertify(['purchaseUpdate']);
 });
 Template.pos_purchaseList.events({
     'click .insert': function (e, t) {
         FlowRouter.go('pos.purchase');
     },
     'click .update': function (e, t) {
-        FlowRouter.go('pos.purchase', {purchaseId: this._id});
+        var id = this._id;
+        Meteor.call('findOneRecord', 'Pos.Collection.Purchases', {_id: id}, {}, function (error, purchase) {
+            if (error) {
+                alertify.error(error.message);
+            } else {
+                if (purchase.status != "Unsaved") {
+                    alertify.purchaseUpdate(fa('pencil', 'Update Existing Purchase'), renderTemplate(posPurchaseUpdate, purchase));
+                } else {
+                    FlowRouter.go('pos.purchase', {purchaseId: id});
+                }
+            }
+
+        });
     },
     'click .remove': function (e, t) {
         var id = this._id;
@@ -58,5 +73,17 @@ Template.pos_purchaseList.events({
 
             })
 
+    }
+});
+
+AutoForm.hooks({
+    pos_purchaseUpdate: {
+        onSuccess: function (formType, result) {
+            alertify.purchaseUpdate().close();
+            alertify.success('Success');
+        },
+        onError: function (formType, error) {
+            alertify.error(error.message);
+        }
     }
 });

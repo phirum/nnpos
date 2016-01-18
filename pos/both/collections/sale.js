@@ -1,78 +1,69 @@
 Pos.Collection.Sales = new Mongo.Collection("pos_sales");
-/*
+
 Pos.Schema.Sales = new SimpleSchema({
+    voucher: {
+        type: String,
+        label: "Voucher",
+        unique: true
+    },
     saleDate: {
         type: Date,
         label: "Sale Date"
-    },
-    discount: {
-        type: Number,
-        label: "Discount",
-        decimal:true
-    },
-    subTotal: {
-        type: Number,
-        label: "SubTotal",
-        decimal:true
-    },
-    total: {
-        type: Number,
-        label: "Total",
-        decimal:true
     },
     staffId: {
         type: String,
         label: "Staff"
         //regEx: /^[a-z0-9A-Z_]{3,15}$/
     },
+    customerId: {
+        type: String,
+        label: "Customer"
+    },
     status: {
         type: String,
         label: "Status"
     },
-    customerId: {
-        type: String,
-        label: "Phone"
+    description:{
+        type:String,
+        label:"Description",
+        optional:true
     },
-    //tableId: {
-    //    type: String,
-    //    label: "Table"
-    //},
-    createdAt: {
-        type: Date,
-        label: "Created Date",
-        autoValue: function () {
-            if (this.isInsert)
-                return new Date;
-        },
-        denyUpdate: true,
-        optional: true
+    exchangeRateId:{
+        type:String,
+        label:"Exchange Rate"
     },
-    updatedAt: {
-        type: Date,
-        label: "Updated Date",
-        autoValue: function () {
-            return new Date();
-        },
-        optional: true
+    discount: {
+        type: Number,
+        label: "Discount",
+        decimal: true
     },
-    createdUserId: {
-        type: String,
-        label: "Created by",
-        autoValue: function () {
-            if (this.isInsert)
-                return Meteor.user()._id;
-        },
-        denyUpdate: true,
-        optional: true
+    subTotal: {
+        type: Number,
+        label: "SubTotal",
+        decimal: true
     },
-    updatedUserId: {
-        type: String,
-        label: "Updated by",
-        autoValue: function () {
-            return Meteor.user()._id;
-        },
-        optional: true
+    total: {
+        type: Number,
+        label: "Total",
+        decimal: true
+    },
+    discountAmount:{
+        type:Number,
+        label:"Discount Amount",
+        decimal:true
+    },
+    transactionType:{
+        type:String,
+        label:"Transaction Type"
+    },
+    branchId:{
+        type:String,
+        label:"Branch"
+    },
+    locationId:{
+        type:String,
+        label:"Location"
     }
 });
 Pos.Collection.Sales.attachSchema(Pos.Schema.Sales);
-*/
+
