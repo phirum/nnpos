@@ -119,7 +119,6 @@ function getSaleProducts(params, categoryId) {
         var product = Pos.Collection.Products.findOne(r.productId);
         grandTotal += r.amount;
         granTotalCost += r.totalCost;
-        console.log(r.amount);
         var unit = Pos.Collection.Units.findOne(product.unitId).name;
         arr.push({
             order: i,

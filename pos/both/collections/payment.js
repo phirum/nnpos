@@ -23,6 +23,30 @@ Pos.Schema.Payments = new SimpleSchema({
     paymentDate: {
         type: String,
         label: "Payment Date"
+    },
+    payAmount: {
+        type: Number,
+        label: "Pay Amount",
+        decimal: true
+    },
+    dueAmount: {
+        type: Number,
+        label: "Due Amount",
+        decimal: true
+    },
+    balanceAmount: {
+        type: Number,
+        label: "Balance Amount",
+        decimal: true
+    },
+    branchId: {
+        type: String,
+        label: "Branch"
+    },
+    status: {
+        type: String,
+        label: "status"
     }
+
 });
 //Pos.Collection.Payments.attachSchema(Pos.Schema.Payments);

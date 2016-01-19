@@ -64,7 +64,6 @@ Pos.Collection.SaleDetails.after.update(function (userId, doc, fieldNames, modif
         var saleDate = sale.saleDate;
         checkPromotion(doc, saleDate);
     });
-    console.log(doc._id);
 });
 
 Pos.Collection.Sales.after.update(function (userId, doc, fieldNames, modifier, options) {
@@ -158,7 +157,6 @@ function removePromotionProduct(doc) {
             selector.startTime = {$lte: saleTime};
             selector.endTime = {$gte: saleTime};
             var promotionQty = Pos.Collection.PromotionQuantities.findOne(selector);
-            console.log(promotionQty);
             if (promotionQty != null) {
                 promotionQty.promotionItems.forEach(function (pro) {
                     var selector = {

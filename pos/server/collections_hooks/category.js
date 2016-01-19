@@ -35,15 +35,18 @@ var getCategoryIds= function(array,categories){
 
 
 Pos.Collection.Categories.after.update(function (userId, doc, fieldNames, modifier, options) {
-    var categories = Pos.Collection.Categories.find({parentId: doc._id});
-    var array=[];
-    array=getCategoryIds(array,categories);
-    var childCategories=Pos.Collection.Categories.find({_id:{$in:array}});
-    childCategories.forEach(function (c){
-        var level=Pos.Collection.Categories.findOne(c.parentId).level + 1;
-        Pos.Collection.Categories.direct.update(c._id,
-            {$set: {level: level}}
-        );
+    Meteor.defer(function () {
+        Meteor._sleepForMs(500);
+        var categories = Pos.Collection.Categories.find({parentId: doc._id});
+        var array = [];
+        array = getCategoryIds(array, categories);
+        var childCategories = Pos.Collection.Categories.find({_id: {$in: array}});
+        childCategories.forEach(function (c) {
+            var level = Pos.Collection.Categories.findOne(c.parentId).level + 1;
+            Pos.Collection.Categories.direct.update(c._id,
+                {$set: {level: level}}
+            );
+        });
     });
 }, {fetchPrevious: true});
 

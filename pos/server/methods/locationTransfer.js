@@ -5,7 +5,6 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         var todayDate = moment().format('YYYYMMDD');
-        console.log(todayDate);
         var prefix = locationTransfer.branchId + "-" + todayDate;
         var locationTransferId= idGenerator.genWithPrefix(Pos.Collection.LocationTransfers, prefix, 4);
         locationTransfer._id=locationTransferId;

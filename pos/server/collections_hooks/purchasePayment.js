@@ -6,6 +6,7 @@
 
 Pos.Collection.PurchasePayments.after.remove(function (userId, doc) {
     Meteor.defer(function () {
+        Meteor._sleepForMs(1000);
         var purchaseObj = {};
         purchaseObj.owedAmount = doc.dueAmount;
         purchaseObj.status = "Owed";
@@ -14,6 +15,7 @@ Pos.Collection.PurchasePayments.after.remove(function (userId, doc) {
 });
 Pos.Collection.PurchasePayments.after.insert(function (userId, doc) {
     Meteor.defer(function () {
+        Meteor._sleepForMs(1000);
         var purchaseObj = {};
         if (doc.balanceAmount <= 0) {
             purchaseObj.status = "Paid";
@@ -27,6 +29,7 @@ Pos.Collection.PurchasePayments.after.insert(function (userId, doc) {
 });
 Pos.Collection.PurchasePayments.after.update(function (userId, doc, fieldNames, modifier, options) {
     Meteor.defer(function () {
+        Meteor._sleepForMs(1000);
         var purchaseObj = {};
         if (doc.balanceAmount <= 0) {
             purchaseObj.status = "Paid";
