@@ -4,7 +4,7 @@ Pos.Schema.Sales = new SimpleSchema({
     voucher: {
         type: String,
         label: "Voucher",
-        unique: true
+        optional:true
     },
     saleDate: {
         type: Date,

@@ -17,11 +17,11 @@ var subs = new SubsManager();
 posRoutes.route('/saleList', {
     name: 'pos.saleList',
     subscriptions: function (params, queryParams) {
-        /*this.register(
-            'pos_sale',
-            Meteor.subscribe('posSale',{branchId:Session.get('currentBranch')})
-        );
         this.register(
+            'pos_userStaff',
+            Meteor.subscribe('posUserStaff', {branchId: Session.get('currentBranch')})
+        );
+         /* this.register(
             'pos_saleDetail',
             Meteor.subscribe('posSaleDetail',{branchId:Session.get('currentBranch')})
         );*/

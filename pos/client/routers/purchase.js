@@ -36,6 +36,10 @@ var subs = new SubsManager();
 posRoutes.route('/purchaseList', {
     name: 'pos.purchaseList',
     subscriptions: function (params, queryParams) {
+        this.register(
+            'pos_userStaff',
+            Meteor.subscribe('posUserStaff', {branchId: Session.get('currentBranch')})
+        );
         /*this.register(
          'pos_purchase',
          subs.subscribe('posPurchase')

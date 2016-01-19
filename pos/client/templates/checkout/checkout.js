@@ -875,11 +875,11 @@ function getValidatedValues() {
         return data;
     }
     var voucher = $('#voucher').val();
-    if (voucher == '') {
+    /*if (voucher == '') {
         data.valid = false;
         data.message = "Please input voucher.";
         return data;
-    }
+    }*/
     /*else {
      if (saleId == '') {
      Meteor.call();

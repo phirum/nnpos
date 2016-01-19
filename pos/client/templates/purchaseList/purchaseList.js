@@ -1,5 +1,37 @@
 var posPurchaseUpdate = Template.pos_purchaseUpdate;
 
+posPurchaseUpdate.onRendered(function () {
+    Meteor.setTimeout(function () {
+        $('select[name="supplierId"]').select2();
+        /*  $('[name="saleDate"]').datetimepicker({
+         format: "YYYY-MM-DD HH:mm:ss"
+         });*/
+        $('select[name="staffId"]').select2();
+    }, 500);
+});
+posPurchaseUpdate.helpers({
+    staffs: function () {
+        var userStaff = Pos.Collection.UserStaffs.findOne({userId: Meteor.user()._id});
+        if (userStaff != null) {
+            var selector = {_id: {$in: userStaff.staffIds}, branchId: Session.get('currentBranch')};
+            return ReactiveMethod.call('getList', 'Pos.Collection.Staffs', selector, {}, false);
+        } else {
+            return [];
+        }
+    },
+    suppliers: function () {
+        var selector = {branchId: Session.get('currentBranch')};
+        return ReactiveMethod.call('getList', 'Pos.Collection.Suppliers', selector, {}, false);
+    }
+    ,
+    transactionTypes: function () {
+        return [
+            {value: 'Purchase', label: 'Purchase'},
+            {value: 'AdjustmentQtyUp', label: 'AdjustmentQtyUp'}
+        ]
+    }
+});
+
 Template.pos_purchaseList.helpers({
     selector: function () {
         return {branchId: Session.get('currentBranch')}

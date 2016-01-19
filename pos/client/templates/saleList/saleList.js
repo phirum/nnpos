@@ -2,25 +2,31 @@ var posSaleListTPL = Template.pos_saleList;
 var posSaleShow = Template.pos_saleShow;
 var posSaleUpdate = Template.pos_saleUpdate;
 
-posSaleUpdate.onRendered(function(){
-    //Meteor.setTimeout(function(){
-        $('select[name="custmoerId"]').select2();
-        $('[name="saleDate"]').datetimepicker({
-            format: "YYYY-MM-DD HH:mm:ss"
-        });
+posSaleUpdate.onRendered(function () {
+    Meteor.setTimeout(function () {
+        $('select[name="customerId"]').select2();
+        /* $('[name="saleDate"]').datetimepicker({
+         format: "YYYY-MM-DD HH:mm:ss"
+         });*/
         $('select[name="staffId"]').select2();
-    //},500);
+    }, 500);
 });
 
 posSaleUpdate.helpers({
     staffs: function () {
-        var selector = {branchId: Session.get('currentBranch')};
-        return ReactiveMethod.call('getList', 'Pos.Collection.Staffs', selector, {}, false);
+        var userStaff = Pos.Collection.UserStaffs.findOne({userId: Meteor.user()._id});
+        if (userStaff != null) {
+            var selector = {_id: {$in: userStaff.staffIds}, branchId: Session.get('currentBranch')};
+            return ReactiveMethod.call('getList', 'Pos.Collection.Staffs', selector, {}, false);
+        } else {
+            return [];
+        }
     },
     customers: function () {
         var selector = {branchId: Session.get('currentBranch')};
         return ReactiveMethod.call('getList', 'Pos.Collection.Customers', selector, {}, false);
-    },
+    }
+    ,
     transactionTypes: function () {
         return [
             {value: 'Sale', label: 'Sale'},
