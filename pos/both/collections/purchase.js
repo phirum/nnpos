@@ -36,10 +36,22 @@ Pos.Schema.Purchases = new SimpleSchema({
         type: String,
         label: "Transaction Type"
     },
-    description:{
-        type:String,
-        label:"Description",
-        optional:true
+    description: {
+        type: String,
+        label: "Description",
+        optional: true
+    },
+    exchangeRateId: {
+        type: String,
+        label: "Exchange Rate"
+    },
+    branchId: {
+        type: String,
+        label: "Branch"
+    },
+    locationId: {
+        type: String,
+        label: "Location"
     }
 });
 Pos.Collection.Purchases.attachSchema(Pos.Schema.Purchases);
