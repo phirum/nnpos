@@ -84,12 +84,12 @@
         <div class="row">
             <div class="col-md-6">
                 {{> afQuickField name='voucher'}}
-                {{> afQuickField name='staffId'}}
-                {{> afQuickField name='transactionType'}}
+                {{> afQuickField name='staffId' options=staffs type="select2"}}
+                {{> afQuickField name='transactionType' options=transactionTypes type="select2"}}
             </div>
             <div class="col-md-6">
                 {{> afQuickField name='saleDate'}}
-                {{> afQuickField name='customerId'}}
+                {{> afQuickField name='customerId' options=customers type="select2"}}
                 {{> afQuickField name='description'}}
             </div>
         </div>

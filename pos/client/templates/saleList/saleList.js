@@ -2,6 +2,32 @@ var posSaleListTPL = Template.pos_saleList;
 var posSaleShow = Template.pos_saleShow;
 var posSaleUpdate = Template.pos_saleUpdate;
 
+posSaleUpdate.onRendered(function(){
+    //Meteor.setTimeout(function(){
+        $('select[name="custmoerId"]').select2();
+        $('[name="saleDate"]').datetimepicker({
+            format: "YYYY-MM-DD HH:mm:ss"
+        });
+        $('select[name="staffId"]').select2();
+    //},500);
+});
+
+posSaleUpdate.helpers({
+    staffs: function () {
+        var selector = {branchId: Session.get('currentBranch')};
+        return ReactiveMethod.call('getList', 'Pos.Collection.Staffs', selector, {}, false);
+    },
+    customers: function () {
+        var selector = {branchId: Session.get('currentBranch')};
+        return ReactiveMethod.call('getList', 'Pos.Collection.Customers', selector, {}, false);
+    },
+    transactionTypes: function () {
+        return [
+            {value: 'Sale', label: 'Sale'},
+            {value: 'AdjustmentQtyDown', label: 'AdjustmentQtyDown'}
+        ]
+    }
+});
 
 posSaleListTPL.onRendered(function () {
     createNewAlertify(['saleShow'], {size: 'lg'});
