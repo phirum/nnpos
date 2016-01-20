@@ -4,7 +4,6 @@ Pos.Collection.Categories.before.insert(function (userId, doc) {
 });
 
 Pos.Collection.Categories.before.update(function (userId, doc, fieldNames, modifier, options) {
-    Meteor.defer(function () {
         modifier.$set = modifier.$set || {};
         if (modifier.$set.parentId == null) {
             Pos.Collection.Categories.direct.update(doc._id,
@@ -16,8 +15,6 @@ Pos.Collection.Categories.before.update(function (userId, doc, fieldNames, modif
                 {$set: {level: level}}
             );
         }
-
-    });
 });
 
 var getCategoryIds= function(array,categories){

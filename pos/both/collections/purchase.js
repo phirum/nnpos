@@ -52,6 +52,12 @@ Pos.Schema.Purchases = new SimpleSchema({
     locationId: {
         type: String,
         label: "Location"
+    },
+    owedAmount: {
+        type: Number,
+        label: "Owed Amount",
+        decimal: true,
+        optional: true
     }
 });
 Pos.Collection.Purchases.attachSchema(Pos.Schema.Purchases);

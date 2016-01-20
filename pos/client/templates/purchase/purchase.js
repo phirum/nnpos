@@ -325,7 +325,7 @@ Template.pos_purchase.events({
         set.transactionType = transactionType;
         set.description = description;
         set.locationId = locationId;
-        Meteor.call('updatePurchase', purchaseId, set, function (error, result) {
+        Meteor.call('directUpdatePurchase', purchaseId, set, function (error, result) {
             if (error)alertify.error(error.message);
         });
         Session.set('purchaseHasUpdate', false);
@@ -447,7 +447,7 @@ Template.pos_purchase.events({
             else {
                 var purchaseObj = {};
                 purchaseObj.status = 'Owed';
-                Meteor.call('updatePurchase', purchaseId, purchaseObj);
+                Meteor.call('directUpdatePurchase', purchaseId, purchaseObj);
                 alertify.success('Purchase is saved successfully');
                 FlowRouter.go('pos.purchase');
             }
@@ -794,6 +794,7 @@ function addOrUpdateProducts(branchId, purchaseId, product, purchaseObj) {
         purchaseObj.discount = totalDiscount;
         purchaseObj.total = 0;
         purchaseObj.branchId = branchId;
+        purchaseObj.owedAmount=0;
         //purchaseObj.exchangeRateId = exchangeRateId;
         //purchaseObj.purchaseDate = moment(purchaseDate).toDate();
         //purchaseObj.transactionType = transactionType;

@@ -42,7 +42,7 @@ Meteor.methods({
         var updateObject = {};
         if (set != null) updateObject.$set = set;
         if (unset != null) updateObject.$unset = unset;
-        Pos.Collection.Purchases.update(id, updateObject);
+        Pos.Collection.Purchases.direct.update(id, updateObject);
     },
     insertPurchaseDetails: function (obj) {
         if (!Meteor.userId()) {
@@ -60,7 +60,7 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        Pos.Collection.PurchaseDetails.update(id, {$set: set});
+        Pos.Collection.PurchaseDetails.update(id, {$set: set},{validate:false});
     },
     directUpdatePurchaseDetails: function (id, set, unset) {
         if (!Meteor.userId()) {

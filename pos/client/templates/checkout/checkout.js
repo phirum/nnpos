@@ -406,7 +406,7 @@ Template.pos_checkout.events({
                     set.transactionType = transactionType;
                     set.description = description;
                     set.voucher = voucher;
-                    Meteor.call('updateSale', saleId, set, function (error, result) {
+                    Meteor.call('directUpdateSale', saleId, set, function (error, result) {
                         if (error) {
                             alertify.error(error.message);
                         }
@@ -595,7 +595,7 @@ Template.pos_checkout.events({
             else {
                 var saleObj = {};
                 saleObj.status = 'Owed';
-                Meteor.call('updateSale', saleId, saleObj, function (er, re) {
+                Meteor.call('directUpdateSale', saleId, saleObj, function (er, re) {
                     if (er) {
                         alertify.error(er.message);
                     } else {
