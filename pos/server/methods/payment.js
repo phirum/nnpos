@@ -6,8 +6,6 @@ Meteor.methods({
         var prefix = obj.saleId;
         obj.paymentDate = obj.paymentDate ? obj.paymentDate : new Date();
         obj._id = idGenerator.genWithPrefix(Pos.Collection.Payments, prefix, 3);
-        console.log('----------------------------------------------------');
-        console.log(obj);
         return Pos.Collection.Payments.insert(obj);
     },
     directInsertPayment: function (obj) {

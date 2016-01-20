@@ -33,7 +33,7 @@ Meteor.methods({
         var updateObject = {};
         if (set != null) updateObject.$set = set;
         if (unset != null) updateObject.$unset = unset;
-        Pos.Collection.Purchases.update(id, {$set: set});
+        Pos.Collection.Purchases.update(id, updateObject);
     },
     directUpdatePurchase: function (id, set, unset) {
         if (!Meteor.userId()) {
@@ -60,7 +60,7 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        Pos.Collection.PurchaseDetails.update(id, {$set: set},{validate:false});
+        Pos.Collection.PurchaseDetails.update(id, {$set: set}, {validate: false});
     },
     directUpdatePurchaseDetails: function (id, set, unset) {
         if (!Meteor.userId()) {
@@ -83,5 +83,24 @@ Meteor.methods({
         var inventory = Pos.Collection.FIFOInventory.findOne({imei: {"$in": [imei]}});
         return inventory;
         //return (saleDetail || inventory);
+    },
+    //need to refactor code later
+    updatePurchaseTotalByDiscount: function (purchaseId, discount) {
+        var purchaseSubTotal = 0;
+        var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
+        purchaseDetails.forEach(function (purchaseDetail) {
+            purchaseSubTotal += parseFloat(purchaseDetail.amount);
+        });
+        var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
+        var total = purchaseSubTotal * (1 - discount / 100);
+        if (baseCurrencyId == "KHR") {
+            total = roundRielCurrency(total);
+        }
+        var set = {};
+        set.subTotal = purchaseSubTotal;
+        set.total = total;
+        Pos.Collection.Purchases.direct.update(purchaseId, {$set: set});
     }
+
 });
+

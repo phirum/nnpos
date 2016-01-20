@@ -8,26 +8,25 @@ Pos.Collection.PurchaseDetails.after.remove(function (userId, doc) {
     }
 });
 Pos.Collection.Purchases.before.update(function (userId, doc, fieldNames, modifier, options) {
+
         if (modifier.$set.locationId != null && modifier.$set.locationId != doc.locationId) {
             Pos.Collection.PurchaseDetails.update(
                 {purchaseId: doc._id},
                 {$set: {locationId: modifier.$set.locationId}},
                 {multi: true});
         }
+
 });
-Pos.Collection.Purchases.after.update(function (userId, doc, fieldNames, modifier, options) {
-    console.log('After update from purchase');
+/*Pos.Collection.Purchases.after.update(function (userId, doc, fieldNames, modifier, options) {
     updatePurchaseTotal(doc._id);
-});
+});*/
 
 Pos.Collection.PurchaseDetails.after.insert(function (userId, doc) {
-    console.log('After insert from purchaseDetail');
     updatePurchaseTotal(doc.purchaseId);
 
 });
 
 Pos.Collection.PurchaseDetails.after.update(function (userId, doc, fieldNames, modifier, options) {
-    console.log('After update from purchaseDetails');
     updatePurchaseTotal(doc.purchaseId);
 });
 

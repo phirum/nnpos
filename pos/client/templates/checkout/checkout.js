@@ -547,12 +547,15 @@ Template.pos_checkout.events({
         if (baseCurrencyId == "KHR") {
             total = roundRielCurrency(total);
         }
-        var set = {};
+        /*var set = {};
         set.discount = discountPercentage;
         set.discountAmount = discount;
         set.total = total;
 
         Meteor.call('directUpdateSale', saleId, set, function (error, result) {
+            if (error) alertify.error(error.message);
+        });*/
+        Meteor.call('updateSaleTotalByDiscount', saleId, discountPercentage, function (error, result) {
             if (error) alertify.error(error.message);
         });
     },
@@ -575,12 +578,15 @@ Template.pos_checkout.events({
         if (baseCurrencyId == "KHR") {
             total = roundRielCurrency(total);
         }
-        var set = {};
-        set.discount = discount;
-        set.discountAmount = discountAmount;
-        set.total = total;
+        /*  var set = {};
+         set.discount = discount;
+         set.discountAmount = discountAmount;
+         set.total = total;
 
-        Meteor.call('directUpdateSale', saleId, set, function (error, result) {
+         Meteor.call('directUpdateSale', saleId, set, function (error, result) {
+         if (error) alertify.error(error.message);
+         });*/
+        Meteor.call('updateSaleTotalByDiscount', saleId, discount, function (error, result) {
             if (error) alertify.error(error.message);
         });
     },
@@ -876,10 +882,10 @@ function getValidatedValues() {
     }
     var voucher = $('#voucher').val();
     /*if (voucher == '') {
-        data.valid = false;
-        data.message = "Please input voucher.";
-        return data;
-    }*/
+     data.valid = false;
+     data.message = "Please input voucher.";
+     return data;
+     }*/
     /*else {
      if (saleId == '') {
      Meteor.call();

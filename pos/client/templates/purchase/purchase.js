@@ -416,16 +416,24 @@ Template.pos_purchase.events({
             $(e.currentTarget).focus();
             return;
         }
-        var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
-        var total = purchase.subTotal * (1 - discount / 100);
-        if (baseCurrencyId == "KHR") {
-            total = roundRielCurrency(total);
-        }
-        var set = {};
-        set.discount = discount;
-        set.total = total;
-        Meteor.call('updatePurchase', purchaseId, set);
-
+        /*var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
+         var total = purchase.subTotal * (1 - discount / 100);
+         if (baseCurrencyId == "KHR") {
+         total = roundRielCurrency(total);
+         }
+         var set = {};
+         set.discount = discount;
+         set.total = total;
+         Meteor.call('updatePurchase', purchaseId, set, function (er, re) {
+         if (er) {
+         alertify.error(er.message);
+         }
+         });*/
+        Meteor.call('updatePurchaseTotalByDiscount', purchaseId, discount, function (er, re) {
+            if (er) {
+                alertify.error(er.message);
+            }
+        });
         /*   Pos.Collection.Purchases.update($('#purchase-id').val(),
          {
          $set: {
@@ -794,7 +802,7 @@ function addOrUpdateProducts(branchId, purchaseId, product, purchaseObj) {
         purchaseObj.discount = totalDiscount;
         purchaseObj.total = 0;
         purchaseObj.branchId = branchId;
-        purchaseObj.owedAmount=0;
+        purchaseObj.owedAmount = 0;
         //purchaseObj.exchangeRateId = exchangeRateId;
         //purchaseObj.purchaseDate = moment(purchaseDate).toDate();
         //purchaseObj.transactionType = transactionType;
