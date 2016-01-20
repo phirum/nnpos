@@ -152,7 +152,6 @@ Meteor.methods({
         set.total = total;
         set.discountAmount = discountAmount;
         //set.discountAmount=saleSubTotal-total;
-        console.log(set);
         Pos.Collection.Sales.direct.update(saleId, {$set: set});
         //Meteor.call('updateSale', saleId, set);
 
