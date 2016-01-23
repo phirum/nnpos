@@ -38,7 +38,7 @@ Template.pos_purchaseList.helpers({
     }
 });
 Template.pos_purchaseList.onRendered(function () {
-    createNewAlertify(['purchaseShow']);
+    createNewAlertify(['purchaseShow'],{size:'lg'});
     createNewAlertify(['purchaseUpdate']);
 });
 Template.pos_purchaseList.events({

@@ -60,6 +60,7 @@
             <th>Qty</th>
             <th>Dis(%)</th>
             <th>Amount</th>
+            <th>IMEI</th>
         </tr>
         </thead>
         <tbody>
@@ -71,6 +72,7 @@
                 <td>{{quantity}}</td>
                 <td>{{discount}}</td>
                 <td>{{amount}}</td>
+                <td class="auto-fix">{{#each imei}}{{this}}<br>{{/each}}</td>
             </tr>
         {{/each}}
         </tbody>
