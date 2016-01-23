@@ -1,6 +1,6 @@
 Meteor.methods({
     posSaleReport: function (arg) {
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
         var data = {
@@ -98,8 +98,10 @@ function calculateSaleHelper(sl) {
         s.saleDate = moment(s.saleDate).format("DD-MM-YY, HH:mm");
         s.total = numeral(s.total).format('0,0.00');
         s.totalCost = numeral(s.totalCost).format('0,0.00');
-        s.customer = Pos.Collection.Customers.findOne(s.customerId).name;
-        s.staff = Pos.Collection.Staffs.findOne(s.staffId).name;
+        s.customer = s._customer.name;
+        s.staff = s._staff.name;
+        //s.customer = Pos.Collection.Customers.findOne(s.customerId).name;
+        //s.staff = Pos.Collection.Staffs.findOne(s.staffId).name;
         i++;
         saleList.push(s);
     });

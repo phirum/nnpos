@@ -1,0 +1,125 @@
+<!--Form-->
+<template name="pos_imeiHistoryReport">
+    {{#autoForm schema=Pos.Schema.IMEIHistoryReport id="pos_imeiHistoryReport" action="imeiHistoryReportGen" target="_blank"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='imei'}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name='branch'}}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>
+
+<!--Generate-->
+<template name="pos_imeiHistoryReportGen">
+    {{#if data}}
+        {{#reportTpl options}}
+            {{#with data}}
+                {{#with title}}
+                    <div class="title">
+                        <div class="title-1x-kh-muol">{{khName}}</div>
+                        <div class="title-1x">{{enName}}</div>
+                        <div style="text-decoration: underline;">IMEI History Summery Report</div>
+                        <div class="title-2x">{{enAddress}}</div>
+                    </div>
+                {{/with}}
+                {{#with header}}
+                    <div style="width: 100%">
+                        <div style="width: 50%; float: left">
+                            <ul class="list-unstyled">
+                                <li><strong>Branch:</strong> {{branch}}</li>
+                            </ul>
+                        </div>
+                        <div style="width: 50%; float: right">
+                            <ul class="list-unstyled">
+                                <li><strong>IMEI:</strong> {{imei}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                {{/with}}
+
+
+                <h4 style="margin-bottom:-25px; ">Sale</h4>
+
+                <!--Sale IMEI History-->
+                <table class="report-content">
+                    <thead class="content-header">
+                    <tr>
+                        <th>No</th>
+                        <th>InvoiceId</th>
+                        <th>Date</th>
+                        <th>Staff</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="content-body">
+                    {{#each saleIMEIHistory}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{saleId}}</td>
+                            <td>{{saleDate}}</td>
+                            <td>{{staff}}</td>
+                            <td>{{customer}}</td>
+                            <td>{{_product.name}}</td>
+                            <td>{{price}}</td>
+                            <td>{{quantity}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+
+                <h4 style="margin-bottom:-25px; ">Purchase</h4>
+                <!--Purchase IMEI History-->
+                <table class="report-content">
+                    <thead class="content-header">
+                    <tr>
+                        <th>No</th>
+                        <th>InvoiceId</th>
+                        <th>Date</th>
+                        <th>Staff</th>
+                        <th>Supplier</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="content-body">
+                    {{#each purchaseIMEIHistory}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{purchaseId}}</td>
+                            <td>{{purchaseDate}}</td>
+                            <td>{{staff}}</td>
+                            <td>{{supplier}}</td>
+                            <td>{{_product.name}}</td>
+                            <td>{{price}}</td>
+                            <td>{{quantity}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+
+            {{/with}}
+
+            <!--Sign-->
+            {{> signFooter}}
+
+        {{/reportTpl}}
+
+        <!--Auto print-->
+        <!--{{autoprint close="true"}}-->
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+
+</template>

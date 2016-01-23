@@ -1,6 +1,6 @@
 Meteor.methods({
     posPurchaseReport: function (arg) {
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
         var data = {
@@ -78,8 +78,7 @@ function calculatePurchaseHelper(pur) {
         grandTotal += p.total;
         p.order = i;
         p.exchangeRates = [];
-        Pos.Collection.ExchangeRates.findOne(p.exchangeRateId).rates.
-        forEach(function (ex) {
+        Pos.Collection.ExchangeRates.findOne(p.exchangeRateId).rates.forEach(function (ex) {
             ex.exTotal = p.total * ex.rate;
             if (grandTotalConvert[ex.toCurrencyId] == null) {
                 grandTotalConvert[ex.toCurrencyId] = 0
@@ -89,8 +88,10 @@ function calculatePurchaseHelper(pur) {
         });
         p.purchaseDate = moment(p.purchaseDate).format("DD-MM-YY, HH:mm");
         p.total = numeral(p.total).format('0,0.00');
-        p.supplier = Pos.Collection.Suppliers.findOne(p.supplierId).name;
-        p.staff = Pos.Collection.Staffs.findOne(p.staffId).name;
+        p.supplier = p._supplier.name;
+        p.staff = p._staff.name;
+        // p.supplier = Pos.Collection.Suppliers.findOne(p.supplierId).name;
+        // p.staff = Pos.Collection.Staffs.findOne(p.staffId).name;
         i++;
         purchaseList.push(p);
     });
