@@ -1,5 +1,4 @@
 Pos.Collection.SaleDetails = new Mongo.Collection("pos_saleDetails");
-/*
 Pos.Schema.SaleDetails = new SimpleSchema({
     saleId: {
         type: String,
@@ -8,6 +7,11 @@ Pos.Schema.SaleDetails = new SimpleSchema({
     productId: {
         type: String,
         label: "Product"
+    },
+    imei: {
+        type: [String],
+        label: "IMEI",
+        optional: true
     },
     price: {
         type: Number,
@@ -28,47 +32,30 @@ Pos.Schema.SaleDetails = new SimpleSchema({
         label: "Amount",
         decimal: true
     },
-    total: {
+    transaction: {
+        type: [Object],
+        label: "Transaction",
+        blackbox: true,
+        optional:true
+    },
+    totalCost: {
         type: Number,
-        label: "Total",
-        decimal: true
-    },
-    createdAt: {
-        type: Date,
-        label: "Created Date",
-        autoValue: function () {
-            if (this.isInsert)
-                return new Date;
-        },
-        denyUpdate: true,
+        label: "Total Cost",
+        decimal: true,
         optional: true
     },
-    updatedAt: {
-        type: Date,
-        label: "Updated Date",
-        autoValue: function () {
-            return new Date();
-        },
-        optional: true
-    },
-    createdUserId: {
+    status: {
         type: String,
-        label: "Created by",
-        autoValue: function () {
-            if (this.isInsert)
-                return Meteor.user()._id;
-        },
-        denyUpdate: true,
-        optional: true
+        label: "Status"
     },
-    updatedUserId: {
+    locationId: {
         type: String,
-        label: "Updated by",
-        autoValue: function () {
-            return Meteor.user()._id;
-        },
-        optional: true
+        label: "Location"
+    },
+    branchId: {
+        type: String,
+        label: "Branch"
     }
 });
 Pos.Collection.SaleDetails.attachSchema(Pos.Schema.SaleDetails);
-*/
+

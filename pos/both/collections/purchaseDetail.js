@@ -1,78 +1,49 @@
-Pos.Collection.PurchaseDetails= new Mongo.Collection("pos_purchaseDetails");
-/*
-Pos.Schema.Sales = new SimpleSchema({
-    saleDate: {
-        type: Date,
-        label: "Sale Date"
+Pos.Collection.PurchaseDetails = new Mongo.Collection("pos_purchaseDetails");
+Pos.Schema.PurchaseDetails = new SimpleSchema({
+    purchaseId: {
+        type: String,
+        label: "Sale"
+    },
+    productId: {
+        type: String,
+        label: "Product"
+    },
+    imei: {
+        type: [String],
+        label: "IMEI",
+        optional: true
+    },
+    price: {
+        type: Number,
+        label: "Price",
+        decimal: true
     },
     discount: {
         type: Number,
         label: "Discount",
-        decimal:true
+        decimal: true
     },
-    subTotal: {
+    quantity: {
         type: Number,
-        label: "SubTotal",
-        decimal:true
+        label: "Quantity"
     },
-    total: {
+    amount: {
         type: Number,
-        label: "Total",
-        decimal:true
-    },
-    staffId: {
-        type: String,
-        label: "Staff"
-        //regEx: /^[a-z0-9A-Z_]{3,15}$/
+        label: "Amount",
+        decimal: true
     },
     status: {
         type: String,
         label: "Status"
     },
-    customerId: {
+    locationId: {
         type: String,
-        label: "Phone"
+        label: "Location"
     },
-    //tableId: {
-    //    type: String,
-    //    label: "Table"
-    //},
-    createdAt: {
-        type: Date,
-        label: "Created Date",
-        autoValue: function () {
-            if (this.isInsert)
-                return new Date;
-        },
-        denyUpdate: true,
-        optional: true
-    },
-    updatedAt: {
-        type: Date,
-        label: "Updated Date",
-        autoValue: function () {
-            return new Date();
-        },
-        optional: true
-    },
-    createdUserId: {
+    branchId: {
         type: String,
-        label: "Created by",
-        autoValue: function () {
-            if (this.isInsert)
-                return Meteor.user()._id;
-        },
-        denyUpdate: true,
-        optional: true
-    },
-    updatedUserId: {
-        type: String,
-        label: "Updated by",
-        autoValue: function () {
-            return Meteor.user()._id;
-        },
-        optional: true
+        label: "Branch"
     }
 });
-Pos.Collection.Sales.attachSchema(Pos.Schema.Sales);
-*/
+Pos.Collection.PurchaseDetails.attachSchema(Pos.Schema.PurchaseDetails);
+
