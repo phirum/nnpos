@@ -85,11 +85,17 @@ Meteor.methods({
             locationId: locationId,
             imei: {"$in": [imei]}
         });
-        var lastInventory = Pos.Collection.FIFOInventory.findOne({
-            branchId: branchId,
-            locationId: locationId
-        }, {sort: {_id: -1}});
-        return inventory._id == lastInventory._id;
+        if (inventory == null) {
+            return false;
+        } else {
+            var lastInventory = Pos.Collection.FIFOInventory.findOne({
+                productId:inventory.productId,
+                branchId: branchId,
+                locationId: locationId
+            }, {sort: {_id: -1}});
+            return inventory._id == lastInventory._id;
+        }
+
         //return (saleDetail || inventory);
     },
     //need to refactor code later
