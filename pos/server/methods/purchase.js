@@ -78,10 +78,18 @@ Meteor.methods({
         }
         Pos.Collection.Purchases.remove(purchaseId);
     },
-    isExistIMEI: function (imei) {
+    isExistIMEI: function (imei, branchId, locationId) {
         //var saleDetail = Pos.Collection.SaleDetails.findOne({imei: {"$in": [imei]}});
-        var inventory = Pos.Collection.FIFOInventory.findOne({imei: {"$in": [imei]}});
-        return inventory;
+        var inventory = Pos.Collection.FIFOInventory.findOne({
+            branchId: branchId,
+            locationId: locationId,
+            imei: {"$in": [imei]}
+        });
+        var lastInventory = Pos.Collection.FIFOInventory.findOne({
+            branchId: branchId,
+            locationId: locationId
+        }, {sort: {_id: -1}});
+        return inventory._id == lastInventory._id;
         //return (saleDetail || inventory);
     },
     //need to refactor code later

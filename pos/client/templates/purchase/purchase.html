@@ -5,14 +5,11 @@
             <img src="{{url}}" width="80px" height="80px" class="img-circle">
         </div>
         <div class="col-lg-9">
-            <p><b style="font-size: 18px;">{{name}}</b></p>
-            <p>
-                {{description}}
+            <p><b style="font-size: 18px;">{{name}} ({{_unit.name}}) </b></p>
+            <p>                {{description}}
             </p>
         </div>
     </div>
-
-
 </template>
 
 <template name="pos_purchase">
@@ -39,12 +36,23 @@
                                 </span>
                             </div>
                             <label for="location-id"> <b>Locations <span style="color:red">*</span></b></label>
-                            <select id="location-id" class="form-control input-sm select-two">
-                                {{#each locations}}
-                                    <option value="{{_id}}"
-                                            selected="{{#if compareTwoValue _id purchase.locationId}}selected{{/if}}">{{name}}</option>
-                                {{/each}}
-                            </select>
+
+                            {{#if isPurchase}}
+                                <input type="text"
+                                       value="{{purchase.locationId}}-{{purchase._location.name}}"
+                                       class="form-control input-sm" readonly>
+                                <input type="text" value="{{purchase.locationId}}"
+                                       class="form-control input-sm hidden" id="location-id">
+                            {{else}}
+                                <select id="location-id" class="form-control input-sm select-two">
+                                    {{#each locations}}
+                                        <option value="{{_id}}"
+                                                selected="{{#if compareTwoValue _id purchase.locationId}}selected{{/if}}">{{name}}</option>
+                                    {{/each}}
+                                </select>
+                            {{/if}}
+
+
                             <label for="staff-id"> <b>Staff <span style="color:red">*</span></b></label>
 
                             <!--<div class="input-group select2-bootstrap-append">-->

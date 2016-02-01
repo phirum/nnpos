@@ -157,6 +157,10 @@ Template.pos_purchase.helpers({
     compareTwoValue: function (val1, val2) {
         return val1 == val2;
     },
+    isPurchase: function () {
+        var purchase = Pos.Collection.Purchases.findOne(FlowRouter.getParam('purchaseId'));
+        return purchase != null;
+    },
     purchase: function () {
         var p = Pos.Collection.Purchases.findOne(FlowRouter.getParam('purchaseId'));
         if (p) {
@@ -268,7 +272,7 @@ Template.pos_purchase.events({
                 return;
             }
             else {
-                Meteor.call('isExistIMEI', imei, function (error, exist) {
+                Meteor.call('isExistIMEI', imei, purchaseDetail.branchId, purchaseDetail.locationId, function (error, exist) {
                     if (error) {
                         alertify.error(error.message);
                     } else {

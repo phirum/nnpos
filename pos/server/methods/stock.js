@@ -371,7 +371,7 @@ Meteor.methods({
                         }
                         //if (enoughQuantity != 0) {
                         if (quantityOfThisPrice > 0) {
-                            transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
+                            transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price});
                             // transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
                             var purchaseDetailObj = {};
                             purchaseDetailObj.locationId = ltd.toLocationId;
