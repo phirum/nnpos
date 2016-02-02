@@ -28,11 +28,11 @@
     {{#autoForm schema=Pos.Schema.PurchasePayments id="pos_purchasePaymentInsert"}}
         <div class="row">
             <div class="col-md-6">
-                {{> afQuickField name='supplierId'}}
-                {{> afQuickField name='purchaseId'}}
+                {{> afQuickField name='supplierId' type="select2" options=supplierList}}
+                {{> afQuickField name='purchaseId' type="select2" options=purchaseList}}
             </div>
             <div class="col-md-6">
-                {{> afQuickField name='paymentDate'}}
+                {{> afQuickField name='paymentDate' type="text" value=paymentDate id="paymentDate"}}
             </div>
             <div class="col-md-12">
                 <table id="payment-table" width="100%">

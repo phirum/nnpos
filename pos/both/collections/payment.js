@@ -3,25 +3,25 @@ Pos.Schema.Payments = new SimpleSchema({
     customerId: {
         type: String,
         label: "Customer",
-        autoform: {
-            type: "select2",
-            options: function () {
-                return Pos.List.customerList();
-            }
-        }
+        /*   autoform: {
+         type: "select2",
+         options: function () {
+         return Pos.List.customerList();
+         }
+         }*/
     },
     saleId: {
         type: String,
-        label: "SaleId",
-        autoform: {
-            type: "select2",
-            options: function () {
-                return Pos.List.saleList()
-            }
-        }
+        label: "SaleId"
+        /* autoform: {
+         type: "select2",
+         options: function () {
+         return Pos.List.saleList()
+         }
+         }*/
     },
     paymentDate: {
-        type: String,
+        type: Date,
         label: "Payment Date"
     },
     payAmount: {
@@ -46,6 +46,11 @@ Pos.Schema.Payments = new SimpleSchema({
     status: {
         type: String,
         label: "status"
+    },
+    payment: {
+        type: [Object],
+        label: "Payment",
+        blackbox: true
     }
 
 });

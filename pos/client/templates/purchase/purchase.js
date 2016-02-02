@@ -264,12 +264,17 @@ Template.pos_purchase.events({
             var purchaseDetail = Pos.Collection.PurchaseDetails.findOne(purchaseDetailId);
             var obj = {};
             var imeis = purchaseDetail.imei == null ? [] : purchaseDetail.imei;
+            var purchaseHasIMEI = Pos.Collection.PurchaseDetails.findOne({
+                imei: {"$in": [imei]}
+            });
+
             if (imeis.indexOf(imei) != -1) {
                 alertify.warning('IMEI is already exist.');
-                return;
+
+            } else if (purchaseHasIMEI) {
+                alertify.warning('IMEI is already exist this purchase or other.');
             } else if (purchaseDetail.imei.count() == purchaseDetail.quantity) {
                 alertify.warning("Number of IMEI can't greater than Quantity.");
-                return;
             }
             else {
                 Meteor.call('isExistIMEI', imei, purchaseDetail.branchId, purchaseDetail.locationId, function (error, exist) {

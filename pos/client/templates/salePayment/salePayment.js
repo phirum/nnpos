@@ -107,9 +107,36 @@ posSalePaymentTPL.events({
     }
 });
 posSalePaymentInsertTPL.onRendered(function () {
+    Session.set("posSalePaymentDate",null);
     datePicker();
 });
 posSalePaymentInsertTPL.helpers({
+    customerList: function () {
+
+        var branchIdSession = Session.get('currentBranch');
+        var selector = {};
+        if (branchIdSession != null) selector.branchId = branchIdSession;
+        return ReactiveMethod.call('getCustomerList',selector);
+    },
+    paymentDate: function () {
+        //var sale = Pos.Collection.Sales.findOne(FlowRouter.getParam('saleId'));
+        var paymentDateSession = Session.get('posSalePaymentDate');
+        if (paymentDateSession) {
+            return paymentDateSession;
+            //return moment(paymentDateSession).format('YYYY-MM-DD HH:mm:ss');
+        } else {
+            return moment(TimeSync.serverTime(null)).format('YYYY-MM-DD HH:mm:ss');
+        }
+    },
+    saleList: function () {
+        var customerSession = Session.get('customerId');
+        var branchIdSession = Session.get('currentBranch');
+        var selector = {};
+        selector.status = "Owed";
+        if (branchIdSession != null) selector.branchId = branchIdSession;
+        if (customerSession != null) selector.customerId = customerSession;
+        return ReactiveMethod.call('getSaleListForPayment', selector);
+    },
     dueAmount: function () {
         var dueAmount = Session.get('dueAmount');
         return dueAmount == null ? 0 : dueAmount;
@@ -141,6 +168,10 @@ posSalePaymentInsertTPL.helpers({
     }
 });
 posSalePaymentInsertTPL.events({
+    'blur #paymentDate': function (e) {
+        var paymentDate = $(e.currentTarget).val();
+        Session.set("posSalePaymentDate",paymentDate);
+    },
     'click #save-payment': function () {
         var saleId = $('select[name="saleId"]').val();
         var paymentDate = $('[name="paymentDate"]').val();

@@ -19,14 +19,14 @@ posRoutes.route('/purchasePayment', {
             'pos_purchasePayment',
             Meteor.subscribe('posPayment',{branchId:Session.get('currentBranch')})
         );*/
-        this.register(
+       /* this.register(
             'pos_purchase',
             Meteor.subscribe('posPurchase',{branchId:Session.get('currentBranch'),status:"Owed"})
         );
         this.register(
             'pos_supplier',
             Meteor.subscribe('posSupplier',{branchId:Session.get('currentBranch')})
-        );
+        );*/
         this.register(
             'pos_exchangeRate',
             Meteor.subscribe('posExchangeRate',{branchId:Session.get('currentBranch')})

@@ -75,6 +75,10 @@ Pos.Schema.Sales = new SimpleSchema({
         label: "total Cost",
         decimal: true,
         optional: true
+    },
+    isRetail:{
+        type:Boolean,
+        label:"Sale Type"
     }
 });
 Pos.Collection.Sales.attachSchema(Pos.Schema.Sales);

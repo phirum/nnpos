@@ -334,7 +334,8 @@ Template.pos_checkout.events({
             //---Open Inventory type block "FIFO Inventory"---
             Meteor.call('findOneRecord', 'Pos.Collection.FIFOInventory', {
                 branchId: branchId,
-                productId: saleDetail.productId
+                productId: saleDetail.productId,
+                locationId:saleDetail.locationId
             }, {sort: {createdAt: -1}}, function (error, inventory) {
                 if (inventory) {
                     if (inventory.imei == null || inventory.imei.indexOf(imei) == -1) {
