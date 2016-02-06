@@ -43,7 +43,7 @@ Meteor.methods({
         });
         return list;
     },
-    getPurchaseList:function(selector){
+    getPurchaseList: function (selector) {
         var list = [{label: "(Select One)", value: ""}];
         Pos.Collection.Purchases.find(selector).forEach(function (obj) {
             var payment = Pos.Collection.Payments.findOne({
@@ -62,6 +62,13 @@ Meteor.methods({
             }
 
 
+        });
+        return list;
+    },
+    getProductList: function () {
+        var list = [{label: "(Select One)", value: ""}];
+        Pos.Collection.Products.find().forEach(function (obj) {
+            list.push({label: obj._id + ' : ' + obj.name, value: obj._id});
         });
         return list;
     }

@@ -12,15 +12,31 @@ promotionQtyItemTpl.onCreated(function () {
 });
 
 promotionQtyItemTpl.onRendered(function () {
-    setTimeout(function () {
+    /*setTimeout(function () {
         $('#tmpProductId').select2();
-    }, 500);
+    }, 500);*/
 
 });
 
 promotionQtyItemTpl.helpers({
+    productItem: function (query, sync, callback) {
+        Meteor.call('searchProduct', query, {}, function (err, res) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            callback(res);
+        });
+    },
+    selected: function (event, suggestion, dataSetName) {
+        // TODO your event handler here
+        var id = suggestion._id;
+        //event.target.productId.value = id;
+        $('[name="tmpProductId"]').val(id).change();
+        $('[name="productItem"]').val(suggestion.name);
+    },
     products: function () {
-        return Pos.Collection.Products.find();
+        return ReactiveMethod.call('getProductList');
     },
     promotionQtyItems: function () {
         return promotionItemsState.fetch();

@@ -19,12 +19,16 @@
         </div>-->
         <div class="col-sm-6">
             <div class="form-group">
-                <select id="tmpProductId" class="tmpProductId form-control" name="tmpProductId" style="width: 100%;">
-                    <option value="">(Select One)</option>
+                <input class="form-control typeahead" name="product-item" type="text"
+                       placeholder="Type your product name" autocomplete="on" spellcheck="off"
+                       data-source="productItem" data-select='selected' data-highlight=true
+                       data-template='repo' style="width: 300px;"/>
+                <input type="text" id="tmpProductId" class="form-control tmpProductId" name="tmpProductId">
+               <!-- <select id="tmpProductId" class="tmpProductId form-control" name="tmpProductId" style="width: 100%;">
                     {{#each products}}
-                        <option value="{{_id}}">{{name}}</option>
+                        <option value="{{value}}">{{label}}</option>
                     {{/each}}
-                </select>
+                </select>-->
             </div>
         </div>
         <div class="col-sm-5">

@@ -20,10 +20,6 @@ posRoutes.route('/promotionQty', {
             'pos_promotionQty',
             Meteor.subscribe('posPromotionQty')
         );
-        this.register(
-            'pos_product',
-            Meteor.subscribe('posProduct')
-        );
     },
     action: function (params, queryParams) {
         Layout.main('pos_promotionQty');
