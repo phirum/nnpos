@@ -3,6 +3,7 @@ var posSaleShow = Template.pos_saleShow;
 var posSaleUpdate = Template.pos_saleUpdate;
 
 posSaleUpdate.onRendered(function () {
+
     Meteor.setTimeout(function () {
         $('select[name="customerId"]').select2();
         /* $('[name="saleDate"]').datetimepicker({
@@ -38,15 +39,33 @@ posSaleUpdate.helpers({
 posSaleListTPL.onRendered(function () {
     createNewAlertify(['saleShow'], {size: 'lg'});
     createNewAlertify(['saleUpdate']);
+    DateTimePicker.dateRange($('#sale-date-filter'));
 });
 
 posSaleListTPL.helpers({
     selector: function () {
-        return {branchId: Session.get('currentBranch')}
+        var selectorSession = Session.get('saleSelectorSession');
+        if (selectorSession) {
+            return selectorSession;
+        } else {
+            var selector = {branchId: Session.get('currentBranch')};
+            var today = moment().format('DD-MM-YYYY');
+            var fromDate = moment(today + " 00:00:00").toDate();
+            var toDate = moment(today + " 23:59:59").toDate();
+            selector.saleDate = {$gte: fromDate, $lte: toDate};
+            return selector;
+        }
+
     }
 });
 
 posSaleListTPL.events({
+    'change #sale-date-filter': function () {
+        setSelectorSession();
+    },
+    'change #sale-status-filter': function () {
+        setSelectorSession();
+    },
     'click .insert': function (e, t) {
         FlowRouter.go('pos.checkout');
     },
@@ -128,4 +147,24 @@ AutoForm.hooks({
         }
     }
 });
+function setSelectorSession() {
+    var selector = {branchId: Session.get('currentBranch')};
+    var dateRange = $('#sale-date-filter').val();
+    var status = $('#sale-status-filter').val();
+    if (dateRange != "") {
+        var date = dateRange.split(" To ");
+        var fromDate = moment(date[0] + " 00:00:00").toDate();
+        var toDate = moment(date[1] + " 23:59:59").toDate();
+        selector.saleDate = {$gte: fromDate, $lte: toDate};
+    } else {
+        var today = moment().format('DD-MM-YYYY');
+        var fromDate = moment(today + " 00:00:00").toDate();
+        var toDate = moment(today + " 23:59:59").toDate();
+        selector.saleDate = {$gte: fromDate, $lte: toDate};
+    }
+    if (status != "") {
+        selector.status = status
+    }
+    Session.set('saleSelectorSession', selector);
+}
 

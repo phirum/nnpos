@@ -13,8 +13,8 @@ promotionQtyItemTpl.onCreated(function () {
 
 promotionQtyItemTpl.onRendered(function () {
     /*setTimeout(function () {
-        $('#tmpProductId').select2();
-    }, 500);*/
+     $('#tmpProductId').select2();
+     }, 500);*/
 
 });
 
@@ -33,7 +33,7 @@ promotionQtyItemTpl.helpers({
         var id = suggestion._id;
         //event.target.productId.value = id;
         $('[name="tmpProductId"]').val(id).change();
-        $('[name="productItem"]').val(suggestion.name);
+        $('[name="productItem"]').typeahead('val', suggestion.name);
     },
     products: function () {
         return ReactiveMethod.call('getProductList');

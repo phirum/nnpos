@@ -19,12 +19,12 @@
         </div>-->
         <div class="col-sm-6">
             <div class="form-group">
-                <input class="form-control typeahead" name="product-item" type="text"
+                <input class="form-control typeahead" name="productItem" type="text"
                        placeholder="Type your product name" autocomplete="on" spellcheck="off"
                        data-source="productItem" data-select='selected' data-highlight=true
                        data-template='repo' style="width: 300px;"/>
-                <input type="text" id="tmpProductId" class="form-control tmpProductId" name="tmpProductId">
-               <!-- <select id="tmpProductId" class="tmpProductId form-control" name="tmpProductId" style="width: 100%;">
+                <input type="text" id="tmpProductId" class="form-control tmpProductId hidden" name="tmpProductId">
+                <!-- <select id="tmpProductId" class="tmpProductId form-control" name="tmpProductId" style="width: 100%;">
                     {{#each products}}
                         <option value="{{value}}">{{label}}</option>
                     {{/each}}
@@ -33,7 +33,8 @@
         </div>
         <div class="col-sm-5">
             <div class="form-group">
-                <input type="number" id="tmpQuantity" step="1" name="tmpQuantity" class="form-control tmpDr" placeholder="Quantity">
+                <input type="number" id="tmpQuantity" step="1" name="tmpQuantity" class="form-control tmpDr"
+                       placeholder="Quantity">
             </div>
         </div>
 

@@ -3,11 +3,31 @@
     <p>
         <a type="button" class="btn btn-primary insert"><i class="fa fa-plus"></i> Add New Sale</a>
     </p>
-    <!--{{#if isSubReady "pos_sale"}}-->
-         {{> tabular table=Pos.TabularTable.Sales selector=selector class="table table-striped table-bordered table-condensed table-hover"}}
-    <!--{{else}}
-        {{> loading}}
-    {{/if}}-->
+    <div class="row">
+        <div class="col-sm-4">
+            Date:
+            <input type="text" class="form-control" id="sale-date-filter">
+        </div>
+        <div class="col-sm-4">
+            Status:
+            <select class="form-control" id="sale-status-filter">
+                <option value="">All</option>
+                <option value="Unsaved">Unsaved</option>
+                <option value="Owed">Owed</option>
+                <option value="Paid">Paid</option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+
+        </div>
+
+    </div>
+    <br>
+        <!--{{#if isSubReady "pos_sale"}}-->
+    {{> tabular table=Pos.TabularTable.Sales selector=selector class="table table-striped table-bordered table-condensed table-hover"}}
+        <!--{{else}}
+    {{> loading}}
+{{/if}}-->
 </template>
 
 <!--Action-->
@@ -16,7 +36,8 @@
         <li><a class="update"><i class="fa fa-pencil"></i> Update</a></li>
         <li><a class="remove"><i class="fa fa-remove"></i> Remove</a></li>
         <li><a class="show"><i class="fa fa-eye"></i> Show</a></li>
-        <li><a href="/pos/checkout/print/{{this._id}}" target="_blank" class="print"><i class="fa fa-print"></i> Print</a></li>
+        <li><a href="/pos/checkout/print/{{this._id}}" target="_blank" class="print"><i class="fa fa-print"></i>
+            Print</a></li>
     {{/tabularAction}}
 </template>
 
@@ -77,7 +98,6 @@
         </tbody>
     </table>
 </template>
-
 
 
 <!--Update-->

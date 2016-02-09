@@ -345,13 +345,15 @@ Template.pos_promotionQtyInsert.helpers({
         var id = suggestion._id;
         //event.target.productId.value = id;
         $('[name="productId"]').val(id);
-        $('[name="search"]').val(suggestion.name);
+        $('[name="search"]').typeahead('val', suggestion.name);
     },
     products: function () {
-       return ReactiveMethod.call('getProductList');
+        return ReactiveMethod.call('getProductList');
     }
 });
 Template.pos_promotionQtyUpdate.onRendered(function () {
+    Meteor.typeahead.inject();
+    Session.set('productNameSession', null);
     /*this.$('.startDate').datetimepicker({
      format: 'YYYY-MM-DD HH:mm:ss'
      });
@@ -386,6 +388,31 @@ Template.pos_promotionQtyUpdate.onRendered(function () {
     });
 });
 Template.pos_promotionQtyUpdate.helpers({
+    search: function (query, sync, callback) {
+        Meteor.call('searchProduct', query, {}, function (err, res) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            callback(res);
+        });
+    },
+    selected: function (event, suggestion, dataSetName) {
+        // TODO your event handler here
+        var id = suggestion._id;
+        //event.target.productId.value = id;
+        $('[name="productId"]').val(id);
+        // Session.set('productNameSession', suggestion.name);
+        $('[name="search"]').typeahead('val', suggestion.name);
+    },
+    /*productName: function () {
+     var productNameSession = Session.get('productNameSession');
+     if (productNameSession) {
+     return productNameSession;
+     } else {
+     return this._product.name;
+     }
+     },*/
     formatDate: function (date) {
         return moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
