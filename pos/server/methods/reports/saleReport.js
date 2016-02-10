@@ -62,6 +62,8 @@ Meteor.methods({
         /****** Header *****/
         data.header = header;
         var content = calculateSaleHelper(sale);
+        data.grandTotalPaid = content.grandTotalPaid;
+        data.grandTotalOwed = content.grandTotalOwed;
         data.grandTotal = content.grandTotal;
         data.grandTotalCost = content.grandTotalCost;
         data.grandTotalConvert = content.grandTotalConvert;
@@ -75,6 +77,7 @@ Meteor.methods({
 });
 
 function calculateSaleHelper(sl) {
+    var grandTotalOwed = 0;
     var grandTotal = 0;
     var grandTotalCost = 0;
     var grandTotalConvert = {};
@@ -92,10 +95,16 @@ function calculateSaleHelper(sl) {
                 grandTotalConvert[ex.toCurrencyId] = 0
             }
             grandTotalConvert[ex.toCurrencyId] += ex.exTotal;
+            ex.exTotal = numeral(ex.exTotal).format('0,0.00');
             s.exchangeRates.push(ex);
 
         });
         s.saleDate = moment(s.saleDate).format("DD-MM-YY, HH:mm");
+        s.owedAmount = s.owedAmount ? s.owedAmount : 0;
+        s.paidAmount = s.total - s.owedAmount;
+        grandTotalOwed += s.owedAmount;
+        s.paidAmount = numeral(s.paidAmount).format('0,0.00');
+        s.owedAmount = numeral(s.owedAmount).format('0,0.00');
         s.total = numeral(s.total).format('0,0.00');
         s.totalCost = numeral(s.totalCost).format('0,0.00');
         s.customer = s._customer.name;
@@ -105,11 +114,16 @@ function calculateSaleHelper(sl) {
         i++;
         saleList.push(s);
     });
+    saleList.grandTotalPaid = numeral(grandTotal-grandTotalOwed).format('0,0.00');
+    saleList.grandTotalOwed = numeral(grandTotalOwed).format('0,0.00');
     saleList.grandTotalCost = numeral(grandTotalCost).format('0,0.00');
     saleList.grandTotal = numeral(grandTotal).format('0,0.00');
     saleList.grandTotalConvert = [];
     for (var key in grandTotalConvert) {
-        saleList.grandTotalConvert.push({toCurrencyId: key, totalConvert: grandTotalConvert[key]});
+        saleList.grandTotalConvert.push({
+            toCurrencyId: key,
+            totalConvert: numeral(grandTotalConvert[key]).format('0,0.00')
+        });
     }
     /*$.each(grandTotalConvert,function(key,value){
      saleList.grandTotalConvert.push({toCurrencyId:key,totalConvert:value});

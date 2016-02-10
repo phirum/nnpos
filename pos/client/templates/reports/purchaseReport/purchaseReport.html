@@ -62,6 +62,8 @@
                         <th>Staff</th>
                         <th>Supplier</th>
                         <th>Status</th>
+                        <th>Paid Amount</th>
+                        <th>Owed Amount</th>
                         <th>Total</th>
                         {{#each grandTotalConvert}}
                             <th>{{toCurrencyId}}</th>
@@ -78,6 +80,8 @@
                             <td>{{staff}}</td>
                             <td>{{supplier}}</td>
                             <td>{{status}}</td>
+                            <td>{{paidAmount}}</td>
+                            <td>{{owedAmount}}</td>
                             <td>{{total}}</td>
                             {{#each exchangeRates}}
                                 <td>{{exTotal}}</td>
@@ -88,6 +92,8 @@
                     <tbody>
                     <tr class="content-body" style="background: #ffff00">
                         <td colspan="6" style="text-align: right">Grand Total:</td>
+                        <td>{{grandTotalPaid}}</td>
+                        <td>{{grandTotalOwed}}</td>
                         <td>{{grandTotal}}</td>
                         {{#each grandTotalConvert}}
                             <td>{{totalConvert}}</td>

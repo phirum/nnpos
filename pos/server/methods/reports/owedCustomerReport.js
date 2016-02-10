@@ -1,6 +1,6 @@
 Meteor.methods({
     posOwedCustomerReport: function (arg) {
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
         var data = {
@@ -50,12 +50,22 @@ Meteor.methods({
         var content = [];
         var sales = Pos.Collection.Sales.find(params);
         var i = 1;
+        var totalOwed = 0;
+        var total = 0;
         sales.forEach(function (s) {
             s.saleDate = moment(s.saleDate).format("DD-MM-YYYY HH:mm:ss");
             s.order = i;
+            total += s.total;
+            totalOwed = s.owedAmount;
+            s.paidAmount = numeral(s.total - s.owedAmount).format('0,0.00');
+            s.owedAmount = numeral(s.owedAmount).format('0,0.00');
+            s.total = numeral(s.total).format('0,0.00');
             i++;
             content.push(s);
         });
+        data.totalPaid = numeral(total - totalOwed).format('0,0.00');
+        data.totalOwed = numeral(totalOwed).format('0,0.00');
+        data.total = numeral(total).format('0,0.00');
         /*var payments = [];
          var sale = Pos.Collection.Sales.find(params);
          if (sale != null) {
