@@ -4,17 +4,32 @@ var posPurchasePaymentUpdateTPL = Template.pos_purchasePaymentUpdate;
 var posPurchasePaymentShowTPL = Template.pos_purchasePaymentShow;
 
 posPurchasePaymentTPL.onRendered(function () {
+    Session.set('purchasePaymentSelectorSession', null);
+    DateTimePicker.dateRange($('#purchase-payment-date-filter'));
     createNewAlertify(['purchasePayment', 'purchasePaymentShow']);
 });
 posPurchasePaymentTPL.helpers({
     selector: function () {
-        var selector = {};
-        //selector.saleId = null;
-        selector.branchId = Session.get('currentBranch');
-        return selector;
+        var selectorSession = Session.get('purchasePaymentSelectorSession');
+        if (selectorSession) {
+            return selectorSession;
+        } else {
+            var selector = {branchId: Session.get('currentBranch')};
+            var today = moment().format('YYYY-MM-DD');
+            var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+            var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+            selector.paymentDate = {$gte: fromDate, $lte: toDate};
+            return selector;
+        }
     }
 });
 posPurchasePaymentTPL.events({
+    'change #purchase-payment-date-filter': function () {
+        setPurchasePaymentSelectorSession();
+    },
+    'change #purchase-payment-status-filter': function () {
+        setPurchasePaymentSelectorSession();
+    },
     'click .insert': function (e, t) {
         alertify.purchasePayment(fa('plus', 'Add New Payment'), renderTemplate(posPurchasePaymentInsertTPL)).maximize();
     },
@@ -558,4 +573,25 @@ function calculateUpdatePayment() {
             $('.return-amount').val(numeral(0).format('0,0.00'));
         }
     }
+}
+
+function setPurchasePaymentSelectorSession() {
+    var selector = {branchId: Session.get('currentBranch')};
+    var dateRange = $('#purchase-payment-date-filter').val();
+    var status = $('#purchase-payment-status-filter').val();
+    if (dateRange != "") {
+        var date = dateRange.split(" To ");
+        var fromDate = moment(date[0] + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+        var toDate = moment(date[1] + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+        selector.paymentDate = {$gte: fromDate, $lte: toDate};
+    } else {
+        var today = moment().format('YYYY-MM-DD');
+        var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+        var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+        selector.paymentDate = {$gte: fromDate, $lte: toDate};
+    }
+    if (status != "") {
+        selector.status = status
+    }
+    Session.set('purchasePaymentSelectorSession', selector);
 }

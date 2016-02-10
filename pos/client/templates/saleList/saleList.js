@@ -2,41 +2,10 @@ var posSaleListTPL = Template.pos_saleList;
 var posSaleShow = Template.pos_saleShow;
 var posSaleUpdate = Template.pos_saleUpdate;
 
-posSaleUpdate.onRendered(function () {
 
-    Meteor.setTimeout(function () {
-        $('select[name="customerId"]').select2();
-        /* $('[name="saleDate"]').datetimepicker({
-         format: "YYYY-MM-DD HH:mm:ss"
-         });*/
-        $('select[name="staffId"]').select2();
-    }, 500);
-});
-
-posSaleUpdate.helpers({
-    staffs: function () {
-        var userStaff = Pos.Collection.UserStaffs.findOne({userId: Meteor.user()._id});
-        if (userStaff != null) {
-            var selector = {_id: {$in: userStaff.staffIds}, branchId: Session.get('currentBranch')};
-            return ReactiveMethod.call('getList', 'Pos.Collection.Staffs', selector, {}, false);
-        } else {
-            return [];
-        }
-    },
-    customers: function () {
-        var selector = {branchId: Session.get('currentBranch')};
-        return ReactiveMethod.call('getList', 'Pos.Collection.Customers', selector, {}, false);
-    }
-    ,
-    transactionTypes: function () {
-        return [
-            {value: 'Sale', label: 'Sale'},
-            {value: 'AdjustmentQtyDown', label: 'AdjustmentQtyDown'}
-        ]
-    }
-});
 
 posSaleListTPL.onRendered(function () {
+    Session.set('saleSelectorSession', null);
     createNewAlertify(['saleShow'], {size: 'lg'});
     createNewAlertify(['saleUpdate']);
     DateTimePicker.dateRange($('#sale-date-filter'));
@@ -49,22 +18,21 @@ posSaleListTPL.helpers({
             return selectorSession;
         } else {
             var selector = {branchId: Session.get('currentBranch')};
-            var today = moment().format('DD-MM-YYYY');
-            var fromDate = moment(today + " 00:00:00").toDate();
-            var toDate = moment(today + " 23:59:59").toDate();
+            var today = moment().format('YYYY-MM-DD');
+            var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+            var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
             selector.saleDate = {$gte: fromDate, $lte: toDate};
             return selector;
         }
-
     }
 });
 
 posSaleListTPL.events({
     'change #sale-date-filter': function () {
-        setSelectorSession();
+        setSaleSelectorSession();
     },
     'change #sale-status-filter': function () {
-        setSelectorSession();
+        setSaleSelectorSession();
     },
     'click .insert': function (e, t) {
         FlowRouter.go('pos.checkout');
@@ -135,6 +103,39 @@ posSaleListTPL.events({
     }
 });
 
+posSaleUpdate.onRendered(function () {
+
+    Meteor.setTimeout(function () {
+        $('select[name="customerId"]').select2();
+        /* $('[name="saleDate"]').datetimepicker({
+         format: "YYYY-MM-DD HH:mm:ss"
+         });*/
+        $('select[name="staffId"]').select2();
+    }, 500);
+});
+
+posSaleUpdate.helpers({
+    staffs: function () {
+        var userStaff = Pos.Collection.UserStaffs.findOne({userId: Meteor.user()._id});
+        if (userStaff != null) {
+            var selector = {_id: {$in: userStaff.staffIds}, branchId: Session.get('currentBranch')};
+            return ReactiveMethod.call('getList', 'Pos.Collection.Staffs', selector, {}, false);
+        } else {
+            return [];
+        }
+    },
+    customers: function () {
+        var selector = {branchId: Session.get('currentBranch')};
+        return ReactiveMethod.call('getList', 'Pos.Collection.Customers', selector, {}, false);
+    }
+    ,
+    transactionTypes: function () {
+        return [
+            {value: 'Sale', label: 'Sale'},
+            {value: 'AdjustmentQtyDown', label: 'AdjustmentQtyDown'}
+        ]
+    }
+});
 
 AutoForm.hooks({
     pos_saleUpdate: {
@@ -147,19 +148,19 @@ AutoForm.hooks({
         }
     }
 });
-function setSelectorSession() {
+function setSaleSelectorSession() {
     var selector = {branchId: Session.get('currentBranch')};
     var dateRange = $('#sale-date-filter').val();
     var status = $('#sale-status-filter').val();
     if (dateRange != "") {
         var date = dateRange.split(" To ");
-        var fromDate = moment(date[0] + " 00:00:00").toDate();
-        var toDate = moment(date[1] + " 23:59:59").toDate();
+        var fromDate = moment(date[0] + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+        var toDate = moment(date[1] + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
         selector.saleDate = {$gte: fromDate, $lte: toDate};
     } else {
-        var today = moment().format('DD-MM-YYYY');
-        var fromDate = moment(today + " 00:00:00").toDate();
-        var toDate = moment(today + " 23:59:59").toDate();
+        var today = moment().format('YYYY-MM-DD');
+        var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+        var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
         selector.saleDate = {$gte: fromDate, $lte: toDate};
     }
     if (status != "") {

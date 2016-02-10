@@ -4,17 +4,32 @@ var posSalePaymentUpdateTPL = Template.pos_salePaymentUpdate;
 var posSalePaymentShowTPL = Template.pos_salePaymentShow;
 
 posSalePaymentTPL.onRendered(function () {
+    Session.set('salePaymentSelectorSession', null);
+    DateTimePicker.dateRange($('#sale-payment-date-filter'));
     createNewAlertify(['salePayment', 'salePaymentShow']);
 });
 posSalePaymentTPL.helpers({
     selector: function () {
-        var selector = {};
-        //selector.purchaseId = null;
-        selector.branchId = Session.get('currentBranch');
-        return selector;
+        var selectorSession = Session.get('salePaymentSelectorSession');
+        if (selectorSession) {
+            return selectorSession;
+        } else {
+            var selector = {branchId: Session.get('currentBranch')};
+            var today = moment().format('YYYY-MM-DD');
+            var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+            var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+            selector.paymentDate = {$gte: fromDate, $lte: toDate};
+            return selector;
+        }
     }
 });
 posSalePaymentTPL.events({
+    'change #sale-payment-date-filter': function () {
+        setSalePaymentSelectorSession();
+    },
+    'change #sale-payment-status-filter': function () {
+        setSalePaymentSelectorSession();
+    },
     'click .insert': function (e, t) {
         alertify.salePayment(fa('plus', 'Add New Payment'), renderTemplate(posSalePaymentInsertTPL)).maximize();
     },
@@ -107,7 +122,7 @@ posSalePaymentTPL.events({
     }
 });
 posSalePaymentInsertTPL.onRendered(function () {
-    Session.set("posSalePaymentDate",null);
+    Session.set("posSalePaymentDate", null);
     datePicker();
 });
 posSalePaymentInsertTPL.helpers({
@@ -116,7 +131,7 @@ posSalePaymentInsertTPL.helpers({
         var branchIdSession = Session.get('currentBranch');
         var selector = {};
         if (branchIdSession != null) selector.branchId = branchIdSession;
-        return ReactiveMethod.call('getCustomerList',selector);
+        return ReactiveMethod.call('getCustomerList', selector);
     },
     paymentDate: function () {
         //var sale = Pos.Collection.Sales.findOne(FlowRouter.getParam('saleId'));
@@ -170,7 +185,7 @@ posSalePaymentInsertTPL.helpers({
 posSalePaymentInsertTPL.events({
     'blur #paymentDate': function (e) {
         var paymentDate = $(e.currentTarget).val();
-        Session.set("posSalePaymentDate",paymentDate);
+        Session.set("posSalePaymentDate", paymentDate);
     },
     'click #save-payment': function () {
         var saleId = $('select[name="saleId"]').val();
@@ -550,4 +565,25 @@ function calculateUpdatePayment() {
             $('.return-amount').val(numeral(0).format('0,0.00'));
         }
     }
+}
+
+function setSalePaymentSelectorSession() {
+    var selector = {branchId: Session.get('currentBranch')};
+    var dateRange = $('#sale-payment-date-filter').val();
+    var status = $('#sale-payment-status-filter').val();
+    if (dateRange != "") {
+        var date = dateRange.split(" To ");
+        var fromDate = moment(date[0] + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+        var toDate = moment(date[1] + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+        selector.paymentDate = {$gte: fromDate, $lte: toDate};
+    } else {
+        var today = moment().format('YYYY-MM-DD');
+        var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+        var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+        selector.paymentDate = {$gte: fromDate, $lte: toDate};
+    }
+    if (status != "") {
+        selector.status = status
+    }
+    Session.set('salePaymentSelectorSession', selector);
 }

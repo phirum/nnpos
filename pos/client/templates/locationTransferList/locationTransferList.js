@@ -2,14 +2,32 @@ var posLocationTransferListTPL = Template.pos_locationTransferList;
 var posLocationTransferShow = Template.pos_locationTransferShow;
 
 posLocationTransferListTPL.onRendered(function () {
+    Session.set('locationTransferSelectorSession', null);
+    DateTimePicker.dateRange($('#location-transfer-date-filter'));
     createNewAlertify(['locationTransferShow']);
 });
 posLocationTransferListTPL.helpers({
     selector: function () {
-        return {branchId: Session.get('currentBranch')}
+        var selectorSession = Session.get('locationTransferSelectorSession');
+        if (selectorSession) {
+            return selectorSession;
+        } else {
+            var selector = {branchId: Session.get('currentBranch')};
+            var today = moment().format('YYYY-MM-DD');
+            var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+            var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+            selector.locationTransferDate = {$gte: fromDate, $lte: toDate};
+            return selector;
+        }
     }
 });
 posLocationTransferListTPL.events({
+    'change #location-transfer-date-filter': function () {
+        setLocationTransferSelectorSession();
+    },
+    'change #location-transfer-status-filter': function () {
+        setLocationTransferSelectorSession();
+    },
     'click .insert': function (e, t) {
         FlowRouter.go('pos.locationTransfer');
     },
@@ -50,3 +68,26 @@ posLocationTransferListTPL.events({
             });
     }
 });
+
+
+
+function setLocationTransferSelectorSession() {
+    var selector = {branchId: Session.get('currentBranch')};
+    var dateRange = $('#location-transfer-date-filter').val();
+    var status = $('#location-transfer-status-filter').val();
+    if (dateRange != "") {
+        var date = dateRange.split(" To ");
+        var fromDate = moment(date[0] + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+        var toDate = moment(date[1] + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+        selector.locationTransferDate = {$gte: fromDate, $lte: toDate};
+    } else {
+        var today = moment().format('YYYY-MM-DD');
+        var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+        var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+        selector.locationTransferDate = {$gte: fromDate, $lte: toDate};
+    }
+    if (status != "") {
+        selector.status = status
+    }
+    Session.set('locationTransferSelectorSession', selector);
+}

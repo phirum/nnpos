@@ -1,47 +1,34 @@
 var posPurchaseUpdate = Template.pos_purchaseUpdate;
 
-posPurchaseUpdate.onRendered(function () {
-    Meteor.setTimeout(function () {
-        $('select[name="supplierId"]').select2();
-        /*  $('[name="saleDate"]').datetimepicker({
-         format: "YYYY-MM-DD HH:mm:ss"
-         });*/
-        $('select[name="staffId"]').select2();
-    }, 500);
-});
-posPurchaseUpdate.helpers({
-    staffs: function () {
-        var userStaff = Pos.Collection.UserStaffs.findOne({userId: Meteor.user()._id});
-        if (userStaff != null) {
-            var selector = {_id: {$in: userStaff.staffIds}, branchId: Session.get('currentBranch')};
-            return ReactiveMethod.call('getList', 'Pos.Collection.Staffs', selector, {}, false);
-        } else {
-            return [];
-        }
-    },
-    suppliers: function () {
-        var selector = {branchId: Session.get('currentBranch')};
-        return ReactiveMethod.call('getList', 'Pos.Collection.Suppliers', selector, {}, false);
-    }
-    ,
-    transactionTypes: function () {
-        return [
-            {value: 'Purchase', label: 'Purchase'},
-            {value: 'AdjustmentQtyUp', label: 'AdjustmentQtyUp'}
-        ]
-    }
-});
 
 Template.pos_purchaseList.helpers({
     selector: function () {
-        return {branchId: Session.get('currentBranch')}
+        var selectorSession = Session.get('purchaseSelectorSession');
+        if (selectorSession) {
+            return selectorSession;
+        } else {
+            var selector = {branchId: Session.get('currentBranch')};
+            var today = moment().format('YYYY-MM-DD');
+            var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+            var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+            selector.purchaseDate = {$gte: fromDate, $lte: toDate};
+            return selector;
+        }
     }
 });
 Template.pos_purchaseList.onRendered(function () {
+    Session.set('purchaseSelectorSession', null);
+    DateTimePicker.dateRange($('#purchase-date-filter'));
     createNewAlertify(['purchaseShow'],{size:'lg'});
     createNewAlertify(['purchaseUpdate']);
 });
 Template.pos_purchaseList.events({
+    'change #purchase-date-filter': function () {
+        setPurchaseSelectorSession();
+    },
+    'change #purchase-status-filter': function () {
+        setPurchaseSelectorSession();
+    },
     'click .insert': function (e, t) {
         FlowRouter.go('pos.purchase');
     },
@@ -107,7 +94,37 @@ Template.pos_purchaseList.events({
 
     }
 });
-
+posPurchaseUpdate.onRendered(function () {
+    Meteor.setTimeout(function () {
+        $('select[name="supplierId"]').select2();
+        /*  $('[name="saleDate"]').datetimepicker({
+         format: "YYYY-MM-DD HH:mm:ss"
+         });*/
+        $('select[name="staffId"]').select2();
+    }, 500);
+});
+posPurchaseUpdate.helpers({
+    staffs: function () {
+        var userStaff = Pos.Collection.UserStaffs.findOne({userId: Meteor.user()._id});
+        if (userStaff != null) {
+            var selector = {_id: {$in: userStaff.staffIds}, branchId: Session.get('currentBranch')};
+            return ReactiveMethod.call('getList', 'Pos.Collection.Staffs', selector, {}, false);
+        } else {
+            return [];
+        }
+    },
+    suppliers: function () {
+        var selector = {branchId: Session.get('currentBranch')};
+        return ReactiveMethod.call('getList', 'Pos.Collection.Suppliers', selector, {}, false);
+    }
+    ,
+    transactionTypes: function () {
+        return [
+            {value: 'Purchase', label: 'Purchase'},
+            {value: 'AdjustmentQtyUp', label: 'AdjustmentQtyUp'}
+        ]
+    }
+});
 AutoForm.hooks({
     pos_purchaseUpdate: {
         onSuccess: function (formType, result) {
@@ -119,3 +136,24 @@ AutoForm.hooks({
         }
     }
 });
+
+function setPurchaseSelectorSession() {
+    var selector = {branchId: Session.get('currentBranch')};
+    var dateRange = $('#purchase-date-filter').val();
+    var status = $('#purchase-status-filter').val();
+    if (dateRange != "") {
+        var date = dateRange.split(" To ");
+        var fromDate = moment(date[0] + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+        var toDate = moment(date[1] + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+        selector.purchaseDate = {$gte: fromDate, $lte: toDate};
+    } else {
+        var today = moment().format('YYYY-MM-DD');
+        var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
+        var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
+        selector.purchaseDate = {$gte: fromDate, $lte: toDate};
+    }
+    if (status != "") {
+        selector.status = status
+    }
+    Session.set('purchaseSelectorSession', selector);
+}

@@ -3,11 +3,30 @@
     <p>
         <a type="button" class="btn btn-primary insert"><i class="fa fa-plus"></i> Add New LocationTransfer</a>
     </p>
-    <!--{{#if isSubReady "pos_locationTransfer"}}-->
-         {{> tabular table=Pos.TabularTable.LocationTransfers selector=selector class="table table-striped table-bordered table-condensed table-hover"}}
-    <!--{{else}}
-        {{> loading}}
-    {{/if}}-->
+    <div class="row">
+        <div class="col-sm-4">
+            Date:
+            <input type="text" class="form-control" id="location-transfer-date-filter">
+        </div>
+        <div class="col-sm-4">
+            Status:
+            <select class="form-control" id="location-transfer-status-filter">
+                <option value="">All</option>
+                <option value="Unsaved">Unsaved</option>
+                <option value="Saved">Saved</option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+
+        </div>
+
+    </div>
+    <br>
+        <!--{{#if isSubReady "pos_locationTransfer"}}-->
+    {{> tabular table=Pos.TabularTable.LocationTransfers selector=selector class="table table-striped table-bordered table-condensed table-hover"}}
+        <!--{{else}}
+    {{> loading}}
+{{/if}}-->
 </template>
 
 <!--Action-->
@@ -16,7 +35,8 @@
         <li><a class="update"><i class="fa fa-pencil"></i> Update</a></li>
         <li><a class="remove"><i class="fa fa-remove"></i> Remove</a></li>
         <li><a class="show"><i class="fa fa-eye"></i> Show</a></li>
-        <li><a href="/pos/checkout/print/{{this._id}}" target="_blank" class="print"><i class="fa fa-print"></i> Print</a></li>
+        <li><a href="/pos/checkout/print/{{this._id}}" target="_blank" class="print"><i class="fa fa-print"></i>
+            Print</a></li>
     {{/tabularAction}}
 </template>
 
