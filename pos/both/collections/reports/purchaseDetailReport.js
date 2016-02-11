@@ -61,5 +61,32 @@ Pos.Schema.PurchaseDetailReport = new SimpleSchema({
             }
         },
         optional: true
+    },
+    transactionType: {
+        type: String,
+        label: "Transaction Type",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return [
+                    {value: 'Purchase', label: 'Purchase'},
+                    {value: 'AdjustmentQtyUp', label: 'AdjustmentQtyUp'}
+                ]
+            }
+        }
+    },
+    status: {
+        type: String,
+        label: "Status",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return [
+                    {value: '', label: 'All'},
+                    {value: 'Owed', label: 'Owed'},
+                    {value: 'Paid', label: 'Paid'}
+                ]
+            }
+        }
     }
 });

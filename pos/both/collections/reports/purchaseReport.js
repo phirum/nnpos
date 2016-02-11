@@ -11,18 +11,18 @@ Pos.Schema.PurchaseReport = new SimpleSchema({
                 return Pos.ListForReport.locations();
             }
         },
-        optional:true
+        optional: true
     },
-    supplierId:{
-        type:String,
-        label:"Supplier",
+    supplierId: {
+        type: String,
+        label: "Supplier",
         autoform: {
             type: "select2",
-            options:function(){
+            options: function () {
                 return Pos.List.supplier();
             }
         },
-        optional:true
+        optional: true
 
     },
     date: {
@@ -30,26 +30,53 @@ Pos.Schema.PurchaseReport = new SimpleSchema({
         label: "Date"
     },
 
-    staffId:{
-        type:String,
-        label:"Staff",
+    staffId: {
+        type: String,
+        label: "Staff",
         autoform: {
             type: "select2",
-            options:function(){
+            options: function () {
                 return Pos.List.staff();
             }
         },
-        optional:true
+        optional: true
     },
-    branch:{
-        type:String,
-        label:"Branch",
+    branch: {
+        type: String,
+        label: "Branch",
         autoform: {
             type: "select2",
-            options:function(){
+            options: function () {
                 return Pos.List.branchForUser();
             }
         },
-        optional:true
+        optional: true
+    },
+    transactionType: {
+        type: String,
+        label: "Transaction Type",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return [
+                    {value: 'Purchase', label: 'Purchase'},
+                    {value: 'AdjustmentQtyUp', label: 'AdjustmentQtyUp'}
+                ]
+            }
+        }
+    },
+    status: {
+        type: String,
+        label: "Status",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return [
+                    {value: '', label: 'All'},
+                    {value: 'Owed', label: 'Owed'},
+                    {value: 'Paid', label: 'Paid'}
+                ]
+            }
+        }
     }
 });

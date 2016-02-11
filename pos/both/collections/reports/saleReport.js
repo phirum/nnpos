@@ -11,7 +11,7 @@ Pos.Schema.SaleReport = new SimpleSchema({
                 return Pos.ListForReport.locations();
             }
         },
-        optional:true
+        optional: true
     },
     customerId: {
         type: String,
@@ -51,5 +51,32 @@ Pos.Schema.SaleReport = new SimpleSchema({
             }
         },
         optional: true
+    },
+    transactionType: {
+        type: String,
+        label: "Transaction Type",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return [
+                    {value: 'Sale', label: 'Sale'},
+                    {value: 'AdjustmentQtyDown', label: 'AdjustmentQtyDown'}
+                ]
+            }
+        }
+    },
+    status: {
+        type: String,
+        label: "Status",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return [
+                    {value: '', label: 'All'},
+                    {value: 'Owed', label: 'Owed'},
+                    {value: 'Paid', label: 'Paid'}
+                ]
+            }
+        }
     }
 });

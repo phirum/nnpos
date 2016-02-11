@@ -43,8 +43,10 @@ Meteor.methods({
             location = Pos.Collection.Locations.findOne(locationId).name;
         }
         params.branchId = {$in: branchIds};
-        params.status = {$ne: "Unsaved"};
-        params.transactionType = "Purchase";
+        params.status = arg.status;
+        //params.status = {$ne: "Unsaved"};
+        params.transactionType = arg.transactionType;
+        //params.transactionType = "Purchase";
         var header = {};
         var branchNames = "";
         branchIds.forEach(function (id) {
@@ -56,6 +58,8 @@ Meteor.methods({
         header.staff = staff;
         header.supplier = supplier;
         data.header = header;
+        data.status = arg.status;
+        data.transactionType = arg.transactionType;
 
         var purchase = Pos.Collection.Purchases.find(params);
         var content = calculatePurchaseHelper(purchase);
@@ -87,7 +91,7 @@ function calculatePurchaseHelper(pur) {
                 grandTotalConvert[ex.toCurrencyId] = 0
             }
             grandTotalConvert[ex.toCurrencyId] += ex.exTotal;
-            ex.exTotal=numeral(ex.exTotal).format('0,0.00');
+            ex.exTotal = numeral(ex.exTotal).format('0,0.00');
             p.exchangeRates.push(ex);
         });
         p.purchaseDate = moment(p.purchaseDate).format("DD-MM-YY, HH:mm");
@@ -104,7 +108,7 @@ function calculatePurchaseHelper(pur) {
         i++;
         purchaseList.push(p);
     });
-    purchaseList.grandTotalPaid = numeral(grandTotal-grandTotalOwed).format('0,0.00');
+    purchaseList.grandTotalPaid = numeral(grandTotal - grandTotalOwed).format('0,0.00');
     purchaseList.grandTotalOwed = numeral(grandTotalOwed).format('0,0.00');
     purchaseList.grandTotal = numeral(grandTotal).format('0,0.00');
     purchaseList.grandTotalConvert = [];

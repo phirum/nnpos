@@ -1,6 +1,6 @@
 Meteor.methods({
     posPurchaseDetailReport: function (arg) {
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
         var data = {
@@ -27,7 +27,7 @@ Meteor.methods({
             branchIds.push(branchId);
         }
         data.title = Cpanel.Collection.Company.findOne();
-        var staff = "All", supplier = "All", location = "All", category = "All";
+        var staff = "All", supplier = "All", location = "All", category = "All", status = "All";
         if (fromDate != null && toDate != null) {
             params.purchaseDate = {$gte: fromDate, $lte: toDate};
         }
@@ -47,8 +47,16 @@ Meteor.methods({
             category = Pos.Collection.Categories.findOne(categoryId).name;
         }
         params.branchId = {$in: branchIds};
-        params.status = {$ne: "Unsaved"};
-        params.transactionType = "Purchase";
+        if (categoryId != null && categoryId != "") {
+            category = Pos.Collection.Categories.findOne(categoryId).name;
+        }
+        if (arg.status != null && arg.status != "") {
+            params.status = arg.status;
+            status = arg.status;
+        }
+        //params.status = {$ne: "Unsaved"};
+        //params.transactionType = "Purchase";
+        params.transactionType = arg.transactionType;
         var header = {};
         var branchNames = "";
         branchIds.forEach(function (id) {
@@ -61,6 +69,8 @@ Meteor.methods({
         header.location = location;
         header.category = category;
         data.header = header;
+        data.status = status;
+        data.transactionType = arg.transactionType;
 
 
         var content = getPurchaseProducts(params, categoryId);
@@ -69,7 +79,7 @@ Meteor.methods({
         if (content.length > 0) {
             data.content = content;
         }
-        return data
+        return data;
     }
 });
 

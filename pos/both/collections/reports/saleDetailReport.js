@@ -11,7 +11,7 @@ Pos.Schema.SaleDetailReport = new SimpleSchema({
                 return Pos.ListForReport.locations();
             }
         },
-        optional:true
+        optional: true
     },
     categoryId: {
         type: String,
@@ -22,18 +22,18 @@ Pos.Schema.SaleDetailReport = new SimpleSchema({
                 return Pos.List.category("All");
             }
         },
-        optional:true
+        optional: true
     },
-    customerId:{
-        type:String,
-        label:"Customer",
+    customerId: {
+        type: String,
+        label: "Customer",
         autoform: {
             type: "select2",
-            options:function(){
+            options: function () {
                 return Pos.List.customer();
             }
         },
-        optional:true
+        optional: true
 
     },
     date: {
@@ -41,26 +41,53 @@ Pos.Schema.SaleDetailReport = new SimpleSchema({
         label: "Date"
     },
 
-    staffId:{
-        type:String,
-        label:"Staff",
+    staffId: {
+        type: String,
+        label: "Staff",
         autoform: {
             type: "select2",
-            options:function(){
+            options: function () {
                 return Pos.List.staff();
             }
         },
-        optional:true
+        optional: true
     },
-    branch:{
-        type:String,
-        label:"Branch",
+    branch: {
+        type: String,
+        label: "Branch",
         autoform: {
             type: "select2",
-            options:function(){
+            options: function () {
                 return Pos.List.branchForUser();
             }
         },
-        optional:true
+        optional: true
+    },
+    transactionType: {
+        type: String,
+        label: "Transaction Type",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return [
+                    {value: 'Purchase', label: 'Purchase'},
+                    {value: 'AdjustmentQtyUp', label: 'AdjustmentQtyUp'}
+                ]
+            }
+        }
+    },
+    status: {
+        type: String,
+        label: "Status",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return [
+                    {value: '', label: 'All'},
+                    {value: 'Owed', label: 'Owed'},
+                    {value: 'Paid', label: 'Paid'}
+                ]
+            }
+        }
     }
 });

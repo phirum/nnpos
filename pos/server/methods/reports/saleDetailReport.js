@@ -34,8 +34,10 @@ Meteor.methods({
         if (staffId != null && staffId != "") params.staffId = staffId;
         if (locationId != null && locationId != "") params.locationId = locationId;
         params.branchId = {$in: branchIds};
-        params.status = {$ne: "Unsaved"};
-        params.transactionType = "Sale";
+        //params.status = {$ne: "Unsaved"};
+        params.status = arg.status;
+        //params.transactionType = "Sale";
+        params.transactionType =arg.transactionType;
 
         var header = {};
         var branchNames = "";
@@ -57,6 +59,8 @@ Meteor.methods({
         header.customer = customer;
         header.location = location;
         header.category = category;
+        header.status = arg.status;
+        header.transactionTyp= arg.transactionType;
 
         /****** Header *****/
         data.header = header;

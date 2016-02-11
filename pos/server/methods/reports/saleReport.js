@@ -43,8 +43,10 @@ Meteor.methods({
             location = Pos.Collection.Locations.findOne(locationId).name;
         }
         params.branchId = {$in: branchIds};
-        params.status = {$ne: "Unsaved"};
-        params.transactionType = "Sale";
+        params.status = arg.status;
+        //params.status = {$ne: "Unsaved"};
+        params.transactionType = arg.transactionType;
+        //params.transactionType = "Sale";
         //params.status = "Owed";
         var sale = Pos.Collection.Sales.find(params);
 
@@ -58,6 +60,8 @@ Meteor.methods({
         header.location = location;
         header.staff = staff;
         header.customer = customer;
+        header.transactionType = arg.transactionType;
+        header.status = arg.status;
 
         /****** Header *****/
         data.header = header;
@@ -114,7 +118,7 @@ function calculateSaleHelper(sl) {
         i++;
         saleList.push(s);
     });
-    saleList.grandTotalPaid = numeral(grandTotal-grandTotalOwed).format('0,0.00');
+    saleList.grandTotalPaid = numeral(grandTotal - grandTotalOwed).format('0,0.00');
     saleList.grandTotalOwed = numeral(grandTotalOwed).format('0,0.00');
     saleList.grandTotalCost = numeral(grandTotalCost).format('0,0.00');
     saleList.grandTotal = numeral(grandTotal).format('0,0.00');
