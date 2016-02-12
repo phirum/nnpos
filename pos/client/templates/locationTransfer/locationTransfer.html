@@ -46,6 +46,7 @@
 
                             <div class="input-group select2-bootstrap-append">
                                 <select id="to-location-id" class="form-control input-sm select-two">
+                                    <option value="">Select To Location</option>
                                     {{#each toLocations}}
                                         <option value="{{_id}}"
                                                 selected="{{#if compareTwoValue _id locationTransfer.toLocationId}}selected{{/if}}">{{_id}}

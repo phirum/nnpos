@@ -317,8 +317,8 @@ Template.pos_locationTransfer.events({
     },
     'change #from-location-id': function (e) {
         Session.set('fromLocationId', $(e.currentTarget).val());
-        $('#to-location-id').select('val', '');
-        checkIsUpdate();
+        $('#to-location-id').select2('val', '');
+        // checkIsUpdate();
     },
     'change #to-location-id': function () {
         checkIsUpdate();
@@ -603,7 +603,7 @@ function getValidatedValues() {
     data.message = "Add product to list is successfully.";
     data.valid = true;
     data.locationTransferObj = {
-        locationTransferDate: moment(locationTransferDate,'MM/DD/YYYY hh:mm:ss a').toDate(),
+        locationTransferDate: moment(locationTransferDate, 'MM/DD/YYYY hh:mm:ss a').toDate(),
         staffId: staffId,
         fromLocationId: fromLocationId,
         toLocationId: toLocationId
@@ -624,7 +624,7 @@ function addOrUpdateProducts(branchId, locationTransferId, product, locationTran
         locationTransferDetailObj.fromLocationId = locationTransferObj.fromLocationId;
         locationTransferDetailObj.toLocationId = locationTransferObj.toLocationId;
         locationTransferDetailObj.imei = [];
-        locationTransferDetailObj.status="Unsaved";
+        locationTransferDetailObj.status = "Unsaved";
         Meteor.call('insertLocationTransferAndLocationTransferDetail', locationTransferObj, locationTransferDetailObj, function (e, r) {
             $('#product-barcode').focus();
             if (e) {
@@ -652,7 +652,7 @@ function addOrUpdateProducts(branchId, locationTransferId, product, locationTran
             locationTransferDetailObj.fromLocationId = locationTransferObj.fromLocationId;
             locationTransferDetailObj.toLocationId = locationTransferObj.toLocationId;
             locationTransferDetailObj.imei = [];
-            locationTransferDetailObj.status="Unsaved";
+            locationTransferDetailObj.status = "Unsaved";
             Meteor.call('insertLocationTransferDetails', locationTransferDetailObj);
         } else {
             var set = {};
