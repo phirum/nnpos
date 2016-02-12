@@ -65,6 +65,8 @@
         <dd>{{transactionType}}</dd>
         <dt>Location</dt>
         <dd>{{_location.name}}</dd>
+        <dt>Profit</dt>
+        <dd>{{profit}}</dd>
     </dl>
     <span style="text-align: center;font-weight: bold;">Sale Items Detail</span>
     <table class="table table-bordered">
@@ -78,6 +80,7 @@
             <th>Qty</th>
             <th>Dis(%)</th>
             <th>Amount</th>
+            <th>Profit</th>
             <th>IMEI</th>
         </tr>
         </thead>
@@ -94,6 +97,7 @@
                 <td>{{quantity}}</td>
                 <td>{{discount}}</td>
                 <td>{{amount}}</td>
+                <td>{{profit}}</td>
                 <td class="auto-fix">{{#each imei}}{{this}}<br>{{/each}}</td>
             </tr>
         {{/each}}

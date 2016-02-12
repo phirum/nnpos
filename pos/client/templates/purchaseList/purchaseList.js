@@ -81,11 +81,11 @@ Template.pos_purchaseList.events({
             if (purchase) {
                 purchase.pDate = moment(this.purchaseDate).format("YYYY-MM-DD HH:mm:ss");
                 //this.saleDetails = Pos.Collection.PurchaseDetails.find({purchaseId: this._id});
-                purchase.retail = this.isRetail ? "Retail" : "Wholesale";
+               // purchase.retail = this.isRetail ? "Retail" : "Wholesale";
                 Meteor.call('findRecords', 'Pos.Collection.PurchaseDetails', {purchaseId: purchase._id}, {},
                     function (error, purchaseDetails) {
                         if (purchaseDetails) {
-                            self.purchaseDetails = purchaseDetails;
+                            purchase.purchaseDetails = purchaseDetails;
                             alertify.purchaseShow(fa('eye', 'Purchase Detail'),
                                 renderTemplate(Template.pos_purchaseShow, purchase));
                         }

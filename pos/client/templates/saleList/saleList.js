@@ -3,7 +3,6 @@ var posSaleShow = Template.pos_saleShow;
 var posSaleUpdate = Template.pos_saleUpdate;
 
 
-
 posSaleListTPL.onRendered(function () {
     Session.set('saleSelectorSession', null);
     createNewAlertify(['saleShow'], {size: 'lg'});
@@ -84,21 +83,32 @@ posSaleListTPL.events({
 
     },
     'click .show': function (e, t) {
-        //var sale=Pos.Collection.Sales.findOne(this._id);
-        var self = this;
-        self.sDate = moment(this.saleDate).format("YYYY-MM-DD HH:mm:ss");
-        //self.saleDetails = Pos.Collection.SaleDetails.find({saleId: this._id});
-        self.retail = this.isRetail ? "Retail" : "Wholesale";
-        Meteor.call('findRecords', 'Pos.Collection.SaleDetails', {saleId: this._id}, {},
-            function (error, saleDetails) {
-                if (saleDetails) {
-                    self.saleDetails = saleDetails;
-                    alertify.saleShow(fa('eye', 'Sale Detail'), renderTemplate(posSaleShow, self));
-                } else {
-                    alertify.error(error.message);
+        Meteor.call('findOneRecord', 'Pos.Collection.Sales', {_id: this._id}, {}, function (error, sale) {
+            if (sale) {
+                sale.sDate = moment(this.saleDate).format("YYYY-MM-DD HH:mm:ss");
+                sale.retail = sale.isRetail ? "Retail" : "Wholesale";
+                if (sale.totalCost) {
+                    sale.profit = sale.total - sale.totalCost;
                 }
-            });
+                Meteor.call('findRecords', 'Pos.Collection.SaleDetails', {saleId: sale._id}, {},
+                    function (er, saleDetails) {
+                        if (saleDetails) {
+                            sale.saleDetails = saleDetails;
+                            saleDetails.forEach(function (saleDetail) {
+                                if (saleDetail.totalCost) {
+                                    saleDetail.profit = saleDetail.amount - saleDetail.totalCost;
+                                }
+                            });
 
+                            alertify.saleShow(fa('eye', 'Sale Detail'), renderTemplate(posSaleShow, sale));
+                        } else {
+                            alertify.error(er.message);
+                        }
+                    });
+            } else {
+                alertify.error(error.message);
+            }
+        });
 
     }
 });
