@@ -53,8 +53,9 @@ Meteor.methods({
         if (arg.status != null && arg.status != "") {
             params.status = arg.status;
             status = arg.status;
+        } else {
+            params.status = {$ne: "Unsaved"};
         }
-        //params.status = {$ne: "Unsaved"};
         //params.transactionType = "Purchase";
         params.transactionType = arg.transactionType;
         var header = {};

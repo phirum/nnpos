@@ -26,7 +26,7 @@ Meteor.methods({
             branchIds.push(branchId);
         }
         data.title = Cpanel.Collection.Company.findOne();
-        var staff = "All", supplier = "All", location = "All";
+        var staff = "All", supplier = "All", location = "All",status="All";
         if (fromDate != null && toDate != null) {
             params.purchaseDate = {$gte: fromDate, $lte: toDate};
         }
@@ -43,7 +43,12 @@ Meteor.methods({
             location = Pos.Collection.Locations.findOne(locationId).name;
         }
         params.branchId = {$in: branchIds};
-        params.status = arg.status;
+        if (arg.status != null && arg.status != "") {
+            params.status = arg.status;
+            status = arg.status;
+        } else {
+            params.status = {$ne: "Unsaved"};
+        }
         //params.status = {$ne: "Unsaved"};
         params.transactionType = arg.transactionType;
         //params.transactionType = "Purchase";
@@ -58,7 +63,7 @@ Meteor.methods({
         header.staff = staff;
         header.supplier = supplier;
         data.header = header;
-        data.status = arg.status;
+        data.status = status;
         data.transactionType = arg.transactionType;
 
         var purchase = Pos.Collection.Purchases.find(params);

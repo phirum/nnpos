@@ -1,6 +1,6 @@
 Meteor.methods({
     posSaleDetailReport: function (arg) {
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
         var data = {
@@ -37,7 +37,7 @@ Meteor.methods({
         //params.status = {$ne: "Unsaved"};
         params.status = arg.status;
         //params.transactionType = "Sale";
-        params.transactionType =arg.transactionType;
+        params.transactionType = arg.transactionType;
 
         var header = {};
         var branchNames = "";
@@ -46,7 +46,7 @@ Meteor.methods({
         });
         header.branch = branchNames.substr(0, branchNames.length - 2);
         header.date = arg.date;
-        var staff = "All", customer = "All", location = "All", category = "All";
+        var staff = "All", customer = "All", location = "All", category = "All", status = "All";
         if (customerId != null && customerId != "")
             customer = Pos.Collection.Customers.findOne(customerId).name;
         if (staffId != null && staffId != "")
@@ -55,12 +55,19 @@ Meteor.methods({
             location = Pos.Collection.Locations.findOne(locationId).name;
         if (categoryId != null && categoryId != "")
             category = Pos.Collection.Categories.findOne(categoryId).name;
+
+        if (arg.status != null && arg.status != "") {
+            params.status = arg.status;
+            status = status;
+        } else {
+            params.status = {$ne: "Unsaved"};
+        }
         header.staff = staff;
         header.customer = customer;
         header.location = location;
         header.category = category;
-        header.status = arg.status;
-        header.transactionTyp= arg.transactionType;
+        header.status = status;
+        header.transactionTyp = arg.transactionType;
 
         /****** Header *****/
         data.header = header;

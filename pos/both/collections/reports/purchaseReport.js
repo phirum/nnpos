@@ -59,6 +59,7 @@ Pos.Schema.PurchaseReport = new SimpleSchema({
             type: "select2",
             options: function () {
                 return [
+                    {value: '', label: '(Select One)'},
                     {value: 'Purchase', label: 'Purchase'},
                     {value: 'AdjustmentQtyUp', label: 'AdjustmentQtyUp'}
                 ]
@@ -77,6 +78,7 @@ Pos.Schema.PurchaseReport = new SimpleSchema({
                     {value: 'Paid', label: 'Paid'}
                 ]
             }
-        }
+        },
+        optional:true
     }
 });
