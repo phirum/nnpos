@@ -19,7 +19,7 @@ Template.pos_purchaseList.helpers({
 Template.pos_purchaseList.onRendered(function () {
     Session.set('purchaseSelectorSession', null);
     DateTimePicker.dateRange($('#purchase-date-filter'));
-    createNewAlertify(['purchaseShow'],{size:'lg'});
+    createNewAlertify(['purchaseShow'], {size: 'lg'});
     createNewAlertify(['purchaseUpdate']);
 });
 Template.pos_purchaseList.events({
@@ -77,20 +77,23 @@ Template.pos_purchaseList.events({
             });
     },
     'click .show': function (e, t) {
-        //var purchase = Pos.Collection.Purchases.findOne(this._id);
-        var self = this;
-        self.pDate = moment(this.purchaseDate).format("YYYY-MM-DD HH:mm:ss");
-        //this.saleDetails = Pos.Collection.PurchaseDetails.find({purchaseId: this._id});
-        self.retail = this.isRetail ? "Retail" : "Wholesale";
-        Meteor.call('findRecords', 'Pos.Collection.PurchaseDetails', {purchaseId: this._id}, {},
-            function (error, purchaseDetails) {
-                if (purchaseDetails) {
-                    self.purchaseDetails = purchaseDetails;
-                    alertify.purchaseShow(fa('eye', 'Purchase Detail'),
-                        renderTemplate(Template.pos_purchaseShow, self));
-                }
-
-            })
+        Meteor.call('findOneRecord', 'Pos.Collection.Purchases', {_id: this._id}, function (error, purchase) {
+            if (purchase) {
+                purchase.pDate = moment(this.purchaseDate).format("YYYY-MM-DD HH:mm:ss");
+                //this.saleDetails = Pos.Collection.PurchaseDetails.find({purchaseId: this._id});
+                purchase.retail = this.isRetail ? "Retail" : "Wholesale";
+                Meteor.call('findRecords', 'Pos.Collection.PurchaseDetails', {purchaseId: purchase._id}, {},
+                    function (error, purchaseDetails) {
+                        if (purchaseDetails) {
+                            self.purchaseDetails = purchaseDetails;
+                            alertify.purchaseShow(fa('eye', 'Purchase Detail'),
+                                renderTemplate(Template.pos_purchaseShow, purchase));
+                        }
+                    });
+            } else {
+                alertify.error(error.message);
+            }
+        });
 
     }
 });

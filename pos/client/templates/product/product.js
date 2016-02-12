@@ -51,7 +51,15 @@ posProductTPL.events({
             });
     },
     'click .show': function (e, t) {
-        alertify.productShow(fa('eye', 'Product Detail'), renderTemplate(posProductShowTPL, this));
+        Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: this._id}, function (er, product) {
+            if (er) {
+                alertify.error(er.message);
+            } else {
+                alertify.productShow(fa('eye', 'Product Detail'),
+                    renderTemplate(posProductShowTPL, product));
+            }
+        });
+
 
     }
 });

@@ -4,4 +4,5 @@ Pos.Collection.Sales.cacheCount('saleDetailCount', Pos.Collection.SaleDetails, '
 Pos.Collection.Sales.cacheDoc('staff',Pos.Collection.Staffs,['name']);
 Pos.Collection.Sales.cacheDoc('exchangeRate',Pos.Collection.ExchangeRates,['base','rates']);
 Pos.Collection.Sales.cacheDoc('customer',Pos.Collection.Customers,['name']);
+Pos.Collection.Sales.cacheDoc('location', Pos.Collection.Locations, ['name']);
 Pos.Collection.Sales.cacheDoc('branch',Cpanel.Collection.Branch,['khName','enName']);
