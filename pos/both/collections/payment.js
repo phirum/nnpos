@@ -3,22 +3,11 @@ Pos.Schema.Payments = new SimpleSchema({
     customerId: {
         type: String,
         label: "Customer",
-        /*   autoform: {
-         type: "select2",
-         options: function () {
-         return Pos.List.customerList();
-         }
-         }*/
+        optional:true,
     },
     saleId: {
         type: String,
         label: "SaleId"
-        /* autoform: {
-         type: "select2",
-         options: function () {
-         return Pos.List.saleList()
-         }
-         }*/
     },
     paymentDate: {
         type: Date,
@@ -47,11 +36,11 @@ Pos.Schema.Payments = new SimpleSchema({
         type: String,
         label: "status"
     },
-    payment: {
+    payments: {
         type: [Object],
         label: "Payment",
         blackbox: true
     }
 
 });
-//Pos.Collection.Payments.attachSchema(Pos.Schema.Payments);
+Pos.Collection.Payments.attachSchema(Pos.Schema.Payments);

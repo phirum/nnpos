@@ -3,31 +3,38 @@ Pos.Schema.PurchasePayments = new SimpleSchema({
     supplierId: {
         type: String,
         label: "Supplier",
-       /* autoform: {
-            type: "select2",
-            options: function () {
-                return Pos.List.supplierList();
-            }
-        }*/
+        optional: true
     },
     purchaseId: {
         type: String,
-        label: "PurchaseId",
-       /* autoform: {
-            type: "select2",
-            options: function () {
-                return Pos.List.purchaseList()
-            }
-        }*/
+        label: "PurchaseId"
     },
     paymentDate: {
         type: String,
         label: "Payment Date"
     },
-    payment: {
+    dueAmount: {
+        type: Number,
+        label: "Due Amount",
+        decimal: true
+    },
+    balanceAmount: {
+        type: Number,
+        label: "Balance Amount",
+        decimal: true
+    },
+    branchId: {
+        type: String,
+        label: "Branch"
+    },
+    status: {
+        type: String,
+        label: "status"
+    },
+    payments: {
         type: [Object],
         label: "Payment",
         blackbox: true
     }
 });
-//Pos.Collection.PurchasePayments.attachSchema(Pos.Schema.PurchasePayments);
+Pos.Collection.PurchasePayments.attachSchema(Pos.Schema.PurchasePayments);
