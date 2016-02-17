@@ -40,7 +40,7 @@ function checkBeforeAddOrUpdate(selector, data) {
                 Meteor.call('findOneRecord', 'Pos.Collection.FIFOInventory', {
                     branchId: branchId,
                     productId: product._id,
-                    locationId: data.fromLocationId
+                    locationId: data.locationTransferObj.fromLocationId
                 }, {sort: {createdAt: -1}}, function (error, inventory) {
                     if (inventory) {
                         var remainQuantity = inventory.remainQty - defaultQuantity;
