@@ -65,11 +65,13 @@ posExchangeRateInsertTPL.events({
         var exchangeRate = {};
         exchangeRate.base = $('#base-currency-id').val();
         exchangeRate.branchId= Session.get('currentBranch');
+        exchangeRate.symbol =$('#base-currency-symbol').val();
         exchangeRate.rates = [];
         $('#to-currency-list tr').each(function () {
             exchangeRate.rates.push({
                 toCurrencyId: $(this).find('.to-currency-id').val(),
-                rate: parseFloat($(this).find('.to-currency-value').val())
+                rate: parseFloat($(this).find('.to-currency-value').val()),
+                symbol: parseFloat($(this).find('.to-currency-symbol').val())
             });
         });
         Meteor.call('insertExchangeRate', exchangeRate);

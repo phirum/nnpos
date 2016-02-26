@@ -132,7 +132,7 @@ Template.pos_checkout.helpers({
         }
 
     },
-    exchangeRates: function () {
+    exchangeRate: function () {
         var sale = Pos.Collection.Sales.findOne(FlowRouter.getParam('saleId'));
         if (sale != null) {
             return Pos.Collection.ExchangeRates.findOne(sale.exchangeRateId);

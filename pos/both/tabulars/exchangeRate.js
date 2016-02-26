@@ -6,10 +6,10 @@ Pos.TabularTable.ExchangeRates = new Tabular.Table({
         {data: "base", title: "Base Currency"},
         {
             data: "rates", title: "Exchange to",
-            render: function (val,type,doc) {
-                var str="";
-                val.forEach(function(obj){
-                    str+=obj.toCurrencyId+'='+obj.rate+", ";
+            render: function (val, type, doc) {
+                var str = "";
+                val.forEach(function (obj) {
+                    str += obj.toCurrencyId + '=' + obj.rate + ", ";
                 });
                 return str;
             }
@@ -18,6 +18,6 @@ Pos.TabularTable.ExchangeRates = new Tabular.Table({
     ],
     order: [['0', 'desc']]
     /*columnDefs: [
-        {"width": "12px", "targets": 3}
-    ]*/
+     {"width": "12px", "targets": 3}
+     ]*/
 });

@@ -261,7 +261,7 @@
                                     </div>
 
                                     {{#if hasTotal sale.total}}
-                                        {{#each exchangeRates.rates}}
+                                        {{#each exchangeRate.rates}}
                                             <div class="form-group">
                                                 <label for="total_riel"
                                                        class="col-sm-5 control-label">Total {{toCurrencyId}}</label>
@@ -360,7 +360,7 @@
                                 </td>
                             </tr>
 
-                            {{#each exchangeRates.rates}}
+                            {{#each exchangeRate.rates}}
                                 <tr>
                                     <td>Total {{toCurrencyId}}
                                         <div id="pay-format">

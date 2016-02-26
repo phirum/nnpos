@@ -29,6 +29,7 @@
 <template name="pos_exchangeRateInsert">
     <h4> Base Currency: <b>{{baseCurrency.name}} ({{baseCurrency._id}})</b></h4>
     <input class="hidden" type="text" id="base-currency-id" value="{{baseCurrency._id}}">
+    <input class="hidden" type="text" id="base-currency-symbol" value="{{baseCurrency.symbol}}">
 
     <div class="row">
         <div class="col-md-12">
@@ -44,6 +45,7 @@
                     <tr>
                         <td><input type="text" class="to-currency-id form-control" value="{{_id}}" readonly></td>
                         <td><input type="text" class="to-currency-value form-control"></td>
+                        <td><input type="text" class="to-currency-symbol form-control" value="{{symbol}}" readonly></td>
                     </tr>
                 {{/each}}
                 </tbody>
