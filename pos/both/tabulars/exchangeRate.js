@@ -9,7 +9,7 @@ Pos.TabularTable.ExchangeRates = new Tabular.Table({
             render: function (val, type, doc) {
                 var str = "";
                 val.forEach(function (obj) {
-                    str += obj.toCurrencyId + '=' + obj.rate + ", ";
+                    str += obj.toCurrencyId + '=' + obj.rate + obj.symbol + ", ";
                 });
                 return str;
             }

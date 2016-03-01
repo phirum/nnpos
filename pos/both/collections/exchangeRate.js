@@ -1,6 +1,9 @@
 Pos.Collection.ExchangeRates = new Mongo.Collection("pos_exchangeRates");
-/*
 Pos.Schema.ExchangeRates = new SimpleSchema({
+    branchId: {
+        type: String,
+        label: "Branch"
+    },
     base: {
         type: String,
         label: "base CurrencyId",
@@ -10,62 +13,25 @@ Pos.Schema.ExchangeRates = new SimpleSchema({
         type: Array,
         optional: true
     },
+    symbol: {
+        type: String,
+        label: "base symbol"
+    },
     'rates.$': {
         type: Object
     },
     'rates.$.toCurrencyId': {
-        type: String
+        type: String,
+        label: "To Currency"
     },
     'rates.$.rate': {
-        type:Number,
-        decimal:true
+        type: Number,
+        decimal: true,
+        label: "Rate"
     },
-    createdAt: {
-        type: Date,
-        label: "Created Date",
-        autoValue: function () {
-            if (this.isInsert)
-                return new Date;
-        }
-
-        ,
-        denyUpdate: true,
-        optional: true
-    }
-    ,
-    updatedAt: {
-        type: Date,
-        label: "Updated Date",
-        autoValue: function () {
-            return new Date();
-        }
-
-        ,
-        optional: true
-    }
-    ,
-    createdUserId: {
+    'rates.$.symbol': {
         type: String,
-        label: "Created by",
-        autoValue: function () {
-            if (this.isInsert)
-                return Meteor.user()._id;
-        }
-
-        ,
-        denyUpdate: true,
-        optional: true
+        label: "To Symbol"
     }
-    ,
-    updatedUserId: {
-        type: String,
-        label: "Updated by",
-        autoValue: function () {
-            return Meteor.user()._id;
-        },
-        optional: true
-    }
-})
-;
+});
 Pos.Collection.ExchangeRates.attachSchema(Pos.Schema.ExchangeRates);
-*/
