@@ -25,6 +25,14 @@
         </div>
     </div>
 </template>
+<!--Action-->
+<template name="pos_exchangeRateAction">
+    {{#tabularAction}}
+        <li><a  class="update"><i class="fa fa-pencil"></i> Update</a></li>
+        <li><a  class="remove"><i class="fa fa-remove"></i> Remove</a></li>
+        <li><a  class="show"><i class="fa fa-eye"></i> Show</a></li>
+    {{/tabularAction}}
+</template>
 
 <template name="pos_exchangeRateInsert">
     <h4> Base Currency: <b>{{baseCurrency.name}} ({{baseCurrency._id}})</b></h4>
@@ -38,6 +46,7 @@
                 <tr>
                     <th>1{{baseCurrency.symbol}} Exchange to</th>
                     <th>Value</th>
+                    <th>Symbol</th>
                 </tr>
                 </thead>
                 <tbody id="to-currency-list">
@@ -56,3 +65,34 @@
 
 </template>
 
+
+<template name="pos_exchangeRateUpdate">
+    <h4> Base Currency: <b>{{exchangeRate.name}} ({{exchangeRate.base}})</b></h4>
+    <input class="hidden" type="text" id="base-currency-id" value="{{exchangeRate.base}}">
+    <input class="hidden" type="text" id="base-currency-symbol" value="{{exchangeRate.symbol}}">
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>1{{exchangeRate.symbol}} Exchange to</th>
+                    <th>Value</th>
+                    <th>Symbol</th>
+                </tr>
+                </thead>
+                <tbody id="to-currency-list">
+                {{#each exchangeRate.rates}}
+                    <tr>
+                        <td><input type="text" class="to-currency-id form-control" value="{{toCurrencyId}}" readonly></td>
+                        <td><input type="text" class="to-currency-value form-control" value="{{rate}}"></td>
+                        <td><input type="text" class="to-currency-symbol form-control" value="{{symbol}}" readonly></td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            <button  class="btn btn-primary" id="update-exchange-rate">Save</button>
+        </div>
+    </div>
+
+</template>
