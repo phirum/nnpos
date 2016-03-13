@@ -9,8 +9,38 @@ posExchangeRateTPL.events({
         alertify.exchangeRate(fa('plus', 'Add New Exchange Rate'), renderTemplate(posExchangeRateInsertTPL));
     },
     'click .update': function (e, t) {
-        var data = this;
-        alertify.exchangeRate(fa('pencil', 'Update Existing Exchange Rate'), renderTemplate(posExchangeRateUpdateTPL, data));
+        alertify.exchangeRate(fa('pencil', 'Update Existing Exchange Rate'), renderTemplate(posExchangeRateUpdateTPL));
+    },
+    'click .remove': function (e, t) {
+        var id = this._id;
+        var arr = [
+            {collection: 'Pos.Collection.Sales', selector: {exchangeRateId: id}},
+            {collection: 'Pos.Collection.Purchases', selector: {exchangeRateId: id}}
+        ];
+        Meteor.call('isRelationExist', arr, function (error, result) {
+            if (error) {
+                alertify.error(error.message);
+            } else {
+                if (result) {
+                    alertify.warning("Data has been used. Can't remove.");
+                }
+                else {
+                    alertify.confirm("Are you sure to delete [" + id + "]?")
+                        .set({
+                            onok: function (closeEvent) {
+                                Pos.Collection.ExchangeRates.remove(id, function (err) {
+                                    if (err) {
+                                        alertify.error(err.message);
+                                    } else {
+                                        alertify.success("Success");
+                                    }
+                                });
+                            },
+                            title: '<i class="fa fa-remove"></i> Delete Staff'
+                        });
+                }
+            }
+        });
     }
 });
 posExchangeRateTPL.helpers({
@@ -113,7 +143,7 @@ posExchangeRateUpdateTPL.helpers({
         return ReactiveMethod.call('findOneRecord', 'Pos.Collection.ExchangeRates', {_id: this._id}, {});
     }
 });
-posExchangeRateInsertTPL.events({
+posExchangeRateUpdateTPL.events({
     'change .to-currency-value': function (e) {
         if ($(e.currentTarget).val() == "") {
             $(e.currentTarget).val(0);
@@ -156,11 +186,12 @@ posExchangeRateInsertTPL.events({
                 symbol: $(this).find('.to-currency-symbol').val()
             });
         });
-        Meteor.call('insertExchangeRate', exchangeRate, function (er, re) {
+        var exchangeRateId = $('#exchange-rate-id').val();
+        Meteor.call('updateExchangeRate', exchangeRateId, exchangeRate, function (er, re) {
             if (er) {
                 alertify.error(er.message);
             } else {
-                alertify.success('ExchangeRate is set successful.');
+                alertify.success('ExchangeRate is update successful.');
                 alertify.exchangeRate().close();
             }
         });

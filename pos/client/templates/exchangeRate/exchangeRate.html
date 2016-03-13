@@ -68,6 +68,7 @@
 
 <template name="pos_exchangeRateUpdate">
     <h4> Base Currency: <b>{{exchangeRate.name}} ({{exchangeRate.base}})</b></h4>
+    <input class="hidden" type="text" id="exchange-rate-id" value="{{exchangeRate._id}}">
     <input class="hidden" type="text" id="base-currency-id" value="{{exchangeRate.base}}">
     <input class="hidden" type="text" id="base-currency-symbol" value="{{exchangeRate.symbol}}">
 
