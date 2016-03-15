@@ -40,6 +40,7 @@
  }
  }*/
 function fifoInventoryInsert(branchId, pd, prefix) {
+    console.log('-----------fifoInventoryInsert---------------');
 //FIFO find the last record that has the same price
     var inventory = Pos.Collection.FIFOInventory.findOne({
         branchId: branchId,
@@ -244,6 +245,7 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
+        console.log('-----------------Purchase Manage Stock-------------------');
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
@@ -263,6 +265,7 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
+        console.log('--------------Sale Mange Stock-------------');
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             var saleTotalCost = 0;
@@ -336,6 +339,7 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
+        console.log('--------------Location Transfer Manage Stock-----------');
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             var locationTransferTotalCost = 0;
@@ -406,6 +410,7 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
+        console.log('----------return stock-----------');
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
