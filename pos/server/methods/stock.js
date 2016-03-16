@@ -289,21 +289,27 @@ Meteor.methods({
                             inventorySet.remainQty = 0;
                             inventorySet.isSale = true;
                             if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
+                                console.log('--------- ir-iq>=0----------');
                                 quantityOfThisPrice = inventories[i].quantity - 0;
                             } else {
+                                console.log('--------------ir-iq<0------------');
                                 quantityOfThisPrice = inventories[i].remainQty - 0;
                             }
                         } else {
+                            console.log(' ----------ir-sq >0----------');
                             inventorySet.remainQty = remainQty;
                             inventorySet.isSale = false;
                             quantityOfThisPrice = inventories[i].quantity - remainQty;
                         }
                         if (enoughQuantity != 0) {
                             if (quantityOfThisPrice > 0) {
+                                console.log('--------before push to transaction --------');
+                                console.log(quantityOfThisPrice);
                                 transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
                             }
+                            enoughQuantity -= quantityOfThisPrice;
                         }
-                        enoughQuantity -= quantityOfThisPrice;
+
                         if (i == inventories.length - 1) {
                             inventorySet.imei = subtractImeiArray(inventories[i].imei, sd.imei);
                         }
@@ -312,9 +318,11 @@ Meteor.methods({
 
                     }
                     var setObj = {};
+                    console.log('-------before update total cost of saleDetail---------');
                     setObj.transaction = transaction;
                     setObj.totalCost = 0;
                     setObj.status = "Saved";
+                    console.log(setObj);
                     if (transaction.count() > 0) {
                         transaction.forEach(function (t) {
                             setObj.totalCost += parseFloat(t.price) * parseFloat(t.quantity);
