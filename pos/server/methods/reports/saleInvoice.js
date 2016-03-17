@@ -32,7 +32,7 @@ function getSaleDetail(saleId, baseCurrency) {
         /*var product = Pos.Collection.Products.findOne(sd.productId);
          var unit = Pos.Collection.Units.findOne(product.unitId).name;
          sd.productName = product.name + "(" + unit + ")";*/
-        sd.price = numeral(sd.price).format('0,0.00') + baseCurrency.symbol;
+       // sd.price = numeral(sd.price).format('0,0.00') + baseCurrency.symbol;
         sd.amountFormated = numeral(sd.amount).format('0,0.00') + baseCurrency.symbol;
         // sd.order = pad(i, 2);
         sd.order = i;

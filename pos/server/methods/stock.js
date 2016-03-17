@@ -296,10 +296,13 @@ Meteor.methods({
                                 quantityOfThisPrice = inventories[i].remainQty - 0;
                             }
                         } else {
-                            console.log(' ----------ir-sq >0----------');
                             inventorySet.remainQty = remainQty;
                             inventorySet.isSale = false;
-                            quantityOfThisPrice = inventories[i].quantity - remainQty;
+                            if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
+                                quantityOfThisPrice = inventories[i].quantity - remainQty;
+                            } else {
+                                quantityOfThisPrice = inventories[i].remainQty - remainQty;
+                            }
                         }
                         if (enoughQuantity != 0) {
                             if (quantityOfThisPrice > 0) {
