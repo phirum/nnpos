@@ -2,6 +2,10 @@ Pos.TabularTable.ExchangeRates = new Tabular.Table({
     name: "exchangeRateList",
     collection: Pos.Collection.ExchangeRates,
     columns: [
+        {
+            title: '<i class="fa fa-bars"></i>',
+            tmpl: Meteor.isClient && Template.pos_exchangeRateAction
+        },
         {data: "_id", title: "ID"},
         {data: "base", title: "Base Currency"},
         {
@@ -14,10 +18,9 @@ Pos.TabularTable.ExchangeRates = new Tabular.Table({
                 return str;
             }
         }
-
     ],
-    order: [['0', 'desc']]
-    /*columnDefs: [
-     {"width": "12px", "targets": 3}
-     ]*/
+    order: [['1', 'desc']],
+    columnDefs: [
+        {"width": "12px", "targets": 0}
+    ]
 });

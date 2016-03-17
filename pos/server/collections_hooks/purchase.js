@@ -1,39 +1,48 @@
-Pos.Collection.PurchaseDetails.before.insert(function (user, doc) {
-    doc._id = idGenerator.genWithPrefix(Pos.Collection.PurchaseDetails, doc.purchaseId, 3);
-});
-Pos.Collection.PurchaseDetails.after.remove(function (userId, doc) {
-    var purchase = Pos.Collection.Purchases.findOne(doc.purchaseId);
-    if (purchase != null) {
-        updatePurchaseTotal(doc.purchaseId);
+//--------------------------Purchase-----------------------------
+Pos.Collection.Purchases.before.update(function (userId, doc, fieldNames, modifier, options) {
+    console.log('---------purchase before update----------------');
+    if (modifier.$set.locationId != null && modifier.$set.locationId != doc.locationId) {
+        Pos.Collection.PurchaseDetails.update(
+            {purchaseId: doc._id},
+            {$set: {locationId: modifier.$set.locationId}},
+            {multi: true});
     }
 });
-Pos.Collection.Purchases.before.update(function (userId, doc, fieldNames, modifier, options) {
 
-        if (modifier.$set.locationId != null && modifier.$set.locationId != doc.locationId) {
-            Pos.Collection.PurchaseDetails.update(
-                {purchaseId: doc._id},
-                {$set: {locationId: modifier.$set.locationId}},
-                {multi: true});
-        }
-
-});
 /*Pos.Collection.Purchases.after.update(function (userId, doc, fieldNames, modifier, options) {
-    updatePurchaseTotal(doc._id);
-});*/
-
-Pos.Collection.PurchaseDetails.after.insert(function (userId, doc) {
-    updatePurchaseTotal(doc.purchaseId);
-
-});
-
-Pos.Collection.PurchaseDetails.after.update(function (userId, doc, fieldNames, modifier, options) {
-    updatePurchaseTotal(doc.purchaseId);
-});
+ updatePurchaseTotal(doc._id);
+ });*/
 
 Pos.Collection.Purchases.after.remove(function (userId, doc) {
     Pos.Collection.PurchaseDetails.remove({purchaseId: doc._id});
     //Pos.Collection.PurchaseDetails.direct.remove({purchaseId: doc._id});
 });
+
+
+//------------------------Purchase Detail---------------------------
+Pos.Collection.PurchaseDetails.before.insert(function (user, doc) {
+    console.log('--------purchase detail before insert---------');
+    doc._id = idGenerator.genWithPrefix(Pos.Collection.PurchaseDetails, doc.purchaseId, 3);
+});
+
+Pos.Collection.PurchaseDetails.after.insert(function (userId, doc) {
+    console.log('----------purchase detail after insert----------');
+    updatePurchaseTotal(doc.purchaseId);
+});
+
+Pos.Collection.PurchaseDetails.after.update(function (userId, doc, fieldNames, modifier, options) {
+    console.log('-----------purchase detail after update----------');
+    updatePurchaseTotal(doc.purchaseId);
+});
+
+Pos.Collection.PurchaseDetails.after.remove(function (userId, doc) {
+    console.log('--------purchase detail after remove-----------');
+    var purchase = Pos.Collection.Purchases.findOne(doc.purchaseId);
+    if (purchase != null) {
+        updatePurchaseTotal(doc.purchaseId);
+    }
+});
+
 
 function updatePurchaseTotal(purchaseId) {
     Meteor.defer(function () {
