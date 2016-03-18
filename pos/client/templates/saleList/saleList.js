@@ -38,18 +38,45 @@ posSaleListTPL.events({
     },
     'click .update': function (e, t) {
         var id = this._id;
-        Meteor.call('findOneRecord', 'Pos.Collection.Sales', {_id: id}, {}, function (error, sale) {
-            if (error) {
-                alertify.error(error.message);
-            } else {
-                if (sale.status != "Unsaved") {
-                    alertify.saleUpdate(fa('pencil', 'Update Existing Sale'), renderTemplate(posSaleUpdate, sale));
-                } else {
-                    FlowRouter.go('pos.checkout', {saleId: id});
-                }
-            }
+        var total=this.total;
+        branchId = Session.get('currentBranch');
+        if (this.status != "Unsaved") {
+            alertify.confirm("Are you sure to update this invoice: [" + id + "]? It will recalculate inventory and remove all it's payment(if it has). ")
+                .set({
+                    onok: function (closeEvent) {
+                        Meteor.call('returnToInventory', id, branchId, function (error, result) {
+                            if (error) {
+                                alertify.error(error.message);
+                            } else {
+                                Meteor.call('updateSaleToUnsavedAndRemovePayment', id,total, function (err, re) {
+                                    if (err) {
+                                        alertify.error(err.message);
+                                    } else {
+                                        FlowRouter.go('pos.checkout', {saleId: id});
+                                    }
+                                })
+                            }
+                        });
+                    },
+                    title: '<i class="fa fa-remove"></i> Delete Sale'
+                });
 
-        });
+           // alertify.saleUpdate(fa('pencil', 'Update Existing Sale'), renderTemplate(posSaleUpdate, sale));
+        } else {
+            FlowRouter.go('pos.checkout', {saleId: id});
+        }
+        /* Meteor.call('findOneRecord', 'Pos.Collection.Sales', {_id: id}, {}, function (error, sale) {
+         if (error) {
+         alertify.error(error.message);
+         } else {
+         if (sale.status != "Unsaved") {
+         alertify.saleUpdate(fa('pencil', 'Update Existing Sale'), renderTemplate(posSaleUpdate, sale));
+         } else {
+         FlowRouter.go('pos.checkout', {saleId: id});
+         }
+         }
+
+         });*/
 
     },
     'click .remove': function (e, t) {
