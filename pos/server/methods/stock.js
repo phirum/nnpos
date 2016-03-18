@@ -435,7 +435,7 @@ Meteor.methods({
                     sd.price = tr.price;
                     sd.quantity = tr.quantity;
                     //fifoInventoryInsert(branchId,sd,prefix);
-                    console.log(sd.locationId);
+                    //console.log(sd.locationId);
                     var inventory = Pos.Collection.FIFOInventory.findOne({
                         branchId: branchId,
                         productId: sd.productId,
