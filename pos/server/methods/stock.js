@@ -505,12 +505,12 @@ Meteor.methods({
                     for (var i = 0; i < inventories.length; i++) {
                         //or if(enoughQuantity==0){ return false; //to stop the loop.}
                         var inventorySet = {};
-                        var remainQty = (inventories[i].remainQty - sd.quantity);
+                        var remainQty = (inventories[i].remainQty - pd.quantity);
                         var quantityOfThisPrice = 0;
                         if (remainQty <= 0) {
                             inventorySet.remainQty = 0;
                             inventorySet.isSale = true;
-                            if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
+                           if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
                                 quantityOfThisPrice = inventories[i].quantity - 0;
                             } else {
                                 quantityOfThisPrice = inventories[i].remainQty - 0;
@@ -525,14 +525,14 @@ Meteor.methods({
                             }
                         }
                         if (enoughQuantity != 0) {
-                            if (quantityOfThisPrice > 0) {
+                           /* if (quantityOfThisPrice > 0) {
                                 transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
-                            }
+                            }*/
                             enoughQuantity -= quantityOfThisPrice;
                         }
 
                         if (i == inventories.length - 1) {
-                            inventorySet.imei = subtractImeiArray(inventories[i].imei, sd.imei);
+                            inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
                         }
                         Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
                         // var quantityOfThisPrice = inventories[i].quantity - remainQty;

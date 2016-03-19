@@ -136,11 +136,9 @@ Meteor.methods({
     },
     updatePurchaseToUnsavedAndRemovePayment: function (purchaseId, total) {
         var purchaseSet = {owedAmount: total,status:'Unsaved'};
-        var purchaseUnset = {totalCost: ''};
         var purchaseDetailSet={status:'Unsaved'};
-        var purchaseDetailUnset = {transaction: '', totalCost: ''};
-        Pos.Collection.Purchases.direct.update(purchaseId, {$set: purchaseSet, $unset: purchaseUnset});
-        Pos.Collection.PurchaseDetails.direct.update({purchaseId: purchaseId}, {$set:purchaseDetailSet,$unset: purchaseDetailUnset}, {multi: true});
+        Pos.Collection.Purchases.direct.update(purchaseId, {$set: purchaseSet});
+        Pos.Collection.PurchaseDetails.direct.update({purchaseId: purchaseId}, {$set:purchaseDetailSet}, {multi: true});
         Pos.Collection.PurchasePayments.direct.remove({purchaseId: purchaseId});
     }
 

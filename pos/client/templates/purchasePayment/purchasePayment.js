@@ -18,7 +18,7 @@ posPurchasePaymentTPL.helpers({
             var today = moment().format('YYYY-MM-DD');
             var fromDate = moment(today + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
             var toDate = moment(today + " 23:59:59", "YYYY-MM-DD HH:mm:ss").toDate();
-            selector.paymentDate = {$gte: fromDate, $lte: toDate};
+           // selector.paymentDate = {$gte: fromDate, $lte: toDate};
             return selector;
         }
     }
@@ -591,7 +591,7 @@ function setPurchasePaymentSelectorSession() {
         selector.paymentDate = {$gte: fromDate, $lte: toDate};
     }
     if (status != "") {
-        selector.status = status
+        selector.status = status;
     }
     Session.set('purchasePaymentSelectorSession', selector);
 }

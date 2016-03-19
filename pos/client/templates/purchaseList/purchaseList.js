@@ -34,9 +34,11 @@ Template.pos_purchaseList.events({
     },
     'click .update': function (e, t) {
         var id = this._id;
-        if (purchase.status != "Unsaved") {
+        var branchId = Session.get('currentBranch');
+        var total=this.total;
+        if (this.status != "Unsaved") {
             //alertify.purchaseUpdate(fa('pencil', 'Update Existing Purchase'), renderTemplate(posPurchaseUpdate, purchase));
-            Meteor.call('isEnoughStock', id, function (error, enough) {
+            Meteor.call('isEnoughStock', id,branchId, function (error, enough) {
                 if (error) {
                     alertify.error(error.message);
                 } else {
@@ -44,13 +46,13 @@ Template.pos_purchaseList.events({
                         alertify.confirm("Are you sure to update this purchase: [" + id + "]? It will recalculate inventory and remove all it's payment(if it has). ")
                             .set({
                                 onok: function (closeEvent) {
-                                    Meteor.call('reduceFromInventory', id, branchId, function (error, result) {
-                                        if (error) {
-                                            alertify.error(error.message);
+                                    Meteor.call('reduceFromInventory', id, branchId, function (err, result) {
+                                        if (err) {
+                                            alertify.error(err.message);
                                         } else {
-                                            Meteor.call('updatePurchaseToUnsavedAndRemovePayment', id, total, function (err, re) {
-                                                if (err) {
-                                                    alertify.error(err.message);
+                                            Meteor.call('updatePurchaseToUnsavedAndRemovePayment', id, total, function (er, re) {
+                                                if (er) {
+                                                    alertify.error(er.message);
                                                 } else {
                                                     FlowRouter.go('pos.checkout', {saleId: id});
                                                 }
@@ -65,7 +67,7 @@ Template.pos_purchaseList.events({
                     }
                 }
 
-            })
+            });
         } else {
             FlowRouter.go('pos.purchase', {purchaseId: id});
         }
@@ -81,32 +83,68 @@ Template.pos_purchaseList.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        var arr = [
-            {collection: 'Pos.Collection.PurchasePayments', selector: {purchaseId: id}}
-        ];
-        Meteor.call('isRelationExist', arr, function (error, result) {
-            if (error) {
-                alertify.error(error.message);
-            } else {
-                if (result) {
-                    alertify.warning("Data has been used. Can't remove.");
+        var branchId = Session.get('currentBranch');
+        if (this.status != "Unsaved") {
+            var arr = [
+                {collection: 'Pos.Collection.PurchasePayments', selector: {purchaseId: id}}
+            ];
+            Meteor.call('isRelationExist', arr, function (error, result) {
+                if (error) {
+                    alertify.error(error.message);
                 } else {
-                    alertify.confirm("Are you sure to delete [" + id + "]?")
-                        .set({
-                            onok: function (closeEvent) {
-                                Pos.Collection.Purchases.remove(id, function (err) {
-                                    if (err) {
-                                        alertify.error(err.message);
-                                    } else {
-                                        alertify.success("Success");
-                                    }
-                                });
-                            },
-                            title: '<i class="fa fa-remove"></i> Delete Purchase'
+                    if (result) {
+                        alertify.warning("Data has been used. Can't remove.");
+                    } else {
+                        Meteor.call('isEnoughStock', id,branchId, function (err, enough) {
+                            if (err) {
+                                alertify.error(err.message);
+                            } else {
+                                if (enough) {
+                                    alertify.confirm("Are you sure to remove this purchase: [" + id + "]? It will recalculate inventory and remove all it's payment(if it has). ")
+                                        .set({
+                                            onok: function (closeEvent) {
+                                                Meteor.call('reduceFromInventory', id, branchId, function (er, result) {
+                                                    if (er) {
+                                                        alertify.error(er.message);
+                                                    } else {
+                                                        Pos.Collection.Purchases.remove(id, function (le) {
+                                                            if (le) {
+                                                                alertify.error(le.message);
+                                                            } else {
+                                                                alertify.success("Success");
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            },
+                                            title: '<i class="fa fa-remove"></i> Delete Sale'
+                                        });
+                                } else {
+                                    alertify.warning("Don't have enough stock for update purchase. Products've been transferred or sold.");
+                                }
+                            }
+
                         });
+
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            alertify.confirm("Are you sure to delete [" + id + "]?")
+                .set({
+                    onok: function (closeEvent) {
+                        Pos.Collection.Purchases.remove(id, function (err) {
+                            if (err) {
+                                alertify.error(err.message);
+                            } else {
+                                alertify.success("Success");
+                            }
+                        });
+                    },
+                    title: '<i class="fa fa-remove"></i> Delete Purchase'
+                });
+        }
 
     },
     'click .show': function (e, t) {
