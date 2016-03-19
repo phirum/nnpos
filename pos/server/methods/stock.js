@@ -426,7 +426,7 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         console.log('----------return stock-----------');
-        var prefix=branchId+'-';
+        var prefix = branchId + '-';
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
@@ -488,15 +488,13 @@ Meteor.methods({
         console.log('--------------Reduce From Inventory-------------');
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
-           // var saleTotalCost = 0;
+            // var saleTotalCost = 0;
             //var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
-            var purchaeseTotalCost=0;
-            var prefix = branchId + "-";
-            var purchaseDetails=Pos.Collection.PurchaseDetails.find({purchaseId:purchaseId});
-            
-            // saleDetails.forEach(function (sd) {
-            purchaseDetails.forEach(function(pd){
-                    var transaction = [];
+            var purchaeseTotalCost = 0;
+            //var prefix = branchId + "-";
+            var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
+            purchaseDetails.forEach(function (pd) {
+                    // var transaction = [];
                     var inventories = Pos.Collection.FIFOInventory.find({
                         branchId: branchId,
                         productId: pd.productId,
@@ -540,31 +538,29 @@ Meteor.methods({
                         // var quantityOfThisPrice = inventories[i].quantity - remainQty;
 
                     }
-                    var setObj = {};
-                    console.log('-------before update total cost of saleDetail---------');
-                    setObj.transaction = transaction;
-                    //setObj.totalCost = 0;
-                   // setObj.status = "Saved";
-                    setObj.status = "Unsaved";
-                    if (transaction.count() > 0) {
-                        transaction.forEach(function (t) {
-                            setObj.totalCost += parseFloat(t.price) * parseFloat(t.quantity);
-                        });
-                    }
-                    purchaeseTotalCost += setObj.totalCost;
-                    Pos.Collection.PurchaseDetails.direct.update(
-                        sd._id,
-                        {$set: setObj}
-                    );
-                    //inventories=sortArrayByKey()
                 }
             );
-            /*Pos.Collection.Purchase.direct.update(
-                saleId,
-                {$set: {totalCost: saleTotalCost}}
-            );*/
-            //--- End Inventory type block "FIFO Inventory"---
         });
+    },
+    isEnoughStock: function (purchaseId, branchId) {
+        var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
+        var enough = true;
+        purchaseDetails.forEach(function (pd) {
+            var inventory = Pos.Collection.FIFOInventory.findOne({
+                branchId: branchId,
+                productId: pd.productId,
+                locationId: pd.locationId,
+                isSale: false
+            }, {sort: {createdAt: -1}});
+            if (!inventory) {
+                enough = false;
+                return false;
+            } else if (inventory.remainQty < pd.quantity) {
+                enough = false;
+                return false;
+            }
+        });
+        return enough;
     }
 });
 

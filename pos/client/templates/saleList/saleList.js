@@ -38,7 +38,7 @@ posSaleListTPL.events({
     },
     'click .update': function (e, t) {
         var id = this._id;
-        var total=this.total;
+        var total = this.total;
         branchId = Session.get('currentBranch');
         if (this.status != "Unsaved") {
             alertify.confirm("Are you sure to update this invoice: [" + id + "]? It will recalculate inventory and remove all it's payment(if it has). ")
@@ -48,7 +48,7 @@ posSaleListTPL.events({
                             if (error) {
                                 alertify.error(error.message);
                             } else {
-                                Meteor.call('updateSaleToUnsavedAndRemovePayment', id,total, function (err, re) {
+                                Meteor.call('updateSaleToUnsavedAndRemovePayment', id, total, function (err, re) {
                                     if (err) {
                                         alertify.error(err.message);
                                     } else {
@@ -61,8 +61,9 @@ posSaleListTPL.events({
                     title: '<i class="fa fa-remove"></i> Delete Sale'
                 });
 
-           // alertify.saleUpdate(fa('pencil', 'Update Existing Sale'), renderTemplate(posSaleUpdate, sale));
-        } else {
+            // alertify.saleUpdate(fa('pencil', 'Update Existing Sale'), renderTemplate(posSaleUpdate, sale));
+        }
+        else {
             FlowRouter.go('pos.checkout', {saleId: id});
         }
         /* Meteor.call('findOneRecord', 'Pos.Collection.Sales', {_id: id}, {}, function (error, sale) {
@@ -81,33 +82,40 @@ posSaleListTPL.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        alertify.confirm("Are you sure to delete [" + id + "]?")
-            .set({
-                onok: function (closeEvent) {
-                    var arr = [
-                        {collection: 'Pos.Collection.Payments', selector: {saleId: id}}
-                    ];
-                    Meteor.call('isRelationExist', arr, function (error, result) {
-                        if (error) {
-                            alertify.error(error.message);
-                        } else {
-                            if (result) {
-                                alertify.warning("Data has been used. Can't remove.");
-                            } else {
-                                Pos.Collection.Sales.remove(id, function (err) {
+        var branchId = Session.get('currentBranch');
+        var arr = [
+            {collection: 'Pos.Collection.Payments', selector: {saleId: id}}
+        ];
+        Meteor.call('isRelationExist', arr, function (error, result) {
+            if (error) {
+                alertify.error(error.message);
+            } else {
+                if (result) {
+                    alertify.warning("Data has been used. Can't remove.");
+                } else {
+                    alertify.confirm("Are you sure to delete [" + id + "]?")
+                        .set({
+                            onok: function (closeEvent) {
+                                Meteor.call('returnToInventory', id, branchId, function (err, re) {
                                     if (err) {
                                         alertify.error(err.message);
                                     } else {
-                                        alertify.success("Success");
+                                        Pos.Collection.Sales.remove(id, function (er, r) {
+                                            if (er) {
+                                                alertify.error(er.message);
+                                            } else {
+                                                alertify.success("Success");
+                                            }
+                                        });
                                     }
                                 });
-                            }
-                        }
-                    });
-                },
-                title: '<i class="fa fa-remove"></i> Delete Sale'
-            });
 
+                            },
+                            title: '<i class="fa fa-remove"></i> Delete Sale'
+                        });
+                }
+            }
+        });
     },
     'click .show': function (e, t) {
         Meteor.call('findOneRecord', 'Pos.Collection.Sales', {_id: this._id}, {}, function (error, sale) {
