@@ -426,6 +426,7 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         console.log('----------return stock-----------');
+        var prefix=branchId+'-';
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
@@ -434,6 +435,7 @@ Meteor.methods({
                     sd.price = tr.price;
                     sd.quantity = tr.quantity;
                     //fifoInventoryInsert(branchId,sd,prefix);
+                    //console.log(sd.locationId);
                     var inventory = Pos.Collection.FIFOInventory.findOne({
                         branchId: branchId,
                         productId: sd.productId,
@@ -446,6 +448,7 @@ Meteor.methods({
                         inventoryObj.branchId = branchId;
                         inventoryObj.productId = sd.productId;
                         inventoryObj.quantity = tr.quantity;
+                        inventoryObj.locationId = sd.locationId;
                         inventoryObj.price = tr.price;
                         inventoryObj.imei = sd.imei;
                         inventoryObj.remainQty = tr.quantity;
@@ -465,6 +468,7 @@ Meteor.methods({
                         nextInventory._id = idGenerator.genWithPrefix(Pos.Collection.FIFOInventory, prefix, 13);
                         nextInventory.branchId = branchId;
                         nextInventory.productId = sd.productId;
+                        inventoryObj.locationId = sd.locationId;
                         nextInventory.quantity = tr.quantity;
                         nextInventory.price = tr.price;
                         nextInventory.imei = inventory.imei.concat(sd.imei);

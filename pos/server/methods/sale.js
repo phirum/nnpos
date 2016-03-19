@@ -174,6 +174,15 @@ Meteor.methods({
         Pos.Collection.Sales.direct.update(saleId, {$set: set});
         //Meteor.call('updateSale', saleId, set);
 
+    },
+    updateSaleToUnsavedAndRemovePayment: function (saleId, total) {
+        var saleSet = {owedAmount: total,status:'Unsaved'};
+        var saleUnset = {totalCost: ''};
+        var saleDetailSet={status:'Unsaved'};
+        var saleDetailUnset = {transaction: '', totalCost: ''};
+        Pos.Collection.Sales.direct.update(saleId, {$set: saleSet, $unset: saleUnset});
+        Pos.Collection.SaleDetails.direct.update({saleId: saleId}, {$set:saleDetailSet,$unset: saleDetailUnset}, {multi: true});
+        Pos.Collection.Payments.direct.remove({saleId: saleId});
     }
 });
 

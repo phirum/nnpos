@@ -17,12 +17,12 @@ Meteor.methods({
             });
             if (payment == null) {
                 list.push({
-                    label: obj._id + ' : ' + obj._customer.name,
+                    label: obj._id + ' | ' + obj._customer.name + ' | ' + obj.owedAmount,
                     value: obj._id
                 });
             } else if (payment.balanceAmount > 0) {
                 list.push({
-                    label: obj._id + ' : ' + obj._customer.name,
+                    label: obj._id + ' | ' + obj._customer.name + ' | ' + obj.owedAmount,
                     value: obj._id
                 });
             }
@@ -56,9 +56,15 @@ Meteor.methods({
                 }
             );
             if (payment == null) {
-                list.push({label: obj._id + ' : ' + obj._supplier.name, value: obj._id});
+                list.push({
+                    label: obj._id + ' | ' + obj._supplier.name + ' | ' + obj.owedAmount,
+                    value: obj._id
+                });
             } else if (payment.balanceAmount > 0) {
-                list.push({label: obj._id + ' : ' + obj._supplier.name, value: obj._id});
+                list.push({
+                    label: obj._id + ' | ' + obj._supplier.name + ' | ' + obj.owedAmount,
+                    value: obj._id
+                });
             }
 
 
