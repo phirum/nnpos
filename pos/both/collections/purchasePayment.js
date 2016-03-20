@@ -10,8 +10,13 @@ Pos.Schema.PurchasePayments = new SimpleSchema({
         label: "PurchaseId"
     },
     paymentDate: {
-        type: String,
+        type: Date,
         label: "Payment Date"
+    },
+    payAmount: {
+        type: Number,
+        label: "Pay Amount",
+        decimal: true
     },
     dueAmount: {
         type: Number,

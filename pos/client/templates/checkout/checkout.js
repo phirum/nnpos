@@ -335,7 +335,7 @@ Template.pos_checkout.events({
             Meteor.call('findOneRecord', 'Pos.Collection.FIFOInventory', {
                 branchId: branchId,
                 productId: saleDetail.productId,
-                locationId:saleDetail.locationId
+                locationId: saleDetail.locationId
             }, {sort: {createdAt: -1}}, function (error, inventory) {
                 if (inventory) {
                     if (inventory.imei == null || inventory.imei.indexOf(imei) == -1) {
@@ -407,7 +407,7 @@ Template.pos_checkout.events({
                     set.transactionType = transactionType;
                     set.description = description;
                     set.voucher = voucher;
-                    Meteor.call('directUpdateSale', saleId, set, function (error, result) {
+                    Meteor.call('updateSale', saleId, set, function (error, result) {
                         if (error) {
                             alertify.error(error.message);
                         }
@@ -549,13 +549,13 @@ Template.pos_checkout.events({
             total = roundRielCurrency(total);
         }
         /*var set = {};
-        set.discount = discountPercentage;
-        set.discountAmount = discount;
-        set.total = total;
+         set.discount = discountPercentage;
+         set.discountAmount = discount;
+         set.total = total;
 
-        Meteor.call('directUpdateSale', saleId, set, function (error, result) {
-            if (error) alertify.error(error.message);
-        });*/
+         Meteor.call('directUpdateSale', saleId, set, function (error, result) {
+         if (error) alertify.error(error.message);
+         });*/
         Meteor.call('updateSaleTotalByDiscount', saleId, discountPercentage, function (error, result) {
             if (error) alertify.error(error.message);
         });
@@ -1232,9 +1232,11 @@ function checkIsUpdate() {
     var description = $('#description').val();
     var hasUpdate = false;
     var voucher = $('#voucher').val();
+    var saleVoucher = sale.voucher == null ? '' : sale.voucher;
+    var saleDescription = sale.description == null ? '' : sale.description;
     if (date != saleDate || customer != sale.customerId ||
         staff != sale.staffId || transactionType != sale.transactionType ||
-        description != sale.description || voucher != sale.voucher) {
+        description != saleDescription || voucher != saleVoucher) {
         hasUpdate = true;
     }
     Session.set('hasUpdate', hasUpdate);

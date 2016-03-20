@@ -23,7 +23,7 @@ Template.pos_purchase.onRendered(function () {
 });
 Template.pos_purchase.helpers({
     search: function (query, sync, callback) {
-        Meteor.call('searchProduct', query, {}, function (err, res) {
+        Meteor.call('searchProductFromPurchase', query, {}, function (err, res) {
             if (err) {
                 console.log(err);
                 return;
@@ -334,7 +334,7 @@ Template.pos_purchase.events({
         set.transactionType = transactionType;
         set.description = description;
         set.locationId = locationId;
-        Meteor.call('directUpdatePurchase', purchaseId, set, function (error, result) {
+        Meteor.call('updatePurchase', purchaseId, set, function (error, result) {
             if (error)alertify.error(error.message);
         });
         Session.set('purchaseHasUpdate', false);
@@ -1005,9 +1005,10 @@ function checkPurchaseIsUpdate() {
     var purchaseDate = moment(purchase.purchaseDate).format('MM/DD/YYYY hh:mm:ss A');
     var hasUpdate = false;
     var description = $('#description').val();
+    var purchaseDescription = purchase.description == null ? '' : purchase.description;
     if (date != purchaseDate || supplier != purchase.supplierId ||
         staff != purchase.staffId || transactionType != purchase.transactionType ||
-        description != purchase.description || locationId != purchase.locationId) {
+        description != purchaseDescription || locationId != purchase.locationId) {
         hasUpdate = true;
     }
     Session.set('purchaseHasUpdate', hasUpdate);

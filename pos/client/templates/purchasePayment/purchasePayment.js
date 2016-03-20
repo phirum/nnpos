@@ -97,7 +97,7 @@ posPurchasePaymentTPL.events({
     }
 });
 posPurchasePaymentInsertTPL.onRendered(function () {
-    Session.set("posPurchasePaymentDate",null);
+    Session.set("posPurchasePaymentDate", null);
     datePicker();
 });
 posPurchasePaymentInsertTPL.helpers({
@@ -119,7 +119,7 @@ posPurchasePaymentInsertTPL.helpers({
         selector.transactionType = "Purchase";
         if (branchIdSession != null) selector.branchId = branchIdSession;
         if (supplierSession != null) selector.supplierId = supplierSession;
-        return ReactiveMethod.call('getPurchaseList',selector);
+        return ReactiveMethod.call('getPurchaseList', selector);
     },
     supplierList: function () {
         var branchIdSession = Session.get('currentBranch');
@@ -160,7 +160,7 @@ posPurchasePaymentInsertTPL.helpers({
 posPurchasePaymentInsertTPL.events({
     'blur #paymentDate': function (e) {
         var paymentDate = $(e.currentTarget).val();
-        Session.set("posPurchasePaymentDate",paymentDate);
+        Session.set("posPurchasePaymentDate", paymentDate);
     },
     'click #save-payment': function () {
         var purchaseId = $('select[name="purchaseId"]').val();
@@ -591,7 +591,7 @@ function setPurchasePaymentSelectorSession() {
         selector.paymentDate = {$gte: fromDate, $lte: toDate};
     }
     if (status != "") {
-        selector.status = status
+        selector.status = status;
     }
     Session.set('purchasePaymentSelectorSession', selector);
 }
