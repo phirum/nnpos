@@ -54,7 +54,7 @@ Template.pos_purchaseList.events({
                                                 if (er) {
                                                     alertify.error(er.message);
                                                 } else {
-                                                    FlowRouter.go('pos.checkout', {saleId: id});
+                                                    FlowRouter.go('pos.purchase', {purchaseId: id});
                                                 }
                                             })
                                         }
