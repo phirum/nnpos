@@ -261,27 +261,55 @@ function checkBeforeAddOrUpdate(selector, data) {
                             var unSavedSaleId = Pos.Collection.Sales.find({
                                 status: "Unsaved",
                                 branchId: Session.get('currentBranch'),
+                                locationId: locationId,
                                 _id: {$ne: saleId}
-                            }).map(function (s) {
+                            }, {fields: {_id: 1}}).map(function (s) {
                                 return s._id;
                             });
                             var otherSaleDetails = Pos.Collection.SaleDetails.find({
                                 saleId: {$in: unSavedSaleId},
                                 productId: product._id,
                                 locationId: locationId
-                            });
+                            }, {fields: {quantity: 1}});
                             var otherQuantity = 0;
                             if (otherSaleDetails.count() > 0) {
                                 otherSaleDetails.forEach(function (sd) {
                                     otherQuantity += sd.quantity;
                                 });
                             }
+
                             remainQuantity = remainQuantity - otherQuantity;
                             if (remainQuantity < 0) {
                                 alertify.warning('Product is out of stock. Quantity in stock is "' +
                                     inventory.remainQty + '". And quantity on sale of other seller is "' + otherQuantity + '".');
-                            } else {
-                                addOrUpdateProducts(branchId, saleId, isRetail, product, data.saleObj);
+                            }
+                            else {
+                                var unSavedLocationTransferId = Pos.Collection.LocationTransfers.find({
+                                    status: "Unsaved",
+                                    branchId: Session.get('currentBranch'),
+                                    fromLocationId: locationId,
+                                }, {fields: {_id: 1}}).map(function (lt) {
+                                    return lt._id;
+                                });
+                                var otherLocationTransferDetails = Pos.Collection.LocationTransferDetails.find({
+                                    locationTransferId: {$in: unSavedLocationTransferId},
+                                    fromLocationId: locationId,
+                                    productId: product._id
+                                }, {fields: {quantity: 1}});
+                                var locationTransferQuantity = 0;
+                                if (otherLocationTransferDetails.count() > 0) {
+                                    otherLocationTransferDetails.forEach(function (ltd) {
+                                        locationTransferQuantity += ltd.quantity;
+                                    });
+                                }
+                                remainQuantity = remainQuantity - locationTransferQuantity;
+                                if (remainQuantity < 0) {
+                                    alertify.warning('Product is out of stock. Quantity in stock is "' +
+                                        inventory.remainQty + '". And quantity on sale of other seller is "' + otherQuantity +
+                                        '". And quantity of location transfer is "' + locationTransferQuantity + '".');
+                                } else {
+                                    addOrUpdateProducts(branchId, saleId, isRetail, product, data.saleObj);
+                                }
                             }
                         }
                     }
@@ -829,14 +857,16 @@ function checkoutStock(self, oldQty, newQty, e) {
                             var unSavedSaleId = Pos.Collection.Sales.find({
                                 status: "Unsaved",
                                 branchId: Session.get('currentBranch'),
-                                _id: {$ne: saleId}
-                            }).map(function (s) {
+                                _id: {$ne: saleId},
+                                locationId: locationId
+                            }, {fields: {_id: 1}}).map(function (s) {
                                 return s._id;
                             });
                             var otherSaleDetails = Pos.Collection.SaleDetails.find({
                                 saleId: {$in: unSavedSaleId},
-                                productId: product._id
-                            });
+                                productId: product._id,
+                                locationId: locationId
+                            },{fields: {quantity: 1}});
                             var otherQuantity = 0;
                             if (otherSaleDetails != null) {
                                 otherSaleDetails.forEach(function (sd) {
@@ -850,7 +880,33 @@ function checkoutStock(self, oldQty, newQty, e) {
                                     inventory.remainQty + '". And quantity on sale of other seller is "' + otherQuantity + '".');
 
                             } else {
-                                Meteor.call('updateSaleDetails', self._id, set);
+                                var unSavedLocationTransferId = Pos.Collection.LocationTransfers.find({
+                                    status: "Unsaved",
+                                    branchId: Session.get('currentBranch'),
+                                    fromLocationId: locationId
+                                }, {fields: {_id: 1}}).map(function (lt) {
+                                    return lt._id;
+                                });
+                                var otherLocationTransferDetails = Pos.Collection.LocationTransferDetails.find({
+                                    locationTransferId: {$in: unSavedLocationTransferId},
+                                    fromLocationId: locationId,
+                                    productId: product._id
+                                }, {fields: {quantity: 1}});
+                                var locationTransferQuantity = 0;
+                                if (otherLocationTransferDetails.count() > 0) {
+                                    otherLocationTransferDetails.forEach(function (ltd) {
+                                        locationTransferQuantity += ltd.quantity;
+                                    });
+                                }
+                                remainQuantity=remainQuantity-locationTransferQuantity;
+                                if(remainQuantity<0){
+                                    $(e.currentTarget).val(oldQty);
+                                    alertify.warning('Product is out of stock. Quantity in stock is "' +
+                                        inventory.remainQty + '". And quantity on sale of other seller is "' +
+                                        otherQuantity + '". And quantity of location transfer is "'+locationTransferQuantity+'".');
+                                }else{
+                                    Meteor.call('updateSaleDetails', self._id, set);
+                                }
                             }
                         }
                     } else {

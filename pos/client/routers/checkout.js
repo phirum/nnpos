@@ -40,6 +40,14 @@ posRoutes.route('/checkout/:saleId?', {
             Meteor.subscribe('posSaleDetail', {branchId: branchId, status: "Unsaved"})
         );
         this.register(
+            'pos_locationTransfer',
+            Meteor.subscribe('posLocationTransfer', {branchId: branchId, status: "Unsaved"})
+        );
+        this.register(
+            'pos_locationTransferDetail',
+            Meteor.subscribe('posLocationTransferDetail', {branchId: branchId, status: "Unsaved"})
+        );
+        this.register(
             'pos_staff',
             Meteor.subscribe('posStaff', {branchId: branchId})
         );
