@@ -271,7 +271,7 @@
                                                         <input type="text" class="form-control input-sm"
                                                                value="{{multiply rate sale.total toCurrencyId}}"
                                                                readonly>
-                                                        <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
+                                                        <span class="input-group-addon"><b>{{symbol}}</b></span>
                                                     </div>
                                                 </div>
 
@@ -365,7 +365,7 @@
                                     <td>Total {{toCurrencyId}}
                                         <div id="pay-format">
                                             <input type="text"
-                                                   value="{{multiply rate sale.total toCurrencyId}} {{getFileOfCurrency toCurrencyId "symbol"}}"
+                                                   value="{{multiply rate sale.total toCurrencyId}} {{symbol}}"
                                                    class="due-amount-total form-control" readonly>
                                         </div>
                                     </td>

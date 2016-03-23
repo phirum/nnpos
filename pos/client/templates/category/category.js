@@ -18,22 +18,20 @@ posCategoryTPL.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-       /* var canRemove = (this._categoryCount == null || this._categoryCount == 0)
-            && (this._productCount == null || this._productCount == 0);*/
-        alertify.confirm("Are you sure to delete [" + id + "]?")
-            .set({
-                onok: function (closeEvent) {
-                    var arr = [
-                        {collection: 'Pos.Collection.Products', selector: {categoryId: id}},
-                        {collection: 'Pos.Collection.Categories', selector: {parentId: id}}
-                    ];
-                    Meteor.call('isRelationExist', arr, function (error, result) {
-                        if (error) {
-                            alertify.error(error.message);
-                        } else {
-                            if (result) {
-                                alertify.warning("Data has been used. Can't remove.");
-                            } else {
+        var arr = [
+            {collection: 'Pos.Collection.Products', selector: {categoryId: id}},
+            {collection: 'Pos.Collection.Categories', selector: {parentId: id}}
+        ];
+        Meteor.call('isRelationExist', arr, function (error, result) {
+            if (error) {
+                alertify.error(error.message);
+            } else {
+                if (result) {
+                    alertify.warning("Data has been used. Can't remove.");
+                } else {
+                    alertify.confirm("Are you sure to delete [" + id + "]?")
+                        .set({
+                            onok: function (closeEvent) {
                                 Pos.Collection.Categories.remove(id, function (err) {
                                     if (err) {
                                         alertify.error(err.message);
@@ -41,32 +39,12 @@ posCategoryTPL.events({
                                         alertify.success("Success");
                                     }
                                 });
-                            }
-                        }
-                    });
-                    /* var relation = relationExist(
-                     [
-                     {collection: Pos.Collection.Products, selector: {categoryId: id}},
-                     {collection: Pos.Collection.Categories, selector: {parentId: id}}
-                     ]
-                     );
-                     if (relation) {
-                     alertify.alert("Data has been used. Can't remove.").set({title: "Data has been used."});
-                     }*/
-                    /*if (canRemove) {
-                     Pos.Collection.Categories.remove(id, function (error) {
-                     if (error) {
-                     alertify.error(error.message);
-                     } else {
-                     alertify.success("Success");
-                     }
-                     });
-                     } else {
-                     alertify.warning("Data has been used. Can't remove.");
-                     }*/
-                },
-                title: '<i class="fa fa-remove"></i> Delete Category'
-            });
+                            },
+                            title: '<i class="fa fa-remove"></i> Delete Category'
+                        });
+                }
+            }
+        });
     },
     'click .show': function (e, t) {
         alertify.categoryShow(fa('eye', 'Category Detail'), renderTemplate(posCategoryShowTPL, this));

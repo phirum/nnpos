@@ -252,7 +252,7 @@
                                                         <input type="text" class="form-control input-sm" id="riel"
                                                                value="{{multiply rate purchase.total toCurrencyId}}"
                                                                readonly>
-                                                        <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
+                                                        <span class="input-group-addon"><b>{{symbol}}</b></span>
                                                     </div>
                                                 </div>
 
@@ -345,7 +345,7 @@
                                     <td>Total {{toCurrencyId}}
                                         <div id="pay-format">
                                             <input type="text"
-                                                   value="{{multiply rate purchase.total toCurrencyId}} {{getFileOfCurrency toCurrencyId "symbol"}}"
+                                                   value="{{multiply rate purchase.total toCurrencyId}} {{symbol}}"
                                                    class="due-amount-total form-control" readonly>
                                         </div>
                                     </td>

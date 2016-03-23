@@ -77,11 +77,11 @@
                                     <td colspan="2"
                                         style="font-weight: bold">{{purchase.totalFormatted}} {{baseCurrency.symbol}}</td>
                                 </tr>
-                                {{#each exchangeRates.rates}}
+                                {{#each purchase._exchangeRate.rates}}
                                     <tr style="text-align: right;">
                                         <td colspan="2" align="right">{{toCurrencyId}}:</td>
                                         <td colspan="2" align="right"
-                                            style="font-weight: bold">{{multiply purchase.total rate toCurrencyId}} {{getFileOfCurrency toCurrencyId "symbol"}}</td>
+                                            style="font-weight: bold">{{totalFormatted}} {{symbol}}</td>
                                     </tr>
                                 {{/each}}
                                     <!-- {{#if purchase.isPay}}-->

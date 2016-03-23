@@ -21,22 +21,22 @@ posStaffTPL.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        alertify.confirm("Are you sure to delete [" + id + "]?")
-            .set({
-                onok: function (closeEvent) {
-                    var arr = [
-                        {collection: 'Pos.Collection.Sales', selector: {staffId: id}},
-                        {collection: 'Pos.Collection.Purchases', selector: {staffId: id}},
-                        {collection: 'Pos.Collection.LocationTransfers', selector: {staffId: id}},
-                        {collection: 'Pos.Collection.UserStaffs', selector: {staffIds: {"$in": [id]}}}
-                    ];
-                    Meteor.call('isRelationExist', arr, function (error, result) {
-                        if (error) {
-                            alertify.error(error.message);
-                        } else {
-                            if (result) {
-                                alertify.warning("Data has been used. Can't remove.");
-                            } else {
+        var arr = [
+            {collection: 'Pos.Collection.Sales', selector: {staffId: id}},
+            {collection: 'Pos.Collection.Purchases', selector: {staffId: id}},
+            {collection: 'Pos.Collection.LocationTransfers', selector: {staffId: id}},
+            {collection: 'Pos.Collection.UserStaffs', selector: {staffIds: {"$in": [id]}}}
+        ];
+        Meteor.call('isRelationExist', arr, function (error, result) {
+            if (error) {
+                alertify.error(error.message);
+            } else {
+                if (result) {
+                    alertify.warning("Data has been used. Can't remove.");
+                } else {
+                    alertify.confirm("Are you sure to delete [" + id + "]?")
+                        .set({
+                            onok: function (closeEvent) {
                                 Pos.Collection.Staffs.remove(id, function (err) {
                                     if (err) {
                                         alertify.error(err.message);
@@ -44,13 +44,12 @@ posStaffTPL.events({
                                         alertify.success("Success");
                                     }
                                 });
-                            }
-                        }
-                    });
-                },
-                title: '<i class="fa fa-remove"></i> Delete Staff'
-            });
-
+                            },
+                            title: '<i class="fa fa-remove"></i> Delete Staff'
+                        });
+                }
+            }
+        });
     },
     'click .show': function (e, t) {
         alertify.staffShow(fa('eye', 'Staff Detail'), renderTemplate(posStaffShowTPL, this));

@@ -23,19 +23,19 @@ posCustomerTPL.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        alertify.confirm("Are you sure to delete [" + id + "]?")
-            .set({
-                onok: function (closeEvent) {
-                    var arr = [
-                        {collection: 'Pos.Collection.Sales', selector: {customerId: id}}
-                    ];
-                    Meteor.call('isRelationExist', arr, function (error, result) {
-                        if (error) {
-                            alertify.error(error.message);
-                        } else {
-                            if (result) {
-                                alertify.warning("Data has been used. Can't remove.");
-                            } else {
+        var arr = [
+            {collection: 'Pos.Collection.Sales', selector: {customerId: id}}
+        ];
+        Meteor.call('isRelationExist', arr, function (error, result) {
+            if (error) {
+                alertify.error(error.message);
+            } else {
+                if (result) {
+                    alertify.warning("Data has been used. Can't remove.");
+                } else {
+                    alertify.confirm("Are you sure to delete [" + id + "]?")
+                        .set({
+                            onok: function (closeEvent) {
                                 Pos.Collection.Customers.remove(id, function (err) {
                                     if (err) {
                                         alertify.error(err.message);
@@ -43,13 +43,12 @@ posCustomerTPL.events({
                                         alertify.success("Success");
                                     }
                                 });
-                            }
-                        }
-                    });
-                },
-                title: '<i class="fa fa-remove"></i> Delete Customer'
-            });
-
+                            },
+                            title: '<i class="fa fa-remove"></i> Delete Customer'
+                        });
+                }
+            }
+        });
     },
     'click .show': function (e, t) {
         alertify.customerShow(fa('eye', 'Customer Detail'), renderTemplate(posCustomerShowTPL, this));

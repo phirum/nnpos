@@ -77,10 +77,10 @@
                                     <td colspan="2">Total {{baseCurrency._id}}:</td>
                                     <td colspan="2">{{sale.totalFormatted}}</td>
                                 </tr>
-                                {{#each sale._exchangeRates.rates}}
+                                {{#each sale._exchangeRate.rates}}
                                     <tr style="text-align: right;">
                                         <td colspan="2" align="right">{{toCurrencyId}}:</td>
-                                        <td colspan="2" align="right">{{multiply sale.total rate toCurrencyId}} {{getFieldOfCurrency toCurrencyId "symbol"}}</td>
+                                        <td colspan="2" align="right">{{totalFormatted}}{{symbol}}</td>
                                     </tr>
                                 {{/each}}
 

@@ -20,22 +20,22 @@ posProductTPL.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        alertify.confirm("Are you sure to delete [" + id + "]?")
-            .set({
-                onok: function (closeEvent) {
-                    var arr = [
-                        {collection: 'Pos.Collection.FIFOInventory', selector: {productId: id}},
-                        {collection: 'Pos.Collection.SaleDetails', selector: {productId: id}},
-                        {collection: 'Pos.Collection.PurchaseDetails', selector: {productId: id}},
-                        {collection: 'Pos.Collection.LocationTransferDetails', selector: {productId: id}}
-                    ];
-                    Meteor.call('isRelationExist', arr, function (error, result) {
-                        if (error) {
-                            alertify.error(error.message);
-                        } else {
-                            if (result) {
-                                alertify.warning("Data has been used. Can't remove.");
-                            } else {
+        var arr = [
+            {collection: 'Pos.Collection.FIFOInventory', selector: {productId: id}},
+            {collection: 'Pos.Collection.SaleDetails', selector: {productId: id}},
+            {collection: 'Pos.Collection.PurchaseDetails', selector: {productId: id}},
+            {collection: 'Pos.Collection.LocationTransferDetails', selector: {productId: id}}
+        ];
+        Meteor.call('isRelationExist', arr, function (error, result) {
+            if (error) {
+                alertify.error(error.message);
+            } else {
+                if (result) {
+                    alertify.warning("Data has been used. Can't remove.");
+                } else {
+                    alertify.confirm("Are you sure to delete [" + id + "]?")
+                        .set({
+                            onok: function (closeEvent) {
                                 Pos.Collection.Products.remove(id, function (err) {
                                     if (err) {
                                         alertify.error(err.message);
@@ -43,12 +43,14 @@ posProductTPL.events({
                                         alertify.success("Success");
                                     }
                                 });
-                            }
-                        }
-                    });
-                },
-                title: '<i class="fa fa-remove"></i> Delete Product'
-            });
+                            },
+                            title: '<i class="fa fa-remove"></i> Delete Product'
+                        });
+                }
+            }
+        });
+
+
     },
     'click .show': function (e, t) {
         Meteor.call('findOneRecord', 'Pos.Collection.Products', {_id: this._id}, function (er, product) {
