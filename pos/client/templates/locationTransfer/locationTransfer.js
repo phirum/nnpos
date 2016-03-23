@@ -21,17 +21,17 @@ Template.pos_locationTransfer.onRendered(function () {
     }, 500);
 });
 function checkBeforeAddOrUpdate(selector, data) {
+    debugger;
     var locationTransferId = $('#locationTransfer-id').val();
     var branchId = Session.get('currentBranch');
     var defaultQuantity = $('#default-quantity').val() == "" ? 1 : parseInt($('#default-quantity').val());
     Meteor.call('findOneRecord', 'Pos.Collection.Products', selector, {}, function (error, product) {
         if (product) {
-            debugger;
             if (product.productType == "Stock") {
                 var sd = Pos.Collection.LocationTransferDetails.findOne({
                     productId: product._id,
                     branchId: branchId,
-                    LocationTransferId: locationTransferId
+                    locationTransferId: locationTransferId
                 });
                 if (sd != null) {
                     defaultQuantity = defaultQuantity + sd.quantity;
@@ -92,7 +92,7 @@ function checkBeforeAddOrUpdate(selector, data) {
                                         saleQuantity += sd.quantity;
                                     });
                                 }
-                                remainQuantity = remainQuantity - saleDetails;
+                                remainQuantity = remainQuantity - saleQuantity;
                                 if (remainQuantity < 0) {
                                     alertify.warning('Product is out of stock. Quantity in stock is "' +
                                         inventory.remainQty + '". And quantity of other locationTransfer is "' + otherQuantity
