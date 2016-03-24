@@ -4,7 +4,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('--------insert sale and sale detail---------');
         var todayDate = moment().format('YYYYMMDD');
         var prefix = sale.branchId + "-" + todayDate;
         var saleId = idGenerator.genWithPrefix(Pos.Collection.Sales, prefix, 4);
@@ -15,7 +14,6 @@ Meteor.methods({
         return saleId;
     },
     insertSale: function (obj) {
-        console.log('----------insert sale ------------');
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
@@ -25,49 +23,42 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('---------direct insert sale--------');
         return Pos.Collection.Sales.direct.insert(obj);
     },
     directUpdateSale: function (id, set) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('---------direct update sale-------');
         Pos.Collection.Sales.direct.update(id, {$set: set});
     },
     updateSale: function (id, set) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------update sale----------');
         Pos.Collection.Sales.update(id, {$set: set});
     },
     directInsertSaleDetails: function (obj) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('-------direct insert sale detail--------');
         Pos.Collection.SaleDetails.direct.insert(obj);
     },
     insertSaleDetails: function (obj) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('--------insert sale detail----------');
         Pos.Collection.SaleDetails.insert(obj);
     },
     directUpdateSaleDetails: function (id, set) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('---------direct update sale detail---------');
         Pos.Collection.SaleDetails.direct.update(id, {$set: set});
     },
     updateSaleDetails: function (id, set) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------update sale detail-------');
         Pos.Collection.SaleDetails.update(id, {$set: set});
     },
     cancelSale: function (saleId) {
@@ -75,14 +66,12 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------cancel sale-------------');
         Pos.Collection.Sales.remove(saleId);
     },
     updateToRetailSale: function (saleId) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------update to retail sale------------')
         Pos.Collection.SaleDetails.find({saleId: saleId}).forEach(function (sd) {
             var retailPrice = Pos.Collection.Products.findOne(sd.productId).retailPrice;
             var detailObj = {};
@@ -98,7 +87,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------update to retail or wholesale---------');
         if (isRetail) {
             Pos.Collection.SaleDetails.find({saleId: saleId}).forEach(function (sd) {
                 if (!sd.isPromotion) {
@@ -127,7 +115,6 @@ Meteor.methods({
 
     //need to refactor code later
     updateSaleTotalByDiscount: function (saleId, discount) {
-        console.log('-------------update sale total by discount---------');
         var set = {};
         //var discount = Pos.Collection.Sales.findOne(saleId).discountAmount;
         //var sale = Pos.Collection.Sales.findOne(saleId);
