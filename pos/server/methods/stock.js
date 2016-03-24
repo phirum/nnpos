@@ -40,7 +40,6 @@
  }
  }*/
 function fifoInventoryInsert(branchId, pd, prefix) {
-    console.log('-----------fifoInventoryInsert---------------');
 //FIFO find the last record that has the same price
     var inventory = Pos.Collection.FIFOInventory.findOne({
         branchId: branchId,
@@ -245,7 +244,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('-----------------Purchase Manage Stock-------------------');
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
@@ -265,7 +263,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('--------------Sale Mange Stock-------------');
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             var saleTotalCost = 0;
@@ -289,10 +286,8 @@ Meteor.methods({
                             inventorySet.remainQty = 0;
                             inventorySet.isSale = true;
                             if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
-                                console.log('--------- ir-iq>=0----------');
                                 quantityOfThisPrice = inventories[i].quantity - 0;
                             } else {
-                                console.log('--------------ir-iq<0------------');
                                 quantityOfThisPrice = inventories[i].remainQty - 0;
                             }
                         } else {
@@ -306,8 +301,6 @@ Meteor.methods({
                         }
                         if (enoughQuantity != 0) {
                             if (quantityOfThisPrice > 0) {
-                                console.log('--------before push to transaction --------');
-                                console.log(quantityOfThisPrice);
                                 transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
                             }
                             enoughQuantity -= quantityOfThisPrice;
@@ -321,11 +314,9 @@ Meteor.methods({
 
                     }
                     var setObj = {};
-                    console.log('-------before update total cost of saleDetail---------');
                     setObj.transaction = transaction;
                     setObj.totalCost = 0;
                     setObj.status = "Saved";
-                    console.log(setObj);
                     if (transaction.count() > 0) {
                         transaction.forEach(function (t) {
                             setObj.totalCost += parseFloat(t.price) * parseFloat(t.quantity);
@@ -350,7 +341,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('--------------Location Transfer Manage Stock-----------');
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             var locationTransferTotalCost = 0;
@@ -425,7 +415,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------return stock-----------');
         var prefix = branchId + '-';
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
@@ -435,7 +424,6 @@ Meteor.methods({
                     sd.price = tr.price;
                     sd.quantity = tr.quantity;
                     //fifoInventoryInsert(branchId,sd,prefix);
-                    //console.log(sd.locationId);
                     var inventory = Pos.Collection.FIFOInventory.findOne({
                         branchId: branchId,
                         productId: sd.productId,
@@ -485,7 +473,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('--------------Reduce From Inventory-------------');
         Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             // var saleTotalCost = 0;

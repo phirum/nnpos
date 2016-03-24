@@ -10,6 +10,14 @@ posRoutes.route('/locationTransfer/:locationTransferId?', {
             'pos_locationTransferDetail',
             Meteor.subscribe('posLocationTransferDetail', {branchId: branchId, status: "Unsaved"})
         );
+        this.register(
+            'pos_sale',
+            Meteor.subscribe('posSale', {branchId: branchId, status: "Unsaved"})
+        );
+        this.register(
+            'pos_saleDetail',
+            Meteor.subscribe('posSaleDetail', {branchId: branchId, status: "Unsaved"})
+        );
         /*this.register(
          'pos_product',
          Meteor.subscribe('posProduct')

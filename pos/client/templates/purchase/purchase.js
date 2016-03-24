@@ -124,7 +124,7 @@ Template.pos_purchase.helpers({
         var value = (val1 * val2);
         if (id != null && id == "KHR") {
             value = roundRielCurrency(value);
-            return numeral(value).format('0,0.00');
+            return numeral(value).format('0,0');
         }
         return numeral(value).format('0,0.00');
     },

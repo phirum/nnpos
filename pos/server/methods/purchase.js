@@ -4,7 +4,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('-------------insert purchase and purchase detail--------');
         var todayDate = moment().format('YYYYMMDD');
         var prefix = purchase.branchId + "-" + todayDate;
         var purchaseId = idGenerator.genWithPrefix(Pos.Collection.Purchases, prefix, 4);
@@ -19,21 +18,18 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('---------insert purchase------------');
         return Pos.Collection.Purchases.insert(obj);
     },
     directInsertPurchase: function (obj) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------direct insert purchase---------');
         Pos.Collection.Purchases.direct.insert(obj);
     },
     updatePurchase: function (id, set, unset) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('--------update purchase-----------');
         var updateObject = {};
         if (set != null) updateObject.$set = set;
         if (unset != null) updateObject.$unset = unset;
@@ -43,7 +39,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------direct update purchase---------');
         var updateObject = {};
         if (set != null) updateObject.$set = set;
         if (unset != null) updateObject.$unset = unset;
@@ -53,28 +48,24 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------- insert purchase detail-----------');
         Pos.Collection.PurchaseDetails.insert(obj);
     },
     directInsertPurchaseDetails: function (obj) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------- direct insert purchase detail -----------');
         Pos.Collection.PurchaseDetails.direct.insert(obj);
     },
     updatePurchaseDetails: function (id, set) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('----------- update purchase detail-------------');
         Pos.Collection.PurchaseDetails.update(id, {$set: set}, {validate: false});
     },
     directUpdatePurchaseDetails: function (id, set, unset) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('------------direct update purchase detail-----------');
         var updateObject = {};
         if (set != null) updateObject.$set = set;
         if (unset != null) updateObject.$unset = unset;
@@ -85,7 +76,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('-------------cancel purchase-----------');
         Pos.Collection.Purchases.remove(purchaseId);
     },
     isExistIMEI: function (imei, branchId, locationId) {
@@ -93,7 +83,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('-------- is exist imei-----------');
         //var saleDetail = Pos.Collection.SaleDetails.findOne({imei: {"$in": [imei]}});
         var inventory = Pos.Collection.FIFOInventory.findOne({
             branchId: branchId,
@@ -118,7 +107,6 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        console.log('---------update purchase total by discount----------');
         var purchaseSubTotal = 0;
         var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
         purchaseDetails.forEach(function (purchaseDetail) {

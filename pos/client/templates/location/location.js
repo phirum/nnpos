@@ -23,25 +23,25 @@ posLocationTPL.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        alertify.confirm("Are you sure to delete [" + id + "]?")
-            .set({
-                onok: function (closeEvent) {
-                    var arr = [
-                        {collection: 'Pos.Collection.FIFOInventory', selector: {locationId: id}},
-                        {collection: 'Pos.Collection.Sales', selector: {locationId: id}},
-                        {collection: 'Pos.Collection.Purchases', selector: {locationId: id}},
-                        {
-                            collection: 'Pos.Collection.LocationTransfers',
-                            selector: {$or: [{fromLocationId: id}, {toLocationId: id}]}
-                        }
-                    ];
-                    Meteor.call('isRelationExist', arr, function (error, result) {
-                        if (error) {
-                            alertify.error(error.message);
-                        } else {
-                            if (result) {
-                                alertify.warning("Data has been used. Can't remove.");
-                            } else {
+        var arr = [
+            {collection: 'Pos.Collection.FIFOInventory', selector: {locationId: id}},
+            {collection: 'Pos.Collection.Sales', selector: {locationId: id}},
+            {collection: 'Pos.Collection.Purchases', selector: {locationId: id}},
+            {
+                collection: 'Pos.Collection.LocationTransfers',
+                selector: {$or: [{fromLocationId: id}, {toLocationId: id}]}
+            }
+        ];
+        Meteor.call('isRelationExist', arr, function (error, result) {
+            if (error) {
+                alertify.error(error.message);
+            } else {
+                if (result) {
+                    alertify.warning("Data has been used. Can't remove.");
+                } else {
+                    alertify.confirm("Are you sure to delete [" + id + "]?")
+                        .set({
+                            onok: function (closeEvent) {
                                 Pos.Collection.Locations.remove(id, function (err) {
                                     if (err) {
                                         alertify.error(err.message);
@@ -49,13 +49,14 @@ posLocationTPL.events({
                                         alertify.success("Success");
                                     }
                                 });
-                            }
-                        }
-                    });
+                            },
+                            title: '<i class="fa fa-remove"></i> Delete Location'
+                        });
+                }
+            }
+        });
 
-                },
-                title: '<i class="fa fa-remove"></i> Delete Location'
-            });
+
     },
     'click .show': function (e, t) {
         alertify.locationShow(fa('eye', 'Location Detail'), renderTemplate(posLocationShowTPL, this))

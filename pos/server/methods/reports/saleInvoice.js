@@ -17,6 +17,15 @@ Meteor.methods({
 
 function getSale(saleId, baseCurrency) {
     var s = Pos.Collection.Sales.findOne(saleId);
+    if (s._exchangeRate) {
+        s._exchangeRate.rates.forEach(function (ex) {
+            if (ex.toCurrencyId == "KHR") {
+                ex.totalFormatted = numeral(roundRielCurrency(ex.rate * s.total)).format('0,0');
+            } else {
+                ex.totalFormatted = numeral(ex.rate * s.total).format('0,0.00');
+            }
+        });
+    }
     s.saleDate = moment(s.saleDate).format("DD-MM-YYYY, HH:mm");
     s.subTotalFormatted = numeral(s.subTotal).format('0,0.00') + baseCurrency.symbol;
     s.totalFormatted = numeral(s.total).format('0,0.00') + baseCurrency.symbol;

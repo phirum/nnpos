@@ -127,14 +127,14 @@ function getSaleProducts(params, categoryId) {
     var granTotalCost = 0;
     var grandTotal = 0;
     result.forEach(function (r) {
-        var product = Pos.Collection.Products.findOne(r.productId);
+       // var product = Pos.Collection.Products.findOne(r.productId);
         grandTotal += r.amount;
         granTotalCost += r.totalCost;
-        var unit = Pos.Collection.Units.findOne(product.unitId).name;
+       // var unit = Pos.Collection.Units.findOne(product.unitId).name;
         arr.push({
             order: i,
             productId: r.productId,
-            productName: product.name + "(" + unit + ")",
+            productName: r._product.name + "(" + r._product._unit.name + ")",
             // price: numeral(r.price).format('0,0.00'),
             quantity: r.quantity,
             total: numeral(r.amount).format('0,0.00'),
