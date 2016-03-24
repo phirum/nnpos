@@ -10,7 +10,7 @@ Meteor.startup(function () {
     Pos.Collection.Purchases._ensureIndex({productId:1,branchId:1,locationId:1,status:1,totalCost:1});
     Pos.Collection.PurchaseDetails._ensureIndex({branchId:1,locationId:1,purchaseId:1,productId:1});
     Pos.Collection.Payments._ensureIndex({branchId:1,saleId:1,purchaseId:1});
-    Pos.Collection.FIFOInventory._ensureIndex({branchId:1,locationId:1,productId:1,isSale:1});
+    Pos.Collection.FIFOInventory._ensureIndex({branchId:1,locationId:1,productId:1,isSale:1,price:1});
     Pos.Collection.Locations._ensureIndex({branchId:1});
     Pos.Collection.LocationSettings._ensureIndex({branchId:1});
     Pos.Collection.LocationTransfers._ensureIndex({branchId:1,locationId:1,productId:1,status:1,fromLocationId:1,toLocationId:1});

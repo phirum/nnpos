@@ -497,7 +497,7 @@ Meteor.methods({
                         if (remainQty <= 0) {
                             inventorySet.remainQty = 0;
                             inventorySet.isSale = true;
-                           if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
+                            if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
                                 quantityOfThisPrice = inventories[i].quantity - 0;
                             } else {
                                 quantityOfThisPrice = inventories[i].remainQty - 0;
@@ -512,9 +512,9 @@ Meteor.methods({
                             }
                         }
                         if (enoughQuantity != 0) {
-                           /* if (quantityOfThisPrice > 0) {
-                                transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
-                            }*/
+                            /* if (quantityOfThisPrice > 0) {
+                             transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
+                             }*/
                             enoughQuantity -= quantityOfThisPrice;
                         }
 
@@ -529,20 +529,46 @@ Meteor.methods({
             );
         });
     },
+    /*isEnoughStock: function (purchaseId, branchId) {
+     var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
+     var enough = true;
+     purchaseDetails.forEach(function (pd) {
+     var inventory = Pos.Collection.FIFOInventory.findOne({
+     branchId: branchId,
+     productId: pd.productId,
+     locationId: pd.locationId,
+     isSale: false
+     }, {sort: {createdAt: -1}});
+     if (!inventory) {
+     enough = false;
+     return false;
+     } else if (inventory.remainQty < pd.quantity) {
+     enough = false;
+     return false;
+     }
+     });
+     return enough;
+     },*/
     isEnoughStock: function (purchaseId, branchId) {
         var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
         var enough = true;
         purchaseDetails.forEach(function (pd) {
-            var inventory = Pos.Collection.FIFOInventory.findOne({
+            var inventories = Pos.Collection.FIFOInventory.find({
                 branchId: branchId,
                 productId: pd.productId,
                 locationId: pd.locationId,
+                price: pd.price,
                 isSale: false
-            }, {sort: {createdAt: -1}});
-            if (!inventory) {
-                enough = false;
-                return false;
-            } else if (inventory.remainQty < pd.quantity) {
+            }, {fields: {_id: 1, remainQty: 1, quantity: 1}});
+            var remainQuantity = 0;
+            inventories.forEach(function (inventory) {
+                if (inventory.remainQty - inventory.quantity < 0) {
+                    remainQuantity += inventory.remainQty;
+                } else {
+                    remainQuantity += inventory.quantity;
+                }
+            });
+            if (remainQuantity<pd.quantity) {
                 enough = false;
                 return false;
             }
