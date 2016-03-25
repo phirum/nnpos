@@ -469,6 +469,7 @@ Meteor.methods({
             //--- End Inventory type block "FIFO Inventory"---
         });
     },
+    /*
     reduceFromInventory: function (purchaseId, branchId) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
@@ -512,9 +513,9 @@ Meteor.methods({
                             }
                         }
                         if (enoughQuantity != 0) {
-                            /* if (quantityOfThisPrice > 0) {
-                             transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
-                             }*/
+                             //if (quantityOfThisPrice > 0) {
+                             //transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
+                             //}
                             enoughQuantity -= quantityOfThisPrice;
                         }
 
@@ -529,6 +530,7 @@ Meteor.methods({
             );
         });
     },
+    */
     /*isEnoughStock: function (purchaseId, branchId) {
      var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
      var enough = true;
@@ -575,7 +577,7 @@ Meteor.methods({
         });
         return enough;
     },
-    reduceFromInventory1: function (purchaseId, branchId) {
+    reduceFromInventory: function (purchaseId, branchId) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
@@ -591,55 +593,23 @@ Meteor.methods({
                 var enoughQuantity = pd.quantity;
                 for (var i = 0; i < inventories.length; i++) {
                     var inventorySet = {};
-                    if (inventories[i].price == pd.price) {
-                        var remainQuantity=inventories[i].quantity-enoughQuantity;
-                        if(remainQuantity>0){
-                            inventorySet.quantity=remainQuantity;
-                            inventorySet.remainQty=inventories[i].remainQty-enoughQuantity;
+                    if (inventories[i].price == pd.price && enoughQuantity != 0) {
+                        var remainQuantity = inventories[i].quantity - enoughQuantity;
+                        if (remainQuantity > 0) {
+                            inventorySet.quantity = remainQuantity;
+                            inventorySet.remainQty = inventories[i].remainQty - enoughQuantity;
                             inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
-                        }else{
-
-                        }
-
-                    }else{
-                        inventorySet.remainQty=1;
-                    }
-
-
-                    //or if(enoughQuantity==0){ return false; //to stop the loop.}
-                    var inventorySet = {};
-                    var remainQty = (inventories[i].remainQty - pd.quantity);
-                    var quantityOfThisPrice = 0;
-                    if (remainQty <= 0) {
-                        inventorySet.remainQty = 0;
-                        inventorySet.isSale = true;
-                        if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
-                            quantityOfThisPrice = inventories[i].quantity - 0;
+                            enoughQuantity = 0;
+                            Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
                         } else {
-                            quantityOfThisPrice = inventories[i].remainQty - 0;
+                            enoughQuantity -= inventories[i].quantity;
+                            Pos.Collection.FIFOInventory.direct.remove(inventories[i]._id);
                         }
                     } else {
-                        inventorySet.remainQty = remainQty;
-                        inventorySet.isSale = false;
-                        if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
-                            quantityOfThisPrice = inventories[i].quantity - remainQty;
-                        } else {
-                            quantityOfThisPrice = inventories[i].remainQty - remainQty;
-                        }
-                    }
-                    if (enoughQuantity != 0) {
-                        /* if (quantityOfThisPrice > 0) {
-                         transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
-                         }*/
-                        enoughQuantity -= quantityOfThisPrice;
-                    }
-
-                    if (i == inventories.length - 1) {
+                        inventorySet.remainQty = inventories[i].remainQty - enoughQuantity;
                         inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
+                        Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
                     }
-                    Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
-                    // var quantityOfThisPrice = inventories[i].quantity - remainQty;
-
                 }
             })
         });
