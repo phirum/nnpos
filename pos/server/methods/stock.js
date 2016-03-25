@@ -477,7 +477,7 @@ Meteor.methods({
             //---Open Inventory type block "FIFO Inventory"---
             // var saleTotalCost = 0;
             //var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
-            var purchaeseTotalCost = 0;
+            var purchaseTotalCost = 0;
             //var prefix = branchId + "-";
             var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
             purchaseDetails.forEach(function (pd) {
@@ -568,12 +568,81 @@ Meteor.methods({
                     remainQuantity += inventory.quantity;
                 }
             });
-            if (remainQuantity<pd.quantity) {
+            if (remainQuantity < pd.quantity) {
                 enough = false;
                 return false;
             }
         });
         return enough;
+    },
+    reduceFromInventory1: function (purchaseId, branchId) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
+        Meteor.defer(function () {
+            var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
+            purchaseDetails.forEach(function (pd) {
+                var inventories = Pos.Collection.FIFOInventory.find({
+                    branchId: branchId,
+                    productId: pd.productId,
+                    locationId: pd.locationId,
+                    isSale: false
+                }, {sort: {_id: -1}}).fetch();
+                var enoughQuantity = pd.quantity;
+                for (var i = 0; i < inventories.length; i++) {
+                    var inventorySet = {};
+                    if (inventories[i].price == pd.price) {
+                        var remainQuantity=inventories[i].quantity-enoughQuantity;
+                        if(remainQuantity>0){
+                            inventorySet.quantity=remainQuantity;
+                            inventorySet.remainQty=inventories[i].remainQty-enoughQuantity;
+                            inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
+                        }else{
+
+                        }
+
+                    }else{
+                        inventorySet.remainQty=1;
+                    }
+
+
+                    //or if(enoughQuantity==0){ return false; //to stop the loop.}
+                    var inventorySet = {};
+                    var remainQty = (inventories[i].remainQty - pd.quantity);
+                    var quantityOfThisPrice = 0;
+                    if (remainQty <= 0) {
+                        inventorySet.remainQty = 0;
+                        inventorySet.isSale = true;
+                        if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
+                            quantityOfThisPrice = inventories[i].quantity - 0;
+                        } else {
+                            quantityOfThisPrice = inventories[i].remainQty - 0;
+                        }
+                    } else {
+                        inventorySet.remainQty = remainQty;
+                        inventorySet.isSale = false;
+                        if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
+                            quantityOfThisPrice = inventories[i].quantity - remainQty;
+                        } else {
+                            quantityOfThisPrice = inventories[i].remainQty - remainQty;
+                        }
+                    }
+                    if (enoughQuantity != 0) {
+                        /* if (quantityOfThisPrice > 0) {
+                         transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
+                         }*/
+                        enoughQuantity -= quantityOfThisPrice;
+                    }
+
+                    if (i == inventories.length - 1) {
+                        inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
+                    }
+                    Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
+                    // var quantityOfThisPrice = inventories[i].quantity - remainQty;
+
+                }
+            })
+        });
     }
 });
 
