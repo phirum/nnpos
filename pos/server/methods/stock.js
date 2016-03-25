@@ -469,6 +469,7 @@ Meteor.methods({
             //--- End Inventory type block "FIFO Inventory"---
         });
     },
+    /*
     reduceFromInventory: function (purchaseId, branchId) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
@@ -477,7 +478,7 @@ Meteor.methods({
             //---Open Inventory type block "FIFO Inventory"---
             // var saleTotalCost = 0;
             //var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
-            var purchaeseTotalCost = 0;
+            var purchaseTotalCost = 0;
             //var prefix = branchId + "-";
             var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
             purchaseDetails.forEach(function (pd) {
@@ -497,7 +498,7 @@ Meteor.methods({
                         if (remainQty <= 0) {
                             inventorySet.remainQty = 0;
                             inventorySet.isSale = true;
-                           if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
+                            if ((inventories[i].remainQty - inventories[i].quantity) >= 0) {
                                 quantityOfThisPrice = inventories[i].quantity - 0;
                             } else {
                                 quantityOfThisPrice = inventories[i].remainQty - 0;
@@ -512,9 +513,9 @@ Meteor.methods({
                             }
                         }
                         if (enoughQuantity != 0) {
-                           /* if (quantityOfThisPrice > 0) {
-                                transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
-                            }*/
+                             //if (quantityOfThisPrice > 0) {
+                             //transaction.push({quantity: quantityOfThisPrice, price: inventories[i].price})
+                             //}
                             enoughQuantity -= quantityOfThisPrice;
                         }
 
@@ -529,25 +530,89 @@ Meteor.methods({
             );
         });
     },
+    */
+    /*isEnoughStock: function (purchaseId, branchId) {
+     var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
+     var enough = true;
+     purchaseDetails.forEach(function (pd) {
+     var inventory = Pos.Collection.FIFOInventory.findOne({
+     branchId: branchId,
+     productId: pd.productId,
+     locationId: pd.locationId,
+     isSale: false
+     }, {sort: {createdAt: -1}});
+     if (!inventory) {
+     enough = false;
+     return false;
+     } else if (inventory.remainQty < pd.quantity) {
+     enough = false;
+     return false;
+     }
+     });
+     return enough;
+     },*/
     isEnoughStock: function (purchaseId, branchId) {
         var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
         var enough = true;
         purchaseDetails.forEach(function (pd) {
-            var inventory = Pos.Collection.FIFOInventory.findOne({
+            var inventories = Pos.Collection.FIFOInventory.find({
                 branchId: branchId,
                 productId: pd.productId,
                 locationId: pd.locationId,
+                price: pd.price,
                 isSale: false
-            }, {sort: {createdAt: -1}});
-            if (!inventory) {
-                enough = false;
-                return false;
-            } else if (inventory.remainQty < pd.quantity) {
+            }, {fields: {_id: 1, remainQty: 1, quantity: 1}});
+            var remainQuantity = 0;
+            inventories.forEach(function (inventory) {
+                if (inventory.remainQty - inventory.quantity < 0) {
+                    remainQuantity += inventory.remainQty;
+                } else {
+                    remainQuantity += inventory.quantity;
+                }
+            });
+            if (remainQuantity < pd.quantity) {
                 enough = false;
                 return false;
             }
         });
         return enough;
+    },
+    reduceFromInventory: function (purchaseId, branchId) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
+        Meteor.defer(function () {
+            var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
+            purchaseDetails.forEach(function (pd) {
+                var inventories = Pos.Collection.FIFOInventory.find({
+                    branchId: branchId,
+                    productId: pd.productId,
+                    locationId: pd.locationId,
+                    isSale: false
+                }, {sort: {_id: -1}}).fetch();
+                var enoughQuantity = pd.quantity;
+                for (var i = 0; i < inventories.length; i++) {
+                    var inventorySet = {};
+                    if (inventories[i].price == pd.price && enoughQuantity != 0) {
+                        var remainQuantity = inventories[i].quantity - enoughQuantity;
+                        if (remainQuantity > 0) {
+                            inventorySet.quantity = remainQuantity;
+                            inventorySet.remainQty = inventories[i].remainQty - enoughQuantity;
+                            inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
+                            enoughQuantity = 0;
+                            Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
+                        } else {
+                            enoughQuantity -= inventories[i].quantity;
+                            Pos.Collection.FIFOInventory.direct.remove(inventories[i]._id);
+                        }
+                    } else {
+                        inventorySet.remainQty = inventories[i].remainQty - enoughQuantity;
+                        inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
+                        Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
+                    }
+                }
+            })
+        });
     }
 });
 
