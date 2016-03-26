@@ -43,7 +43,8 @@ Pos.Schema.Purchases = new SimpleSchema({
     },
     exchangeRateId: {
         type: String,
-        label: "Exchange Rate"
+        label: "Exchange Rate",
+        optional: true
     },
     branchId: {
         type: String,

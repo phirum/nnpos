@@ -97,17 +97,18 @@ function calculateSaleHelper(sl) {
         grandTotalCost += s.totalCost;
         s.order = i;
         s.exchangeRates = [];
-        var exchange = Pos.Collection.ExchangeRates.findOne(s.exchangeRateId);
-        exchange.rates.forEach(function (ex) {
-            ex.exTotal = s.total * ex.rate;
-            if (grandTotalConvert[ex.toCurrencyId] == null) {
-                grandTotalConvert[ex.toCurrencyId] = 0
-            }
-            grandTotalConvert[ex.toCurrencyId] += ex.exTotal;
-            ex.exTotal = numeral(ex.exTotal).format('0,0.00');
-            s.exchangeRates.push(ex);
+        if (s._exchangeRate) {
+            s._exchangeRate.rates.forEach(function (ex) {
+                ex.exTotal = s.total * ex.rate;
+                if (grandTotalConvert[ex.toCurrencyId] == null) {
+                    grandTotalConvert[ex.toCurrencyId] = 0
+                }
+                grandTotalConvert[ex.toCurrencyId] += ex.exTotal;
+                ex.exTotal = numeral(ex.exTotal).format('0,0.00');
+                s.exchangeRates.push(ex);
 
-        });
+            });
+        }
         s.saleDate = moment(s.saleDate).format("DD-MM-YY, HH:mm");
         s.owedAmount = s.owedAmount ? s.owedAmount : 0;
         s.paidAmount = s.total - s.owedAmount;

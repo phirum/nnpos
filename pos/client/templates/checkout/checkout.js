@@ -137,7 +137,8 @@ Template.pos_checkout.helpers({
         if (sale != null) {
             return Pos.Collection.ExchangeRates.findOne(sale.exchangeRateId);
         } else {
-            var id = "";
+            return false;
+           /* var id = "";
             var setting = Cpanel.Collection.Setting.findOne();
             if (setting != null) {
                 id = setting.baseCurrency;
@@ -145,7 +146,8 @@ Template.pos_checkout.helpers({
             return Pos.Collection.ExchangeRates.findOne({
                 base: id,
                 branchId: Session.get('currentBranch')
-            }, {sort: {_id: -1, createdAt: -1}});
+            }, {sort: {_id: -1, createdAt: -1}});*/
+
         }
 
     },
@@ -866,7 +868,7 @@ function checkoutStock(self, oldQty, newQty, e) {
                                 saleId: {$in: unSavedSaleId},
                                 productId: product._id,
                                 locationId: locationId
-                            },{fields: {quantity: 1}});
+                            }, {fields: {quantity: 1}});
                             var otherQuantity = 0;
                             if (otherSaleDetails != null) {
                                 otherSaleDetails.forEach(function (sd) {
@@ -898,13 +900,13 @@ function checkoutStock(self, oldQty, newQty, e) {
                                         locationTransferQuantity += ltd.quantity;
                                     });
                                 }
-                                remainQuantity=remainQuantity-locationTransferQuantity;
-                                if(remainQuantity<0){
+                                remainQuantity = remainQuantity - locationTransferQuantity;
+                                if (remainQuantity < 0) {
                                     $(e.currentTarget).val(oldQty);
                                     alertify.warning('Product is out of stock. Quantity in stock is "' +
                                         inventory.remainQty + '". And quantity on sale of other seller is "' +
-                                        otherQuantity + '". And quantity of location transfer is "'+locationTransferQuantity+'".');
-                                }else{
+                                        otherQuantity + '". And quantity of location transfer is "' + locationTransferQuantity + '".');
+                                } else {
                                     Meteor.call('updateSaleDetails', self._id, set);
                                 }
                             }
@@ -928,15 +930,15 @@ function checkoutStock(self, oldQty, newQty, e) {
 function getValidatedValues() {
     var data = {};
     var id = Cpanel.Collection.Setting.findOne().baseCurrency;
-    var exchangeRate = Pos.Collection.ExchangeRates.findOne({
-        base: id,
-        branchId: Session.get('currentBranch')
-    }, {sort: {_id: -1, createdAt: -1}});
-    if (exchangeRate == null) {
-        data.valid = false;
-        data.message = "Please input exchange rate for this branch.";
-        return data;
-    }
+    /* var exchangeRate = Pos.Collection.ExchangeRates.findOne({
+     base: id,
+     branchId: Session.get('currentBranch')
+     }, {sort: {_id: -1, createdAt: -1}});
+     if (exchangeRate == null) {
+     data.valid = false;
+     data.message = "Please input exchange rate for this branch.";
+     return data;
+     }*/
     var voucher = $('#voucher').val();
     /*if (voucher == '') {
      data.valid = false;
@@ -993,12 +995,20 @@ function getValidatedValues() {
         saleDate: moment(saleDate, 'MM/DD/YYYY hh:mm:ss a').toDate(),
         staffId: staffId,
         customerId: customerId,
-        exchangeRateId: exchangeRate._id,
+        //exchangeRateId: exchangeRate._id,
         description: $('#description').val(),
         transactionType: transactionType,
         voucher: voucher,
         locationId: locationId
     };
+    var exchangeRate = Pos.Collection.ExchangeRates.findOne({
+        base: id,
+        branchId: Session.get('currentBranch')
+    }, {sort: {_id: -1, createdAt: -1}});
+    if (exchangeRate) {
+        data.saleObj.exchangeRateId = exchangeRate._id;
+    }
+
     //data.product = product;
     return data;
 }

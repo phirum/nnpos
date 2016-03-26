@@ -138,20 +138,21 @@ Template.pos_purchase.helpers({
             return Cpanel.Collection.Currency.findOne(setting.baseCurrency);
         }
     },
-    exchangeRates: function () {
+    exchangeRate: function () {
         var purchase = Pos.Collection.Purchases.findOne(FlowRouter.getParam('purchaseId'));
         if (purchase) {
             return Pos.Collection.ExchangeRates.findOne(purchase.exchangeRateId);
         } else {
-            var setting = Cpanel.Collection.Setting.findOne();
-            if (setting) {
-                return Pos.Collection.ExchangeRates.findOne({
-                    base: setting.baseCurrency,
-                    branchId: Session.get('currentBranch')
-                }, {sort: {_id: -1, createdAt: -1}});
-            } else {
-                return {};
-            }
+            return false;
+            /*var setting = Cpanel.Collection.Setting.findOne();
+             if (setting) {
+             return Pos.Collection.ExchangeRates.findOne({
+             base: setting.baseCurrency,
+             branchId: Session.get('currentBranch')
+             }, {sort: {_id: -1, createdAt: -1}});
+             } else {
+             return {};
+             }*/
         }
     },
     compareTwoValue: function (val1, val2) {
@@ -1044,15 +1045,15 @@ function subtractArray(src, filt) {
 function getValidatedValues() {
     var data = {};
     var id = Cpanel.Collection.Setting.findOne().baseCurrency;
-    var exchangeRate = Pos.Collection.ExchangeRates.findOne({
-        base: id,
-        branchId: Session.get('currentBranch')
-    }, {sort: {_id: -1, createdAt: -1}});
-    if (exchangeRate == null) {
-        data.valid = false;
-        data.message = "Please input exchange rate for this branch.";
-        return data;
-    }
+    /* var exchangeRate = Pos.Collection.ExchangeRates.findOne({
+     base: id,
+     branchId: Session.get('currentBranch')
+     }, {sort: {_id: -1, createdAt: -1}});
+     if (exchangeRate == null) {
+     data.valid = false;
+     data.message = "Please input exchange rate for this branch.";
+     return data;
+     }*/
     var purchaseDate = $('#input-purchase-date').val();
     if (purchaseDate == '') {
         data.valid = false;
@@ -1090,10 +1091,17 @@ function getValidatedValues() {
         purchaseDate: moment(purchaseDate, 'MM/DD/YYYY hh:mm:ss a').toDate(),
         staffId: staffId,
         supplierId: supplierId,
-        exchangeRateId: exchangeRate._id,
+        //exchangeRateId: exchangeRate._id,
         description: $('#description').val(),
         transactionType: transactionType,
         locationId: locationId
     };
+    var exchangeRate = Pos.Collection.ExchangeRates.findOne({
+        base: id,
+        branchId: Session.get('currentBranch')
+    }, {sort: {_id: -1, createdAt: -1}});
+    if (exchangeRate) {
+        data.purchaseObj.exchangeRateId = exchangeRate._id;
+    }
     return data;
 }

@@ -1,4 +1,3 @@
-
 <template name="pos_checkout">
 
 
@@ -120,7 +119,7 @@
                                    autofocus>
                         </div>
                         <div class="col-md-5">
-                           <!-- <select id="product-id" class="form-control input-sm select-two">
+                            <!-- <select id="product-id" class="form-control input-sm select-two">
                                 <option value="">(Select One)</option>
                                 {{#each products}}
                                     <option value="{{_id}}">{{name}} ({{_unit.name}})</option>
@@ -129,7 +128,7 @@
                             <input class="form-control typeahead input-sm" name="search" type="text"
                                    placeholder="Type your product name" autocomplete="on" spellcheck="off"
                                    data-source="search" data-select='selected' data-highlight=true
-                                   data-template='repo'  style="width: 315px;"/>
+                                   data-template='repo' style="width: 315px;"/>
                         </div>
                         <div class="col-md-2">
                             <input type="text" id="default-quantity" class="form-control input-sm"
@@ -185,7 +184,7 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-xs" role="group" aria-label="">
-                                            <a href="" class="btn btn-warning btn-imei">IMEI</a>
+                                            <!--<a href="" class="btn btn-warning btn-imei">IMEI</a>-->
                                             <a href="" class="btn btn-danger btn-remove"><i
                                                     class="fa fa-trash"></i></a>
                                         </div>
@@ -261,23 +260,25 @@
                                     </div>
 
                                     {{#if hasTotal sale.total}}
-                                        {{#each exchangeRate.rates}}
-                                            <div class="form-group">
-                                                <label for="total_riel"
-                                                       class="col-sm-5 control-label">Total {{toCurrencyId}}</label>
+                                        {{#if exchangeRate}}
+                                            {{#each exchangeRate.rates}}
+                                                <div class="form-group">
+                                                    <label for="total_riel"
+                                                           class="col-sm-5 control-label">Total {{toCurrencyId}}</label>
 
-                                                <div class="col-sm-7">
-                                                    <div class="input-group input-group-sm">
-                                                        <input type="text" class="form-control input-sm"
-                                                               value="{{multiply rate sale.total toCurrencyId}}"
-                                                               readonly>
-                                                        <span class="input-group-addon"><b>{{symbol}}</b></span>
+                                                    <div class="col-sm-7">
+                                                        <div class="input-group input-group-sm">
+                                                            <input type="text" class="form-control input-sm"
+                                                                   value="{{multiply rate sale.total toCurrencyId}}"
+                                                                   readonly>
+                                                            <span class="input-group-addon"><b>{{symbol}}</b></span>
+                                                        </div>
                                                     </div>
+
                                                 </div>
 
-                                            </div>
-
-                                        {{/each}}
+                                            {{/each}}
+                                        {{/if}}
                                     {{/if}}
 
 

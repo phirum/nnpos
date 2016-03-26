@@ -30,7 +30,8 @@ Pos.Schema.Sales = new SimpleSchema({
     },
     exchangeRateId:{
         type:String,
-        label:"Exchange Rate"
+        label:"Exchange Rate",
+        optional:true
     },
     discount: {
         type: Number,

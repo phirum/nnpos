@@ -149,12 +149,17 @@ posPurchasePaymentInsertTPL.helpers({
     },
     exchangeRates: function () {
         var id = Cpanel.Collection.Setting.findOne().baseCurrency;
-        return Pos.Collection.ExchangeRates.findOne({base: id, branchId: Session.get('currentBranch')}, {
+        var exchangeRate = Pos.Collection.ExchangeRates.findOne({base: id, branchId: Session.get('currentBranch')}, {
             sort: {
                 _id: -1,
                 createdAt: -1
             }
         });
+        if (exchangeRate) {
+            return exchangeRate;
+        } else {
+            return false;
+        }
     }
 });
 posPurchasePaymentInsertTPL.events({
