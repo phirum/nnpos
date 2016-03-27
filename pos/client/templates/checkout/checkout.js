@@ -137,15 +137,17 @@ Template.pos_checkout.helpers({
         if (sale != null) {
             return Pos.Collection.ExchangeRates.findOne(sale.exchangeRateId);
         } else {
-            var id = "";
-            var setting = Cpanel.Collection.Setting.findOne();
-            if (setting != null) {
-                id = setting.baseCurrency;
-            }
-            return Pos.Collection.ExchangeRates.findOne({
-                base: id,
-                branchId: Session.get('currentBranch')
-            }, {sort: {_id: -1, createdAt: -1}});
+            return false;
+            /* var id = "";
+             var setting = Cpanel.Collection.Setting.findOne();
+             if (setting != null) {
+             id = setting.baseCurrency;
+             }
+             return Pos.Collection.ExchangeRates.findOne({
+             base: id,
+             branchId: Session.get('currentBranch')
+             }, {sort: {_id: -1, createdAt: -1}});*/
+
         }
 
     },
@@ -496,6 +498,9 @@ Template.pos_checkout.events({
             });
         }
     },
+    'click .la-box,#total_discount,#total_discount_amount': function (e) {
+        $(e.currentTarget).select();
+    },
     'mouseout .la-box,#total_discount,#total_discount_amount': function () {
         $('#product-barcode').focus();
     },
@@ -689,11 +694,11 @@ Template.pos_checkout.events({
             return;
         }
     },
-    'keypress #default-quantity,.quantity,.pay-amount': function (evt) {
+    'keypress #default-quantity,.quantity': function (evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         return !(charCode > 31 && (charCode < 48 || charCode > 57));
     },
-    'keypress #default-discount,.price,.discount,#total_discount': function (evt) {
+    'keypress .pay-amount,#default-discount,.price,.discount,#total_discount': function (evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if ($(evt.currentTarget).val().indexOf('.') != -1) {
             if (charCode == 46) {
@@ -866,7 +871,7 @@ function checkoutStock(self, oldQty, newQty, e) {
                                 saleId: {$in: unSavedSaleId},
                                 productId: product._id,
                                 locationId: locationId
-                            },{fields: {quantity: 1}});
+                            }, {fields: {quantity: 1}});
                             var otherQuantity = 0;
                             if (otherSaleDetails != null) {
                                 otherSaleDetails.forEach(function (sd) {
@@ -898,13 +903,13 @@ function checkoutStock(self, oldQty, newQty, e) {
                                         locationTransferQuantity += ltd.quantity;
                                     });
                                 }
-                                remainQuantity=remainQuantity-locationTransferQuantity;
-                                if(remainQuantity<0){
+                                remainQuantity = remainQuantity - locationTransferQuantity;
+                                if (remainQuantity < 0) {
                                     $(e.currentTarget).val(oldQty);
                                     alertify.warning('Product is out of stock. Quantity in stock is "' +
                                         inventory.remainQty + '". And quantity on sale of other seller is "' +
-                                        otherQuantity + '". And quantity of location transfer is "'+locationTransferQuantity+'".');
-                                }else{
+                                        otherQuantity + '". And quantity of location transfer is "' + locationTransferQuantity + '".');
+                                } else {
                                     Meteor.call('updateSaleDetails', self._id, set);
                                 }
                             }
@@ -928,15 +933,15 @@ function checkoutStock(self, oldQty, newQty, e) {
 function getValidatedValues() {
     var data = {};
     var id = Cpanel.Collection.Setting.findOne().baseCurrency;
-    var exchangeRate = Pos.Collection.ExchangeRates.findOne({
-        base: id,
-        branchId: Session.get('currentBranch')
-    }, {sort: {_id: -1, createdAt: -1}});
-    if (exchangeRate == null) {
-        data.valid = false;
-        data.message = "Please input exchange rate for this branch.";
-        return data;
-    }
+    /* var exchangeRate = Pos.Collection.ExchangeRates.findOne({
+     base: id,
+     branchId: Session.get('currentBranch')
+     }, {sort: {_id: -1, createdAt: -1}});
+     if (exchangeRate == null) {
+     data.valid = false;
+     data.message = "Please input exchange rate for this branch.";
+     return data;
+     }*/
     var voucher = $('#voucher').val();
     /*if (voucher == '') {
      data.valid = false;
@@ -993,12 +998,20 @@ function getValidatedValues() {
         saleDate: moment(saleDate, 'MM/DD/YYYY hh:mm:ss a').toDate(),
         staffId: staffId,
         customerId: customerId,
-        exchangeRateId: exchangeRate._id,
+        //exchangeRateId: exchangeRate._id,
         description: $('#description').val(),
         transactionType: transactionType,
         voucher: voucher,
         locationId: locationId
     };
+    var exchangeRate = Pos.Collection.ExchangeRates.findOne({
+        base: id,
+        branchId: Session.get('currentBranch')
+    }, {sort: {_id: -1, createdAt: -1}});
+    if (exchangeRate) {
+        data.saleObj.exchangeRateId = exchangeRate._id;
+    }
+
     //data.product = product;
     return data;
 }
@@ -1193,8 +1206,9 @@ function updateSaleSubTotal(saleId) {
     Meteor.call('updateSale', saleId, set);
 }
 function clearDataFormPayment() {
-    $('.pay-amount').val('');
-    $('.return-amount').val('');
+    var grandTotal = $('#due-grand-total').text().trim();
+    $('.pay-amount:first').val(grandTotal);
+    $('.return-amount').val('0');
 }
 function calculatePayment() {
     var total = 0;
@@ -1230,13 +1244,16 @@ function pay(saleId) {
     obj.payments = [];
     var totalPay = 0;
     $('#payment-list tr').each(function () {
-        var currencyId = $(this).find('.currency-id').text();
+        var currencyId = $(this).find('.currency-id').text().trim();
         var pay = $(this).find('.pay-amount').val() == "" ? 0 : $(this).find('.pay-amount').val();
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
+        if (currencyId == "KHR") {
+            pay = roundRielCurrency(pay);
+        }
         totalPay += pay / rate;
         obj.payments.push(
             {

@@ -149,12 +149,17 @@ posPurchasePaymentInsertTPL.helpers({
     },
     exchangeRates: function () {
         var id = Cpanel.Collection.Setting.findOne().baseCurrency;
-        return Pos.Collection.ExchangeRates.findOne({base: id, branchId: Session.get('currentBranch')}, {
+        var exchangeRate = Pos.Collection.ExchangeRates.findOne({base: id, branchId: Session.get('currentBranch')}, {
             sort: {
                 _id: -1,
                 createdAt: -1
             }
         });
+        if (exchangeRate) {
+            return exchangeRate;
+        } else {
+            return false;
+        }
     }
 });
 posPurchasePaymentInsertTPL.events({
@@ -215,8 +220,16 @@ posPurchasePaymentInsertTPL.events({
         }
     },
     'keypress .pay-amount': function (evt) {
+       /* var charCode = (evt.which) ? evt.which : evt.keyCode;
+        return !(charCode > 31 && (charCode < 48 || charCode > 57));*/
         var charCode = (evt.which) ? evt.which : evt.keyCode;
-        return !(charCode > 31 && (charCode < 48 || charCode > 57));
+        if ($(evt.currentTarget).val().indexOf('.') != -1) {
+            if (charCode == 46) {
+                return false;
+            }
+        }
+        return !(charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57));
+
     },
     'keyup .pay-amount': function () {
         calculatePurchasePayment();
@@ -353,8 +366,16 @@ posPurchasePaymentUpdateTPL.events({
         }
     },
     'keypress .pay-amount': function (evt) {
+       /* var charCode = (evt.which) ? evt.which : evt.keyCode;
+        return !(charCode > 31 && (charCode < 48 || charCode > 57));*/
         var charCode = (evt.which) ? evt.which : evt.keyCode;
-        return !(charCode > 31 && (charCode < 48 || charCode > 57));
+        if ($(evt.currentTarget).val().indexOf('.') != -1) {
+            if (charCode == 46) {
+                return false;
+            }
+        }
+        return !(charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57));
+
     },
     'keyup .pay-amount': function () {
         calculateUpdatePayment();
@@ -470,6 +491,9 @@ function pay(purchaseId) {
         returnAmount = numeral().unformat(returnAmount);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
+        if (currencyId == "KHR") {
+            pay = roundRielCurrency(pay);
+        }
         totalPay += pay / rate;
         obj.payments.push(
             {
@@ -514,6 +538,9 @@ function updatePayment(paymentId) {
         returnAmount = numeral().unformat(returnAmount);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
+        if (currencyId == "KHR") {
+            pay = roundRielCurrency(pay);
+        }
         totalPay += pay / rate;
         obj.payments.push(
             {

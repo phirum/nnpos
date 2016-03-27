@@ -69,9 +69,10 @@ Meteor.methods({
         header.supplier = supplier;
         header.location = location;
         header.category = category;
+        header.status = status;
+        header.transactionType = arg.transactionType;
         data.header = header;
-        data.status = status;
-        data.transactionType = arg.transactionType;
+
 
 
         var content = getPurchaseProducts(params, categoryId);
@@ -104,13 +105,14 @@ function getPurchaseProducts(params, categoryId) {
     var result = [];
     var purchaseDetails = Pos.Collection.PurchaseDetails.find(
         selectorObj,
-        {fields: {productId: 1, quantity: 1, price: 1, amount: 1}});
+        {fields: {productId: 1, quantity: 1, price: 1, amount: 1, _product: 1}});
     (purchaseDetails.fetch()).reduce(function (res, value) {
         if (!res[value.productId]) {
             res[value.productId] = {
                 amount: value.amount,
                 quantity: 0,
-                productId: value.productId
+                productId: value.productId,
+                _product: value._product
             };
             result.push(res[value.productId])
         } else {
@@ -123,13 +125,13 @@ function getPurchaseProducts(params, categoryId) {
     var arr = [];
     var grandTotal = 0;
     result.forEach(function (r) {
-        var product = Pos.Collection.Products.findOne(r.productId);
+        //var product = Pos.Collection.Products.findOne(r.productId);
         grandTotal += r.amount;
-        var unit = Pos.Collection.Units.findOne(product.unitId).name;
+        //var unit = Pos.Collection.Units.findOne(product.unitId).name;
         arr.push({
             order: i,
             productId: r.productId,
-            productName: product.name + "(" + unit + ")",
+            productName: r._product.name + "(" + r._product._unit.name + ")",
             // productName: product.name,
             // price: numeral(r.price).format('0,0.00'),
             quantity: r.quantity,

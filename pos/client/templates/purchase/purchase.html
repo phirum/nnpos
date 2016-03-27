@@ -37,20 +37,20 @@
                             </div>
                             <label for="location-id"> <b>Locations <span style="color:red">*</span></b></label>
 
-                          <!--  {{#if isPurchase}}
+                                <!--  {{#if isPurchase}}
                                 <input type="text"
                                        value="{{purchase.locationId}}-{{purchase._location.name}}"
                                        class="form-control input-sm" readonly>
                                 <input type="text" value="{{purchase.locationId}}"
                                        class="form-control input-sm hidden" id="location-id">
                             {{else}}-->
-                                <select id="location-id" class="form-control input-sm select-two">
-                                    {{#each locations}}
-                                        <option value="{{_id}}"
-                                                selected="{{#if compareTwoValue _id purchase.locationId}}selected{{/if}}">{{name}}</option>
-                                    {{/each}}
-                                </select>
-                            <!--{{/if}}-->
+                            <select id="location-id" class="form-control input-sm select-two">
+                                {{#each locations}}
+                                    <option value="{{_id}}"
+                                            selected="{{#if compareTwoValue _id purchase.locationId}}selected{{/if}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                                <!--{{/if}}-->
 
 
                             <label for="staff-id"> <b>Staff <span style="color:red">*</span></b></label>
@@ -183,7 +183,7 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-xs" role="group" aria-label="">
-                                            <a href="" class="btn btn-warning btn-imei">IMEI</a>
+                                            <!--<a href="" class="btn btn-warning btn-imei">IMEI</a>-->
                                             <a href="" class="btn btn-danger btn-remove"><i
                                                     class="fa fa-trash"></i></a>
                                         </div>
@@ -242,23 +242,25 @@
                                     </div>
 
                                     {{#if hasTotal purchase.total}}
-                                        {{#each exchangeRates.rates}}
-                                            <div class="form-group">
-                                                <label for="total_riel"
-                                                       class="col-sm-5 control-label">Total {{toCurrencyId}}</label>
+                                        {{#if exchangeRate}}
+                                            {{#each exchangeRate.rates}}
+                                                <div class="form-group">
+                                                    <label for="total_riel"
+                                                           class="col-sm-5 control-label">Total {{toCurrencyId}}</label>
 
-                                                <div class="col-sm-7">
-                                                    <div class="input-group input-group-sm">
-                                                        <input type="text" class="form-control input-sm" id="riel"
-                                                               value="{{multiply rate purchase.total toCurrencyId}}"
-                                                               readonly>
-                                                        <span class="input-group-addon"><b>{{symbol}}</b></span>
+                                                    <div class="col-sm-7">
+                                                        <div class="input-group input-group-sm">
+                                                            <input type="text" class="form-control input-sm" id="riel"
+                                                                   value="{{multiply rate purchase.total toCurrencyId}}"
+                                                                   readonly>
+                                                            <span class="input-group-addon"><b>{{symbol}}</b></span>
+                                                        </div>
                                                     </div>
+
                                                 </div>
 
-                                            </div>
-
-                                        {{/each}}
+                                            {{/each}}
+                                        {{/if}}
                                     {{/if}}
 
 
@@ -339,39 +341,41 @@
                                     </div>
                                 </td>
                             </tr>
+                            {{#if exchangeRate}}
+                                {{#each exchangeRate.rates}}
+                                    <tr>
+                                        <td>Total {{toCurrencyId}}
+                                            <div id="pay-format">
+                                                <input type="text"
+                                                       value="{{multiply rate purchase.total toCurrencyId}} {{symbol}}"
+                                                       class="due-amount-total form-control" readonly>
+                                            </div>
+                                        </td>
 
-                            {{#each exchangeRates.rates}}
-                                <tr>
-                                    <td>Total {{toCurrencyId}}
-                                        <div id="pay-format">
-                                            <input type="text"
-                                                   value="{{multiply rate purchase.total toCurrencyId}} {{symbol}}"
-                                                   class="due-amount-total form-control" readonly>
-                                        </div>
-                                    </td>
+                                        <td>Pay in {{toCurrencyId}}
+                                            <div id="pay-format">
+                                                <input type="text" class="pay-amount form-control">
+                                            </div>
+                                        </td>
+                                        <td>Return in {{toCurrencyId}}
+                                            <div id="pay-format">
+                                                <input type="text" id="{{toCurrencyId}}"
+                                                       class="return-amount form-control"
+                                                       readonly>
+                                            </div>
+                                        </td>
+                                        <td class="hidden">Exchange Rate to <span
+                                                class="currency-id">{{toCurrencyId}}</span>
 
-                                    <td>Pay in {{toCurrencyId}}
-                                        <div id="pay-format">
-                                            <input type="text" class="pay-amount form-control">
-                                        </div>
-                                    </td>
-                                    <td>Return in {{toCurrencyId}}
-                                        <div id="pay-format">
-                                            <input type="text" id="{{toCurrencyId}}" class="return-amount form-control"
-                                                   readonly>
-                                        </div>
-                                    </td>
-                                    <td class="hidden">Exchange Rate to <span
-                                            class="currency-id">{{toCurrencyId}}</span>
+                                            <div id="pay-format">
+                                                <input type="text" class="exchange-rate form-control" value="{{rate}}"
+                                                       readonly>
+                                            </div>
+                                        </td>
 
-                                        <div id="pay-format">
-                                            <input type="text" class="exchange-rate form-control" value="{{rate}}"
-                                                   readonly>
-                                        </div>
-                                    </td>
-
-                                </tr>
-                            {{/each}}
+                                    </tr>
+                                {{/each}}
+                            {{/if}}
                             </tbody>
                         </table>
                     </div>

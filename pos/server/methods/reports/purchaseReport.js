@@ -26,7 +26,7 @@ Meteor.methods({
             branchIds.push(branchId);
         }
         data.title = Cpanel.Collection.Company.findOne();
-        var staff = "All", supplier = "All", location = "All",status="All";
+        var staff = "All", supplier = "All", location = "All", status = "All";
         if (fromDate != null && toDate != null) {
             params.purchaseDate = {$gte: fromDate, $lte: toDate};
         }
@@ -90,15 +90,17 @@ function calculatePurchaseHelper(pur) {
         grandTotal += p.total;
         p.order = i;
         p.exchangeRates = [];
-        Pos.Collection.ExchangeRates.findOne(p.exchangeRateId).rates.forEach(function (ex) {
-            ex.exTotal = p.total * ex.rate;
-            if (grandTotalConvert[ex.toCurrencyId] == null) {
-                grandTotalConvert[ex.toCurrencyId] = 0
-            }
-            grandTotalConvert[ex.toCurrencyId] += ex.exTotal;
-            ex.exTotal = numeral(ex.exTotal).format('0,0.00');
-            p.exchangeRates.push(ex);
-        });
+        if (p._exchangeRate) {
+            p._exchangeRate.rates.forEach(function (ex) {
+                ex.exTotal = p.total * ex.rate;
+                if (grandTotalConvert[ex.toCurrencyId] == null) {
+                    grandTotalConvert[ex.toCurrencyId] = 0
+                }
+                grandTotalConvert[ex.toCurrencyId] += ex.exTotal;
+                ex.exTotal = numeral(ex.exTotal).format('0,0.00');
+                p.exchangeRates.push(ex);
+            });
+        }
         p.purchaseDate = moment(p.purchaseDate).format("DD-MM-YY, HH:mm");
         p.owedAmount = p.owedAmount ? p.owedAmount : 0;
         p.paidAmount = p.total - p.owedAmount;

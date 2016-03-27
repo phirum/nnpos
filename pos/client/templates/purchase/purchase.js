@@ -138,20 +138,21 @@ Template.pos_purchase.helpers({
             return Cpanel.Collection.Currency.findOne(setting.baseCurrency);
         }
     },
-    exchangeRates: function () {
+    exchangeRate: function () {
         var purchase = Pos.Collection.Purchases.findOne(FlowRouter.getParam('purchaseId'));
         if (purchase) {
             return Pos.Collection.ExchangeRates.findOne(purchase.exchangeRateId);
         } else {
-            var setting = Cpanel.Collection.Setting.findOne();
-            if (setting) {
-                return Pos.Collection.ExchangeRates.findOne({
-                    base: setting.baseCurrency,
-                    branchId: Session.get('currentBranch')
-                }, {sort: {_id: -1, createdAt: -1}});
-            } else {
-                return {};
-            }
+            return false;
+            /*var setting = Cpanel.Collection.Setting.findOne();
+             if (setting) {
+             return Pos.Collection.ExchangeRates.findOne({
+             base: setting.baseCurrency,
+             branchId: Session.get('currentBranch')
+             }, {sort: {_id: -1, createdAt: -1}});
+             } else {
+             return {};
+             }*/
         }
     },
     compareTwoValue: function (val1, val2) {
@@ -353,7 +354,12 @@ Template.pos_purchase.events({
     //'click':function(){
     //    $('#product-barcode').focus();
     //},
-    'mouseout .handle-mouseout,.la-box': function () {
+    'click .la-box,#total_discount': function (e) {
+        //alert('hi');
+        $(e.currentTarget).select();
+    },
+    'mouseout .handle-mouseout,.la-box': function (e) {
+        //$(e.currentTarget).change();
         $('#product-barcode').focus();
     },
     'click #print-invoice': function () {
@@ -532,7 +538,7 @@ Template.pos_purchase.events({
             return;
         }
     },
-    'keypress #default-quantity,.quantity,.pay-amount': function (evt) {
+    'keypress #default-quantity,.quantity': function (evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         return !(charCode > 31 && (charCode < 48 || charCode > 57));
         //if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -540,7 +546,7 @@ Template.pos_purchase.events({
         //}
         //return true;
     },
-    'keypress #default-price,#default-discount,.price,.discount,#total_discount': function (evt) {
+    'keypress .pay-amount,#default-price,#default-discount,.price,.discount,#total_discount': function (evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if ($(evt.currentTarget).val().indexOf('.') != -1) {
             if (charCode == 46) {
@@ -896,8 +902,9 @@ updatePurchaseSubTotal = function (purchaseId) {
     Meteor.call('updatePurchase', purchaseId, purchaseSetObj);
 };
 function clearDataFormPayment() {
-    $('.pay-amount').val('');
-    $('.return-amount').val('');
+    var grandTotal = $('#due-grand-total').text().trim();
+    $('.pay-amount:first').val(grandTotal);
+    $('.return-amount').val('0');
 }
 function calculatePayment() {
     var total = 0;
@@ -940,6 +947,9 @@ function pay(purchaseId) {
         returnAmount = numeral().unformat(returnAmount);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
+        if (currencyId == "KHR") {
+            pay = roundRielCurrency(pay);
+        }
         totalPay += pay / rate;
         obj.payments.push(
             {
@@ -1044,15 +1054,15 @@ function subtractArray(src, filt) {
 function getValidatedValues() {
     var data = {};
     var id = Cpanel.Collection.Setting.findOne().baseCurrency;
-    var exchangeRate = Pos.Collection.ExchangeRates.findOne({
-        base: id,
-        branchId: Session.get('currentBranch')
-    }, {sort: {_id: -1, createdAt: -1}});
-    if (exchangeRate == null) {
-        data.valid = false;
-        data.message = "Please input exchange rate for this branch.";
-        return data;
-    }
+    /* var exchangeRate = Pos.Collection.ExchangeRates.findOne({
+     base: id,
+     branchId: Session.get('currentBranch')
+     }, {sort: {_id: -1, createdAt: -1}});
+     if (exchangeRate == null) {
+     data.valid = false;
+     data.message = "Please input exchange rate for this branch.";
+     return data;
+     }*/
     var purchaseDate = $('#input-purchase-date').val();
     if (purchaseDate == '') {
         data.valid = false;
@@ -1090,10 +1100,17 @@ function getValidatedValues() {
         purchaseDate: moment(purchaseDate, 'MM/DD/YYYY hh:mm:ss a').toDate(),
         staffId: staffId,
         supplierId: supplierId,
-        exchangeRateId: exchangeRate._id,
+        //exchangeRateId: exchangeRate._id,
         description: $('#description').val(),
         transactionType: transactionType,
         locationId: locationId
     };
+    var exchangeRate = Pos.Collection.ExchangeRates.findOne({
+        base: id,
+        branchId: Session.get('currentBranch')
+    }, {sort: {_id: -1, createdAt: -1}});
+    if (exchangeRate) {
+        data.purchaseObj.exchangeRateId = exchangeRate._id;
+    }
     return data;
 }

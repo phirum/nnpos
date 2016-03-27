@@ -109,70 +109,70 @@
                             </div>
                         </td>
                     </tr>
+                    {{#if exchangeRates}}
+                        {{#each exchangeRates.rates}}
+                            <tr>
+                                <td>Total {{toCurrencyId}}
+                                    <div id="pay-format">
+                                        <!--      <input type="text"
+                                                     value=""
+                                                     class="due-amount-total form-control" readonly>
+          -->
 
-                    {{#each exchangeRates.rates}}
-                        <tr>
-                            <td>Total {{toCurrencyId}}
-                                <div id="pay-format">
-                                    <!--      <input type="text"
-                                                 value=""
-                                                 class="due-amount-total form-control" readonly>
-      -->
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control input-sm"
+                                                   value="{{multiply rate dueAmount toCurrencyId}}"
+                                                   readonly>
+                                            <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
+                                        </div>
 
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control input-sm"
-                                               value="{{multiply rate dueAmount toCurrencyId}}"
-                                               readonly>
-                                        <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
                                     </div>
+                                </td>
 
-                                </div>
-                            </td>
+                                <td>Pay in {{toCurrencyId}}
+                                    <div id="pay-format">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="pay-amount form-control input-sm"
+                                                   value="">
+                                            <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
+                                        </div>
 
-                            <td>Pay in {{toCurrencyId}}
-                                <div id="pay-format">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" class="pay-amount form-control input-sm"
-                                               value="">
-                                        <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
+                                        <!--<input type="text" class="pay-amount form-control">-->
                                     </div>
+                                </td>
+                                <td>Change in {{toCurrencyId}}
+                                    <div id="pay-format">
 
-                                    <!--<input type="text" class="pay-amount form-control">-->
-                                </div>
-                            </td>
-                            <td>Change in {{toCurrencyId}}
-                                <div id="pay-format">
-
-                                    <!--  <input type="text" id="{{toCurrencyId}}" class="return-amount form-control"
+                                        <!--  <input type="text" id="{{toCurrencyId}}" class="return-amount form-control"
                                            readonly>-->
 
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" class="return-amount form-control input-sm"
-                                               id="{{toCurrencyId}}"
-                                               value=""
-                                               readonly>
-                                        <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="return-amount form-control input-sm"
+                                                   id="{{toCurrencyId}}"
+                                                   value=""
+                                                   readonly>
+                                            <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="hidden">Exchange Rate From <span
-                                    class="currency-id">{{toCurrencyId}}</span>
+                                </td>
+                                <td class="hidden">Exchange Rate From <span
+                                        class="currency-id">{{toCurrencyId}}</span>
 
-                                <div id="pay-format">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" class="exchange-rate form-control input-sm"
-                                               value="{{rate}}"
-                                               readonly>
-                                        <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
+                                    <div id="pay-format">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="exchange-rate form-control input-sm"
+                                                   value="{{rate}}"
+                                                   readonly>
+                                            <span class="input-group-addon"><b>{{getFileOfCurrency toCurrencyId "symbol"}}</b></span>
+                                        </div>
+
+                                        <!-- <input type="text" class="exchange-rate form-control" value=""
+                                                readonly>-->
                                     </div>
-
-                                    <!-- <input type="text" class="exchange-rate form-control" value=""
-                                            readonly>-->
-                                </div>
-                            </td>
-
-                        </tr>
-                    {{/each}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                    {{/if}}
                     </tbody>
                 </table>
                 <br>
