@@ -1,7 +1,27 @@
 Session.set('branchIds', null);
 Template.pos_salePaymentHistoryReport.onRendered(function () {
+    Meteor.typeahead.inject();
 });
 Template.pos_salePaymentHistoryReport.events({
+});
+Template.pos_salePaymentHistoryReport.helpers({
+    search: function (query, sync, callback) {
+        Meteor.call('searchSale', query, {}, function (err, res) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            callback(res);
+        });
+    },
+    selected: function (event, suggestion, dataSetName) {
+        // event - the jQuery event object
+        // suggestion - the suggestion object
+        // datasetName - the name of the dataset the suggestion belongs to
+        // TODO your event handler here
+        var id = suggestion._id;
+        $('#search-sale-id').val(id);
+    }
 });
 
 Template.pos_salePaymentHistoryReportGen.helpers({
