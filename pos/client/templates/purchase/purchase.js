@@ -354,7 +354,12 @@ Template.pos_purchase.events({
     //'click':function(){
     //    $('#product-barcode').focus();
     //},
-    'mouseout .handle-mouseout,.la-box': function () {
+    'click .la-box,#total_discount': function (e) {
+        //alert('hi');
+        $(e.currentTarget).select();
+    },
+    'mouseout .handle-mouseout,.la-box': function (e) {
+        //$(e.currentTarget).change();
         $('#product-barcode').focus();
     },
     'click #print-invoice': function () {
@@ -533,7 +538,7 @@ Template.pos_purchase.events({
             return;
         }
     },
-    'keypress #default-quantity,.quantity,.pay-amount': function (evt) {
+    'keypress #default-quantity,.quantity': function (evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         return !(charCode > 31 && (charCode < 48 || charCode > 57));
         //if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -541,7 +546,7 @@ Template.pos_purchase.events({
         //}
         //return true;
     },
-    'keypress #default-price,#default-discount,.price,.discount,#total_discount': function (evt) {
+    'keypress .pay-amount,#default-price,#default-discount,.price,.discount,#total_discount': function (evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if ($(evt.currentTarget).val().indexOf('.') != -1) {
             if (charCode == 46) {
@@ -897,8 +902,9 @@ updatePurchaseSubTotal = function (purchaseId) {
     Meteor.call('updatePurchase', purchaseId, purchaseSetObj);
 };
 function clearDataFormPayment() {
-    $('.pay-amount').val('');
-    $('.return-amount').val('');
+    var grandTotal = $('#due-grand-total').text().trim();
+    $('.pay-amount:first').val(grandTotal);
+    $('.return-amount').val('0');
 }
 function calculatePayment() {
     var total = 0;
@@ -941,6 +947,9 @@ function pay(purchaseId) {
         returnAmount = numeral().unformat(returnAmount);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
+        if (currencyId == "KHR") {
+            pay = roundRielCurrency(pay);
+        }
         totalPay += pay / rate;
         obj.payments.push(
             {

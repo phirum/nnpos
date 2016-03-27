@@ -41,7 +41,7 @@ Pos.Collection.PurchaseDetails.after.remove(function (userId, doc) {
 
 function updatePurchaseTotal(purchaseId) {
     Meteor.defer(function () {
-        Meteor._sleepForMs(1000);
+        Meteor._sleepForMs(200);
         //var discount = Pos.Collection.Purchases.findOne(purchaseId).discountAmount;
         var purchase = Pos.Collection.Purchases.findOne(purchaseId);
         var discount = purchase && purchase.discount ? purchase.discount : 0;

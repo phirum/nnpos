@@ -138,15 +138,15 @@ Template.pos_checkout.helpers({
             return Pos.Collection.ExchangeRates.findOne(sale.exchangeRateId);
         } else {
             return false;
-           /* var id = "";
-            var setting = Cpanel.Collection.Setting.findOne();
-            if (setting != null) {
-                id = setting.baseCurrency;
-            }
-            return Pos.Collection.ExchangeRates.findOne({
-                base: id,
-                branchId: Session.get('currentBranch')
-            }, {sort: {_id: -1, createdAt: -1}});*/
+            /* var id = "";
+             var setting = Cpanel.Collection.Setting.findOne();
+             if (setting != null) {
+             id = setting.baseCurrency;
+             }
+             return Pos.Collection.ExchangeRates.findOne({
+             base: id,
+             branchId: Session.get('currentBranch')
+             }, {sort: {_id: -1, createdAt: -1}});*/
 
         }
 
@@ -498,6 +498,9 @@ Template.pos_checkout.events({
             });
         }
     },
+    'click .la-box,#total_discount,#total_discount_amount': function (e) {
+        $(e.currentTarget).select();
+    },
     'mouseout .la-box,#total_discount,#total_discount_amount': function () {
         $('#product-barcode').focus();
     },
@@ -691,11 +694,11 @@ Template.pos_checkout.events({
             return;
         }
     },
-    'keypress #default-quantity,.quantity,.pay-amount': function (evt) {
+    'keypress #default-quantity,.quantity': function (evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         return !(charCode > 31 && (charCode < 48 || charCode > 57));
     },
-    'keypress #default-discount,.price,.discount,#total_discount': function (evt) {
+    'keypress .pay-amount,#default-discount,.price,.discount,#total_discount': function (evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if ($(evt.currentTarget).val().indexOf('.') != -1) {
             if (charCode == 46) {
@@ -1203,8 +1206,9 @@ function updateSaleSubTotal(saleId) {
     Meteor.call('updateSale', saleId, set);
 }
 function clearDataFormPayment() {
-    $('.pay-amount').val('');
-    $('.return-amount').val('');
+    var grandTotal = $('#due-grand-total').text().trim();
+    $('.pay-amount:first').val(grandTotal);
+    $('.return-amount').val('0');
 }
 function calculatePayment() {
     var total = 0;
@@ -1240,13 +1244,16 @@ function pay(saleId) {
     obj.payments = [];
     var totalPay = 0;
     $('#payment-list tr').each(function () {
-        var currencyId = $(this).find('.currency-id').text();
+        var currencyId = $(this).find('.currency-id').text().trim();
         var pay = $(this).find('.pay-amount').val() == "" ? 0 : $(this).find('.pay-amount').val();
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
+        if (currencyId == "KHR") {
+            pay = roundRielCurrency(pay);
+        }
         totalPay += pay / rate;
         obj.payments.push(
             {
