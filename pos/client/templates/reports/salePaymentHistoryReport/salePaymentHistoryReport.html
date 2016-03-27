@@ -1,0 +1,86 @@
+<!--Form-->
+<template name="pos_salePaymentHistoryReport">
+    {{#autoForm schema=Pos.Schema.SalePaymentHistoryReport id="pos_salePaymentHistoryReport" action="salePaymentHistoryReportGen" target="_blank"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='saleId'}}
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>
+
+<!--Generate-->
+<template name="pos_salePaymentHistoryReportGen">
+    {{#if data}}
+        {{#reportTpl options}}
+            {{#with data}}
+                {{#with title}}
+                    <div class="title">
+                        <div class="title-1x-kh-muol">{{khName}}</div>
+                        <div class="title-1x">{{enName}}</div>
+                        <div style="text-decoration: underline;">Sale Payment History Report</div>
+                        <div class="title-2x">{{enAddress}}</div>
+                    </div>
+                {{/with}}
+                {{#with header}}
+                    <div style="width: 100%">
+                        <div style="width: 50%; float: left">
+                            <ul class="list-unstyled">
+                                <li><strong>Sale ID:</strong> {{saleId}}</li>
+                            </ul>
+                        </div>
+                        <div style="width: 50%; float: right">
+                            <ul class="list-unstyled">
+                            </ul>
+                        </div>
+                    </div>
+                {{/with}}
+
+                <!--Content-->
+                <table class="report-content">
+                    <thead class="content-header">
+                    <tr>
+                        <th>No</th>
+                        <th>InvoiceId</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Due Amount</th>
+                        <th>Paid Amount</th>
+                        <th>Balance Amount</th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="content-body">
+                    {{#each content}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{_id}}</td>
+                            <td>{{paymentDate}}</td>
+                            <td>{{status}}</td>
+                            <td>{{dueAmount}}</td>
+                            <td>{{payAmount}}</td>
+                            <td>{{balanceAmount}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+
+            {{/with}}
+
+            <!--Sign-->
+            {{> signFooter}}
+
+        {{/reportTpl}}
+
+        <!--Auto print-->
+        <!--{{autoprint close="true"}}-->
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+
+</template>
