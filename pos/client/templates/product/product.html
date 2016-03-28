@@ -25,13 +25,6 @@
         <div class="row">
             <div class="col-md-6">
                 {{> afQuickField name='name'}}
-                {{> afQuickField name='retailPrice'}}
-                {{> afQuickField name='wholesalePrice'}}
-                <!--{{> afQuickField name='purchasePrice'}}-->
-                {{> afQuickField name='productType'}}
-                {{> afQuickField name='status'}}
-            </div>
-            <div class="col-md-6">
                 <!--{{> afQuickField name='categoryId'}}-->
                 <div class="form-group{{#if afFieldIsInvalid name='categoryId'}} has-error{{/if}}" data-required="true">
                     <label class="control-label" for="address">Category</label>
@@ -80,6 +73,14 @@
                         <span class="help-block">{{afFieldMessage name='UnitId'}}</span>
                     {{/if}}
                 </div>
+
+                {{> afQuickField name='retailPrice'}}
+                {{> afQuickField name='wholesalePrice'}}
+                <!--{{> afQuickField name='purchasePrice'}}-->
+                           </div>
+            <div class="col-md-6">
+                {{> afQuickField name='productType' type="hidden" value="Stock"}}
+                {{> afQuickField name='status' type="hidden" value="enable"}}
                 {{> afQuickField name='description'}}
                 {{> afQuickField name='barcode'}}
                 {{> afQuickField name="picture"}}
@@ -112,15 +113,6 @@
         <div class="row">
             <div class="col-md-6">
                 {{> afQuickField name='name'}}
-                {{> afQuickField name='retailPrice'}}
-                {{> afQuickField name='wholesalePrice'}}
-                <!--{{> afQuickField name='purchasePrice'}}-->
-                {{> afQuickField name='productType'}}
-                {{> afQuickField name='status'}}
-            </div>
-            <div class="col-md-6">
-                <!--{{> afQuickField name='productType'}}-->
-                <!--{{> afQuickField name='categoryId'}}-->
                 <div class="form-group{{#if afFieldIsInvalid name='categoryId'}} has-error{{/if}}" data-required="true">
                     <label class="control-label" for="address">Category</label>
 
@@ -168,6 +160,14 @@
                         <span class="help-block">{{afFieldMessage name='UnitId'}}</span>
                     {{/if}}
                 </div>
+                {{> afQuickField name='retailPrice'}}
+                {{> afQuickField name='wholesalePrice'}}
+                <!--{{> afQuickField name='purchasePrice'}}-->
+
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name='productType'}}
+                {{> afQuickField name='status'}}
                 {{> afQuickField name='description'}}
                 {{> afQuickField name='barcode'}}
                 {{> afQuickField name="picture"}}

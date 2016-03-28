@@ -3,7 +3,7 @@ Pos.Schema.Payments = new SimpleSchema({
     customerId: {
         type: String,
         label: "Customer",
-        optional:true,
+        optional:true
     },
     saleId: {
         type: String,
