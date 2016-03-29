@@ -13,9 +13,9 @@ Meteor.methods({
             }
         });
     },
-    insertProduct: function () {
+    insertProduct: function (n) {
         Meteor.defer(function () {
-            for (var i = 1; i <= 10000; i++) {
+            for (var i = 1; i <= n; i++) {
                 var product = {};
                 product._id = idGenerator.gen(Pos.Collection.Products, 7);
                 product.name = "pro" + i;

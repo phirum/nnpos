@@ -60,7 +60,7 @@ Template.pos_purchaseList.events({
                                         }
                                     });
                                 },
-                                title: '<i class="fa fa-remove"></i> Delete Sale'
+                                title: '<i class="fa fa-remove"></i> Update Purchase'
                             });
                     } else {
                         alertify.warning("Don't have enough stock for update purchase. Products've been transferred or sold.");
@@ -117,7 +117,7 @@ Template.pos_purchaseList.events({
                                                     }
                                                 });
                                             },
-                                            title: '<i class="fa fa-remove"></i> Delete Sale'
+                                            title: '<i class="fa fa-remove"></i> Delete Purchase'
                                         });
                                 } else {
                                     alertify.warning("Don't have enough stock for update purchase. Products've been transferred or sold.");

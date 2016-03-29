@@ -36,7 +36,7 @@ posExchangeRateTPL.events({
                                     }
                                 });
                             },
-                            title: '<i class="fa fa-remove"></i> Delete Staff'
+                            title: '<i class="fa fa-remove"></i> Delete Exchange Rate'
                         });
                 }
             }
@@ -50,10 +50,15 @@ posExchangeRateTPL.helpers({
     },
     currentExchangeRate: function () {
         var id = Cpanel.Collection.Setting.findOne().baseCurrency;
-        return Pos.Collection.ExchangeRates.findOne({
+        var current = Pos.Collection.ExchangeRates.findOne({
             base: id,
             branchId: Session.get('currentBranch')
         }, {sort: {_id: -1}});
+        if (current) {
+            return current;
+        } else {
+            return false;
+        }
     },
     exchangeRates: function () {
         var id = Cpanel.Collection.Setting.findOne().baseCurrency;

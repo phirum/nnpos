@@ -15,11 +15,11 @@ posLocationTPL.helpers({
 });
 posLocationTPL.events({
     'click .insert': function (e, t) {
-        alertify.location(fa('plus', 'Add New Location'), renderTemplate(posLocationInsertTPL)).maximize();
+        alertify.location(fa('plus', 'Add New Location'), renderTemplate(posLocationInsertTPL));
     },
     'click .update': function (e, t) {
         var data = Pos.Collection.Locations.findOne(this._id);
-        alertify.location(fa('pencil', 'Update Existing Location'), renderTemplate(posLocationUpdateTPL, data)).maximize();
+        alertify.location(fa('pencil', 'Update Existing Location'), renderTemplate(posLocationUpdateTPL, data));
     },
     'click .remove': function (e, t) {
         var id = this._id;

@@ -19,12 +19,12 @@ posLocationSettingTPL.events({
         if (locationSetting != null) {
             alertify.warning('Location Setting is already had.');
         } else {
-            alertify.locationSetting(fa('plus', 'Add New LocationSetting'), renderTemplate(posLocationSettingInsertTPL)).maximize();
+            alertify.locationSetting(fa('plus', 'Add New LocationSetting'), renderTemplate(posLocationSettingInsertTPL));
         }
     },
     'click .update': function (e, t) {
         var data = Pos.Collection.LocationSettings.findOne(this._id);
-        alertify.locationSetting(fa('pencil', 'Update Existing LocationSetting'), renderTemplate(posLocationSettingUpdateTPL, data)).maximize();
+        alertify.locationSetting(fa('pencil', 'Update Existing LocationSetting'), renderTemplate(posLocationSettingUpdateTPL, data));
     },
     'click .remove': function (e, t) {
         var id = this._id;

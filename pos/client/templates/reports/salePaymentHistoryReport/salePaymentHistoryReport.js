@@ -21,6 +21,8 @@ Template.pos_salePaymentHistoryReport.helpers({
         // TODO your event handler here
         var id = suggestion._id;
         $('#search-sale-id').val(id);
+        $('[name="search"]').typeahead('val', suggestion._id);
+        //$('[name="search"]').select();
     }
 });
 

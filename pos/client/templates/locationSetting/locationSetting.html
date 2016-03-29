@@ -23,11 +23,10 @@
 <template name="pos_locationSettingInsert">
     {{#autoForm collection=Pos.Collection.LocationSettings id="pos_locationSettingInsert" type="insert"}}
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 {{> afQuickField name='saleLocationId'}}
             </div>
-            <div class="col-md-6">
-            </div>
+
         </div>
 
         <button type="submit" class="btn btn-primary">Save</button>
@@ -39,10 +38,8 @@
 <template name="pos_locationSettingUpdate">
     {{#autoForm collection=Pos.Collection.LocationSettings id="pos_locationSettingUpdate" doc=this type="update"}}
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 {{> afQuickField name='saleLocationId'}}
-            </div>
-            <div class="col-md-6">
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>

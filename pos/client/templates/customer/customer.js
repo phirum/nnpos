@@ -15,11 +15,11 @@ posCustomerTPL.helpers({
 });
 posCustomerTPL.events({
     'click .insert': function (e, t) {
-        alertify.customer(fa('plus', 'Add New Customer'), renderTemplate(posCustomerInsertTPL)).maximize();
+        alertify.customer(fa('plus', 'Add New Customer'), renderTemplate(posCustomerInsertTPL));
     },
     'click .update': function (e, t) {
         var data = Pos.Collection.Customers.findOne(this._id);
-        alertify.customer(fa('pencil', 'Update Existing Customer'), renderTemplate(posCustomerUpdateTPL, data)).maximize();
+        alertify.customer(fa('pencil', 'Update Existing Customer'), renderTemplate(posCustomerUpdateTPL, data));
     },
     'click .remove': function (e, t) {
         var id = this._id;
