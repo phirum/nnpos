@@ -13,11 +13,11 @@ posSupplierTPL.helpers({
 });
 posSupplierTPL.events({
     'click .insert': function (e, t) {
-        alertify.supplier(fa('plus', 'Add New Supplier'), renderTemplate(posSupplierInsertTPL)).maximize();
+        alertify.supplier(fa('plus', 'Add New Supplier'), renderTemplate(posSupplierInsertTPL));
     },
     'click .update': function (e, t) {
         var data = Pos.Collection.Suppliers.findOne(this._id);
-        alertify.supplier(fa('pencil', 'Update Existing Supplier'), renderTemplate(posSupplierUpdateTPL, data)).maximize();
+        alertify.supplier(fa('pencil', 'Update Existing Supplier'), renderTemplate(posSupplierUpdateTPL, data));
     },
     'click .remove': function (e, t) {
         var id = this._id;

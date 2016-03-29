@@ -58,7 +58,7 @@ posSaleListTPL.events({
                             }
                         });
                     },
-                    title: '<i class="fa fa-remove"></i> Delete Sale'
+                    title: '<i class="fa fa-remove"></i> Update Sale'
                 });
 
             // alertify.saleUpdate(fa('pencil', 'Update Existing Sale'), renderTemplate(posSaleUpdate, sale));

@@ -5,6 +5,7 @@ Meteor.methods({
             value: ""
         }];
         Pos.Collection.Sales.find(selector).forEach(function (obj) {
+            obj.date = moment(obj.saleDate).format('DD-MM-YYYY');
             var payment = Pos.Collection.Payments.findOne({
                 saleId: obj._id,
                 branchId: selector.branchId
@@ -17,12 +18,12 @@ Meteor.methods({
             });
             if (payment == null) {
                 list.push({
-                    label: obj._id + ' | ' + obj._customer.name + ' | ' + obj.owedAmount,
+                    label: obj._id + ' | ' + obj._customer.name + ' | ' + obj.date + ' | ' + obj.owedAmount,
                     value: obj._id
                 });
             } else if (payment.balanceAmount > 0) {
                 list.push({
-                    label: obj._id + ' | ' + obj._customer.name + ' | ' + obj.owedAmount,
+                    label: obj._id + ' | ' + obj._customer.name + ' | ' + obj.date + ' | ' + obj.owedAmount,
                     value: obj._id
                 });
             }
@@ -46,6 +47,7 @@ Meteor.methods({
     getPurchaseList: function (selector) {
         var list = [{label: "(Select One)", value: ""}];
         Pos.Collection.Purchases.find(selector).forEach(function (obj) {
+            obj.date = moment(obj.purchaseDate).format('DD-MM-YYYY');
             var payment = Pos.Collection.Payments.findOne({
                     purchaseId: obj._id,
                     branchId: selector.branchId
@@ -57,12 +59,12 @@ Meteor.methods({
             );
             if (payment == null) {
                 list.push({
-                    label: obj._id + ' | ' + obj._supplier.name + ' | ' + obj.owedAmount,
+                    label: obj._id + ' | ' + obj._supplier.name + ' | ' + obj.date + ' | ' + obj.owedAmount,
                     value: obj._id
                 });
             } else if (payment.balanceAmount > 0) {
                 list.push({
-                    label: obj._id + ' | ' + obj._supplier.name + ' | ' + obj.owedAmount,
+                    label: obj._id + ' | ' + obj._supplier.name + ' | ' + obj.date + ' | ' + obj.owedAmount,
                     value: obj._id
                 });
             }

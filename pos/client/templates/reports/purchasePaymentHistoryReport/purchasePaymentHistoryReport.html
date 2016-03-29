@@ -1,13 +1,29 @@
-<!--Form-->
+<!--Index-->
+<template name="purchaseSearch">
+    <div class="row">
+        <div class="com-md-11 col-md-offset-1">
+            ID: {{_id}} , Customer: {{_supplier.name}} , Total: {{total}}
+        </div>
+    </div>
+</template>
+
 <template name="pos_purchasePaymentHistoryReport">
     {{#autoForm schema=Pos.Schema.PurchasePaymentHistoryReport id="pos_purchasePaymentHistoryReport" action="purchasePaymentHistoryReportGen" target="_blank"}}
         <div class="row">
             <div class="col-md-6">
-                {{> afQuickField name='purchaseId'}}
+                <label>Purchase ID</label>
+                <input class="form-control typeahead" name="search" type="text"
+                       placeholder="Type your Sale Id" autocomplete="on" spellcheck="off"
+                       data-source="search" data-select='selected' data-highlight=true
+                       data-template='purchaseSearch'/>
+
             </div>
             <div class="col-md-6">
+                {{> afQuickField name='purchaseId' id='search-purchase-id' type="hidden"}}
             </div>
+
         </div>
+        <br>
         <button type="submit" class="btn btn-primary">Generate</button>
         <button type="reset" class="btn btn-default">Reset</button>
     {{/autoForm}}

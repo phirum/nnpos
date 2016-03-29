@@ -8,11 +8,11 @@ posUnitTPL.onRendered(function () {
 });
 posUnitTPL.events({
     'click .insert': function (e, t) {
-        alertify.unit(fa('plus', 'Add New Unit'), renderTemplate(posUnitInsertTPL)).maximize();
+        alertify.unit(fa('plus', 'Add New Unit'), renderTemplate(posUnitInsertTPL));
     },
     'click .update': function (e, t) {
         var data = Pos.Collection.Units.findOne(this._id);
-        alertify.unit(fa('pencil', 'Update Existing Unit'), renderTemplate(posUnitUpdateTPL, data)).maximize();
+        alertify.unit(fa('pencil', 'Update Existing Unit'), renderTemplate(posUnitUpdateTPL, data));
     },
     'click .remove': function (e, t) {
         var id = this._id;

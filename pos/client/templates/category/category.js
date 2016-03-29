@@ -8,13 +8,12 @@ posCategoryTPL.onRendered(function () {
 posCategoryTPL.events({
     'click .insert': function (e, t) {
         Session.set('CategoryIdSession', null);
-        alertify.category(fa('plus', 'Add New Category'), renderTemplate(posCategoryInsertTPL)).maximize();
+        alertify.category(fa('plus', 'Add New Category'), renderTemplate(posCategoryInsertTPL));
     },
     'click .update': function (e, t) {
         var data = Pos.Collection.Categories.findOne(this._id);
         Session.set('CategoryIdSession', this._id);
-        alertify.category(fa('pencil', 'Update Existing Category'), renderTemplate(posCategoryUpdateTPL, data))
-            .maximize();
+        alertify.category(fa('pencil', 'Update Existing Category'), renderTemplate(posCategoryUpdateTPL, data));
     },
     'click .remove': function (e, t) {
         var id = this._id;

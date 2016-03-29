@@ -6,12 +6,14 @@
         <div class="col-md-5">
             <button class="btn btn-primary" id="add-exchange-rate">Set Exchange Rate</button>
         </div>
-        <div class="col-md-6">
-            {{currentExchangeRate.base}} ->
-            {{#each currentExchangeRate.rates}}
-                {{toCurrencyId}}={{rate}},
-            {{/each}}
-        </div>
+        {{#if currentExchangeRate}}
+            <div class="col-md-6">
+                {{currentExchangeRate.base}} ->
+                {{#each currentExchangeRate.rates}}
+                    {{toCurrencyId}}={{rate}},
+                {{/each}}
+            </div>
+        {{/if}}
     </div>
     <br>
 
@@ -28,9 +30,9 @@
 <!--Action-->
 <template name="pos_exchangeRateAction">
     {{#tabularAction}}
-        <li><a  class="update"><i class="fa fa-pencil"></i> Update</a></li>
-        <li><a  class="remove"><i class="fa fa-remove"></i> Remove</a></li>
-        <li><a  class="show"><i class="fa fa-eye"></i> Show</a></li>
+        <li><a class="update"><i class="fa fa-pencil"></i> Update</a></li>
+        <li><a class="remove"><i class="fa fa-remove"></i> Remove</a></li>
+        <!--<li><a class="show"><i class="fa fa-eye"></i> Show</a></li>-->
     {{/tabularAction}}
 </template>
 
@@ -59,7 +61,7 @@
                 {{/each}}
                 </tbody>
             </table>
-            <button  class="btn btn-primary" id="save-exchange-rate">Save</button>
+            <button class="btn btn-primary" id="save-exchange-rate">Save</button>
         </div>
     </div>
 
@@ -85,14 +87,15 @@
                 <tbody id="to-currency-list">
                 {{#each exchangeRate.rates}}
                     <tr>
-                        <td><input type="text" class="to-currency-id form-control" value="{{toCurrencyId}}" readonly></td>
+                        <td><input type="text" class="to-currency-id form-control" value="{{toCurrencyId}}" readonly>
+                        </td>
                         <td><input type="text" class="to-currency-value form-control" value="{{rate}}"></td>
                         <td><input type="text" class="to-currency-symbol form-control" value="{{symbol}}" readonly></td>
                     </tr>
                 {{/each}}
                 </tbody>
             </table>
-            <button  class="btn btn-primary" id="update-exchange-rate">Save</button>
+            <button class="btn btn-primary" id="update-exchange-rate">Save</button>
         </div>
     </div>
 
