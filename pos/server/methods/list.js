@@ -6,6 +6,7 @@ Meteor.methods({
         }];
         Pos.Collection.Sales.find(selector).forEach(function (obj) {
             obj.date = moment(obj.saleDate).format('DD-MM-YYYY');
+            obj.voucher = obj.voucher ? obj.voucher : '';
             var payment = Pos.Collection.Payments.findOne({
                 saleId: obj._id,
                 branchId: selector.branchId
@@ -18,12 +19,12 @@ Meteor.methods({
             });
             if (payment == null) {
                 list.push({
-                    label: obj._id + ' | ' + obj._customer.name + ' | ' + obj.date + ' | ' + obj.owedAmount,
+                    label: obj._id + ' | ' + obj._customer.name + ' | ' + obj.date + ' | ' + obj.owedAmount + ' | ' + obj.voucher,
                     value: obj._id
                 });
             } else if (payment.balanceAmount > 0) {
                 list.push({
-                    label: obj._id + ' | ' + obj._customer.name + ' | ' + obj.date + ' | ' + obj.owedAmount,
+                    label: obj._id + ' | ' + obj._customer.name + ' | ' + obj.date + ' | ' + obj.owedAmount + ' | ' + obj.voucher,
                     value: obj._id
                 });
             }

@@ -13,11 +13,11 @@ posUserStaffTPL.helpers({
 });
 posUserStaffTPL.events({
     'click .insert': function (e, t) {
-        alertify.userStaff(fa('plus', 'Add New User Staff Mapping'), renderTemplate(posUserStaffInsertTPL)).maximize();
+        alertify.userStaff(fa('plus', 'Add New User Staff Mapping'), renderTemplate(posUserStaffInsertTPL));
     },
     'click .update': function (e, t) {
         var data = Pos.Collection.UserStaffs.findOne(this._id);
-        alertify.userStaff(fa('pencil', 'Update Existing User Staff Mapping'), renderTemplate(posUserStaffUpdateTPL, data)).maximize();
+        alertify.userStaff(fa('pencil', 'Update Existing User Staff Mapping'), renderTemplate(posUserStaffUpdateTPL, data));
     },
     'click .remove': function (e, t) {
         var id = this._id;

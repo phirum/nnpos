@@ -17,7 +17,7 @@ Meteor.methods({
         Meteor.defer(function () {
             for (var i = 1; i <= n; i++) {
                 var product = {};
-                product._id = idGenerator.gen(Pos.Collection.Products, 7);
+               // product._id = idGenerator.gen(Pos.Collection.Products, 7);
                 product.name = "pro" + i;
                 product.retailPrice = 200;
                 product.wholesalePrice = 180;
