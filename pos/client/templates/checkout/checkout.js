@@ -196,7 +196,7 @@ Template.pos_checkout.helpers({
             return Pos.Collection.Staffs.find({
                 _id: {$in: userStaff.staffIds},
                 branchId: Session.get('currentBranch')
-            });
+            }, {fields: {_id: 1, name: 1}});
         } else {
             return [];
         }
@@ -204,16 +204,16 @@ Template.pos_checkout.helpers({
     customers: function () {
         return Pos.Collection.Customers.find({
             branchId: Session.get('currentBranch')
-        }, {fields: {_id: 1, name: 1}, limit: 10});
+        }, {fields: {_id: 1, name: 1}});
     },
-    products: function () {
-        return Pos.Collection.Products.find({status: "enable"}, {fields: {_id: 1, name: 1, _unit: 1}, limit: 10});
+   // products: function () {
+       // return Pos.Collection.Products.find({status: "enable"}, {fields: {_id: 1, name: 1, _unit: 1}, limit: 10});
         /*.map(function (p) {
          var unit = Pos.Collection.Units.findOne(p.unitId).name;
          p.name = p.name + "(" + unit + ")";
          return p;
          });*/
-    },
+    //},
     sales: function () {
         var id = FlowRouter.getParam('saleId');
         if (id != null || id != "") {
