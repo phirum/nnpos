@@ -32,6 +32,11 @@ Pos.Schema.ExchangeRates = new SimpleSchema({
     'rates.$.symbol': {
         type: String,
         label: "To Symbol"
+    },
+    _branch:{
+        type:Object,
+        blackbox:true,
+        optional:true
     }
 });
 Pos.Collection.ExchangeRates.attachSchema(Pos.Schema.ExchangeRates);

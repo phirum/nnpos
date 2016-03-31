@@ -22,6 +22,19 @@ Pos.Schema.Categories = new SimpleSchema({
                return Pos.List.category("Select Parent | No Parent");
             }
         }
+    },
+    level:{
+        type:Number,
+        optional:true
+    },
+    _parent:{
+        type:Object,
+        blackbox:true,
+        optional:true
+    },
+    _productCount:{
+        type:Number,
+        optional:true
     }
 });
 Pos.Collection.Categories.attachSchema(Pos.Schema.Categories);

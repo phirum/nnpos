@@ -4,7 +4,7 @@ Pos.Schema.Sales = new SimpleSchema({
     voucher: {
         type: String,
         label: "Voucher",
-        optional:true
+        optional: true
     },
     saleDate: {
         type: Date,
@@ -23,15 +23,15 @@ Pos.Schema.Sales = new SimpleSchema({
         type: String,
         label: "Status"
     },
-    description:{
-        type:String,
-        label:"Description",
-        optional:true
+    description: {
+        type: String,
+        label: "Description",
+        optional: true
     },
-    exchangeRateId:{
-        type:String,
-        label:"Exchange Rate",
-        optional:true
+    exchangeRateId: {
+        type: String,
+        label: "Exchange Rate",
+        optional: true
     },
     discount: {
         type: Number,
@@ -48,22 +48,22 @@ Pos.Schema.Sales = new SimpleSchema({
         label: "Total",
         decimal: true
     },
-    discountAmount:{
-        type:Number,
-        label:"Discount Amount",
-        decimal:true
+    discountAmount: {
+        type: Number,
+        label: "Discount Amount",
+        decimal: true
     },
-    transactionType:{
-        type:String,
-        label:"Transaction Type"
+    transactionType: {
+        type: String,
+        label: "Transaction Type"
     },
-    branchId:{
-        type:String,
-        label:"Branch"
+    branchId: {
+        type: String,
+        label: "Branch"
     },
-    locationId:{
-        type:String,
-        label:"Location"
+    locationId: {
+        type: String,
+        label: "Location"
     },
     owedAmount: {
         type: Number,
@@ -77,9 +77,37 @@ Pos.Schema.Sales = new SimpleSchema({
         decimal: true,
         optional: true
     },
-    isRetail:{
-        type:Boolean,
-        label:"Sale Type"
+    isRetail: {
+        type: Boolean,
+        label: "Sale Type"
+    },
+    _staff: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    _customer: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    _location: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    _branch: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    _saleDetailCount:{
+        type:Number,
+        optional:true
+    },
+    _paymentCount:{
+        type:Number,
+        optional:true
     }
 });
 Pos.Collection.Sales.attachSchema(Pos.Schema.Sales);

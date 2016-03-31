@@ -24,7 +24,32 @@ Pos.Schema.LocationTransfers = new SimpleSchema({
     branchId: {
         type: String,
         label: "Branch"
+    },
+    _branch: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    _staff: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    _fromLocation: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    _toLocation:{
+        type:Object,
+        blackbox:true,
+        optional:true
+    },
+    _locationTransferDetailCount:{
+        type:Number,
+        optional:true
     }
+
 });
 Pos.Collection.LocationTransfers.attachSchema(Pos.Schema.LocationTransfers);
 

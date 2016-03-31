@@ -16,9 +16,18 @@ Pos.Schema.Locations = new SimpleSchema({
         label: "Description",
         optional: true
     },
-    branchId:{
-        type:String,
-        label:"Branch"
+    branchId: {
+        type: String,
+        label: "Branch"
+    },
+    _branch: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    _saleCount: {
+        type: Number,
+        optional: true
     }
 });
 Pos.Collection.Locations.attachSchema(Pos.Schema.Locations);

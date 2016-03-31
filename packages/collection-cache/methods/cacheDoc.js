@@ -74,7 +74,7 @@ Mongo.Collection.prototype.cacheDoc = function (fieldName, collection, collectio
             selector[refField] = doc._id;
 
             // Attach soft remove
-            thisCollection.attachBehaviour('softRemovable');
+           // thisCollection.attachBehaviour('softRemovable');
             if (_.isUndefined(doc.removedAt)) {
                 if (_.isUndefined(doc.restoredAt)) {
                     //Fields specifier for Mongo.Collection.update

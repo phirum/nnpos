@@ -116,6 +116,16 @@ Pos.Schema.Products = new SimpleSchema({
                 return Pos.List.status();
             }
         }
+    },
+    _category:{
+        type:Object,
+        blackbox:true,
+        optional:true
+    },
+    _unit:{
+        type:Object,
+        blackbox:true,
+        optional:true
     }
 })
 ;

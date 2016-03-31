@@ -36,7 +36,7 @@ Pos.Schema.SaleDetails = new SimpleSchema({
         type: [Object],
         label: "Transaction",
         blackbox: true,
-        optional:true
+        optional: true
     },
     totalCost: {
         type: Number,
@@ -55,6 +55,29 @@ Pos.Schema.SaleDetails = new SimpleSchema({
     branchId: {
         type: String,
         label: "Branch"
+    },
+    _branch: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    _location: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    _product: {
+        type: Object,
+        blackbox: true,
+        optional: true
+    },
+    isPromotion: {
+        type: Boolean,
+        optional: true
+    },
+    promotionFromProductId: {
+        type: String,
+        optional: true
     }
 });
 Pos.Collection.SaleDetails.attachSchema(Pos.Schema.SaleDetails);

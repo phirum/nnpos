@@ -13,6 +13,16 @@ Pos.Schema.LocationSettings = new SimpleSchema({
     branchId: {
         type: String,
         label: "Branch"
+    },
+    _location:{
+        type:Object,
+        blackbox:true,
+        optional:true
+    },
+    _branch:{
+        type:Object,
+        blackbox:true,
+        optional:true
     }
 });
 Pos.Collection.LocationSettings.attachSchema(Pos.Schema.LocationSettings);

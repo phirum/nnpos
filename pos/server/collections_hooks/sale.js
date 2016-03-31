@@ -222,12 +222,13 @@ function checkPromotion(saleDetail, saleDate) {
                     var productPromotion = Pos.Collection.SaleDetails.findOne(selector);
                     var saleDetailObj = {};
                     if (productPromotion == null) {
-                        saleDetailObj._id = idGenerator.genWithPrefix(Pos.Collection.SaleDetails, saleDetail.saleId, 3);
+                       // saleDetailObj._id = idGenerator.genWithPrefix(Pos.Collection.SaleDetails, saleDetail.saleId, 3);
                         saleDetailObj.productId = pro.productId;
                         saleDetailObj.quantity = promotionQuantity;
                         saleDetailObj.discount = 0;
                         saleDetailObj.locationId = saleDetail.locationId;
                         //saleDetailObj.discount = 100;
+                        saleDetailObj.status="Unsaved";
                         saleDetailObj.price = 0;
                         //saleDetailObj.price = isRetail ? product.retailPrice : product.wholesalePrice;
                         saleDetailObj.amount = 0;
