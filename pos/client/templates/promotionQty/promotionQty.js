@@ -240,7 +240,7 @@
 
 promotionItemsState = new ReactiveList();
 Template.pos_promotionQty.onRendered(function () {
-    createNewAlertify("promotionQty");
+    createNewAlertify(['promotionQty', 'promotionQtyShow']);
 });
 Template.pos_promotionQty.events({
     'click .insert': function (e, t) {
@@ -289,10 +289,7 @@ Template.pos_promotionQty.events({
     'click .show': function (e, t) {
         this.sDate = moment(this.startDate).format('YYYY-MM-DD');
         this.eDate = moment(this.endDate).format('YYYY-MM-DD');
-        alertify.alert(renderTemplate(Template.pos_promotionQtyShow, this))
-            .set({
-                title: '<i class="fa fa-eye"></i> Promotion Detail'
-            });
+        alertify.promotionQtyShow(fa('plus', 'PromotionQty Detail'),renderTemplate(Template.pos_promotionQtyShow, this));
     }
 });
 Template.pos_promotionQtyInsert.onRendered(function () {
