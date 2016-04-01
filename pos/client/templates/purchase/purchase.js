@@ -945,10 +945,13 @@ function pay(purchaseId) {
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
+        returnAmount=math.round(returnAmount,2);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
         if (currencyId == "KHR") {
             pay = roundRielCurrency(pay);
+        }else{
+            pay=math.round(pay,2);
         }
         totalPay += pay / rate;
         obj.payments.push(
@@ -963,9 +966,9 @@ function pay(purchaseId) {
     var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
     obj.purchaseId = purchaseId;
     //obj.status = "firstPay";
-    obj.payAmount = numeral().unformat(numeral(totalPay).format('0,0.00'));
-    obj.dueAmount = parseFloat($('#due-grand-total').text().trim());
-    obj.balanceAmount = numeral().unformat(numeral(obj.dueAmount - obj.payAmount).format('0,0.00'));
+    obj.payAmount = math.round(totalPay,2);
+    obj.dueAmount = math.round(parseFloat($('#due-grand-total').text().trim()),2);
+    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount),2);
     //obj.balanceAmount = numeral().unformat($('#' + baseCurrencyId).val());
     obj.status = obj.balanceAmount >= 0 ? "Paid" : "Owed";
     obj.branchId = branchId;

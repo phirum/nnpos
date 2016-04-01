@@ -56,7 +56,7 @@ Meteor.methods({
             s.saleDate = moment(s.saleDate).format("DD-MM-YYYY HH:mm:ss");
             s.order = i;
             total += s.total;
-            totalOwed = s.owedAmount;
+            totalOwed += s.owedAmount;
             s.paidAmount = numeral(s.total - s.owedAmount).format('0,0.00');
             s.owedAmount = numeral(s.owedAmount).format('0,0.00');
             s.total = numeral(s.total).format('0,0.00');

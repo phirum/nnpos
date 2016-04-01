@@ -145,18 +145,21 @@ Meteor.methods({
          } else {
          set.discount = discount = 0;
          }*/
+        saleSubTotal=math.round(saleSubTotal,2);
         set.discount = discount;
         var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
         //var total = saleSubTotal - discount;
         var total = saleSubTotal * (1 - discount / 100);
         if (baseCurrencyId == "KHR") {
             total = roundRielCurrency(total);
+        }else{
+            total=math.round(total,2);
         }
         var discountAmount = saleSubTotal * discount / 100;
 
         set.subTotal = saleSubTotal;
         set.total = total;
-        set.discountAmount = discountAmount;
+        set.discountAmount = math.round(discountAmount,2);
         //set.discountAmount=saleSubTotal-total;
         Pos.Collection.Sales.direct.update(saleId, {$set: set});
         //Meteor.call('updateSale', saleId, set);

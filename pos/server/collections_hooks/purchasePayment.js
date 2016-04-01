@@ -8,7 +8,7 @@ Pos.Collection.PurchasePayments.after.remove(function (userId, doc) {
     Meteor.defer(function () {
         Meteor._sleepForMs(1000);
         var purchaseObj = {};
-        purchaseObj.owedAmount = doc.dueAmount;
+        purchaseObj.owedAmount = math.round(doc.dueAmount,2);
         purchaseObj.status = "Owed";
         Pos.Collection.Purchases.direct.update(doc.purchaseId, {$set: purchaseObj});
     });
@@ -22,7 +22,7 @@ Pos.Collection.PurchasePayments.after.insert(function (userId, doc) {
             purchaseObj.owedAmount = 0;
         } else {
             purchaseObj.status = "Owed";
-            purchaseObj.owedAmount = doc.balanceAmount
+            purchaseObj.owedAmount = math.round(doc.balanceAmount,2);
         }
         Pos.Collection.Purchases.direct.update(doc.purchaseId, {$set: purchaseObj});
     });
@@ -36,7 +36,7 @@ Pos.Collection.PurchasePayments.after.update(function (userId, doc, fieldNames, 
             purchaseObj.owedAmount = 0;
         } else {
             purchaseObj.status = "Owed";
-            purchaseObj.owedAmount = doc.balanceAmount
+            purchaseObj.owedAmount = math.round(doc.balanceAmount,2);
         }
         Pos.Collection.Purchases.direct.update(doc.purchaseId, {$set: purchaseObj});
 

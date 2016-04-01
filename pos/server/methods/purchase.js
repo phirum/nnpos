@@ -113,9 +113,12 @@ Meteor.methods({
             purchaseSubTotal += parseFloat(purchaseDetail.amount);
         });
         var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
+        purchaseSubTotal=math.round(purchaseSubTotal,2);
         var total = purchaseSubTotal * (1 - discount / 100);
         if (baseCurrencyId == "KHR") {
             total = roundRielCurrency(total);
+        }else{
+            total=math.round(purchaseSubTotal,2);
         }
         var set = {};
         set.subTotal = purchaseSubTotal;
