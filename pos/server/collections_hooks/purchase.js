@@ -54,9 +54,12 @@ function updatePurchaseTotal(purchaseId) {
         /*var Setting = Cpanel.Collection.Setting.findOne();
          var baseCurrencyId = Setting && Setting.baseCurrency ? Setting.baseCurrency : 0;*/
         //var total = purchaseSubTotal - discount;
+        purchaseSubTotal=math.round(purchaseSubTotal,2);
         var total = purchaseSubTotal * (1 - discount / 100);
         if (baseCurrencyId == "KHR") {
             total = roundRielCurrency(total);
+        }else{
+            total=math.round(total);
         }
         var set = {};
         set.subTotal = purchaseSubTotal;

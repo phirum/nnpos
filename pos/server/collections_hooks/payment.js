@@ -1,13 +1,13 @@
 /*Pos.Collection.Payments.before.insert(function (userId, doc) {
-    var prefix = doc.saleId;
-    doc.paymentDate = doc.paymentDate ? doc.paymentDate : new Date();
-    doc._id = idGenerator.genWithPrefix(Pos.Collection.Payments, prefix, 3);
-});*/
+ var prefix = doc.saleId;
+ doc.paymentDate = doc.paymentDate ? doc.paymentDate : new Date();
+ doc._id = idGenerator.genWithPrefix(Pos.Collection.Payments, prefix, 3);
+ });*/
 
 Pos.Collection.Payments.after.remove(function (userId, doc) {
     Meteor.defer(function () {
         var saleObj = {};
-        saleObj.owedAmount = doc.dueAmount;
+        saleObj.owedAmount = math.round(doc.dueAmount, 2);
         saleObj.status = "Owed";
         Pos.Collection.Sales.direct.update(doc.saleId, {$set: saleObj});
     });
@@ -23,7 +23,7 @@ Pos.Collection.Payments.after.insert(function (userId, doc) {
             // saleObj.PaidAmount=
         } else {
             saleObj.status = "Owed";
-            saleObj.owedAmount = doc.balanceAmount
+            saleObj.owedAmount = math.round(doc.balanceAmount, 2);
         }
         Pos.Collection.Sales.direct.update(doc.saleId, {$set: saleObj});
     });
@@ -37,7 +37,7 @@ Pos.Collection.Payments.after.update(function (userId, doc, fieldNames, modifier
             saleObj.owedAmount = 0;
         } else {
             saleObj.status = "Owed";
-            saleObj.owedAmount = doc.balanceAmount;
+            saleObj.owedAmount = math.round(doc.balanceAmount, 2);
         }
         Pos.Collection.Sales.direct.update(doc.saleId, {$set: saleObj});
     });

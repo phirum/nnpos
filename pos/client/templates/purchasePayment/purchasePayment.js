@@ -489,10 +489,13 @@ function pay(purchaseId) {
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
+        returnAmount=math.round(returnAmount,2);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
         if (currencyId == "KHR") {
             pay = roundRielCurrency(pay);
+        }else{
+            pay=math.round(pay,2);
         }
         totalPay += pay / rate;
         obj.payments.push(
@@ -508,9 +511,9 @@ function pay(purchaseId) {
     obj.paymentDate = moment($('[name="paymentDate"]').val()).toDate();
     obj.purchaseId = purchaseId;
     //obj.status = "firstPay";
-    obj.payAmount = numeral().unformat(numeral(totalPay).format('0,0.00'));
-    obj.dueAmount = parseFloat($('#base-total').val().trim());
-    obj.balanceAmount = numeral().unformat(numeral(obj.dueAmount - obj.payAmount).format('0,0.00'));
+    obj.payAmount = math.round(totalPay,2);
+    obj.dueAmount = math.round(parseFloat($('#base-total').val().trim()),2);
+    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount),2);
     obj.status = obj.balanceAmount > 0 ? "Owed" : "Paid";
     obj.branchId = branchId;
     debugger;
@@ -536,10 +539,13 @@ function updatePayment(paymentId) {
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
+        returnAmount=math.round(returnAmount,2);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
         if (currencyId == "KHR") {
             pay = roundRielCurrency(pay);
+        }else{
+            pay=math.round(pay,2);
         }
         totalPay += pay / rate;
         obj.payments.push(
@@ -556,9 +562,9 @@ function updatePayment(paymentId) {
     //obj.paymentDate = $('[name="paymentDate"]').val();
     //obj.purchaseId = purchaseId;
     //obj.status = "firstPay";
-    obj.payAmount = numeral().unformat(numeral(totalPay).format('0,0.00'));
-    obj.dueAmount = parseFloat($('#base-total').val().trim());
-    obj.balanceAmount = numeral().unformat(numeral(obj.dueAmount - obj.payAmount).format('0,0.00'));
+    obj.payAmount = math.round(totalPay,2);
+    obj.dueAmount = math.round(parseFloat($('#base-total').val().trim()),2);
+    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount),2);
     obj.status = obj.balanceAmount > 0 ? "Owed" : "Paid";
     //obj.branchId = branchId;
 

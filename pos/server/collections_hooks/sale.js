@@ -118,15 +118,18 @@ function updateSaleTotal(saleId) {
 
         var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
         //var total = saleSubTotal - discount;
+        saleSubTotal=math.round(saleSubTotal,2);
         var total = saleSubTotal * (1 - discount / 100);
         if (baseCurrencyId == "KHR") {
             total = roundRielCurrency(total);
+        }else{
+            total=math.round(total,2);
         }
         var discountAmount = saleSubTotal * discount / 100;
 
         set.subTotal = saleSubTotal;
-        set.total = total;
-        set.discountAmount = discountAmount;
+        set.total =total;
+        set.discountAmount = math.round(discountAmount,2);
         set.owedAmount = total;
         //set.discountAmount=saleSubTotal-total;
         Pos.Collection.Sales.direct.update(saleId, {$set: set});
@@ -175,9 +178,9 @@ function removePromotionProduct(doc) {
     });
 }
 function checkPromotion(saleDetail, saleDate) {
-    var data = {
+    /*var data = {
         message: []
-    };
+    };*/
     if (!saleDetail.isPromotion) {
         //var today = moment().toDate();
         var saleTime = moment(saleDate).format("HH:mm");
@@ -198,17 +201,19 @@ function checkPromotion(saleDetail, saleDate) {
                     if (inventoryType == 1) {
                         inventory = Pos.Collection.FIFOInventory.findOne({
                             branchId: saleDetail.branchId,
-                            productId: pro.productId
+                            productId: pro.productId,
+                            locationId:saleDetail.locationId
                         }, {sort: {createdAt: -1}});
                     }
                     var promotionQuantity = 0;
                     if (inventory.quantity <= 0) {
-                        data.message.push('Promotion Item is out of stock.' + pro.productId);
+                       // data.message.push('Promotion Item is out of stock.' + pro.productId);
                         return;
                     }
                     if (inventory.quantity < increase * pro.quantity) {
-                        data.message.push('Promotion Item is not enough.');
+                       // data.message.push('Promotion Item is not enough.');
                         promotionQuantity = inventory.quantity;
+                        return;
                     } else {
                         promotionQuantity = increase * pro.quantity;
                     }
@@ -242,7 +247,7 @@ function checkPromotion(saleDetail, saleDate) {
                         saleDetailObj.discount = 0;
                         saleDetailObj.price = 0;
                         saleDetailObj.amount = 0;
-                        Pos.Collection.SaleDetails.update(productPromotion._id, {$set: saleDetailObj});
+                        Pos.Collection.SaleDetails.direct.update(productPromotion._id, {$set: saleDetailObj});
                     }
                 })
             } else {
