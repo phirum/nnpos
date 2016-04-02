@@ -17,7 +17,7 @@ Meteor.methods({
         Meteor.defer(function () {
             for (var i = 1; i <= n; i++) {
                 var product = {};
-               // product._id = idGenerator.gen(Pos.Collection.Products, 7);
+                // product._id = idGenerator.gen(Pos.Collection.Products, 7);
                 product.name = "pro" + i;
                 product.retailPrice = 200;
                 product.wholesalePrice = 180;
@@ -30,18 +30,20 @@ Meteor.methods({
                 Pos.Collection.Products.insert(product);
             }
         });
+    },
+    updateProductCache: function () {
+        Meteor.defer(function () {
+            Pos.Collection.Products.update({}, {$set: {status: 'enable'}}, {multi: true});
+        });
     }
 });
-
-
-
 
 
 /*
-Meteor.startup(function () {
-    if (!Pos.Collection.Products.find().count()) {
-        // fill BigCollection
-    }
-});
-*/
+ Meteor.startup(function () {
+ if (!Pos.Collection.Products.find().count()) {
+ // fill BigCollection
+ }
+ });
+ */
 
