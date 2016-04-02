@@ -62,9 +62,9 @@ Meteor.methods({
         header.location = location;
         header.staff = staff;
         header.supplier = supplier;
+        header.status = status;
+        header.transactionType = arg.transactionType;
         data.header = header;
-        data.status = status;
-        data.transactionType = arg.transactionType;
 
         var purchase = Pos.Collection.Purchases.find(params);
         var content = calculatePurchaseHelper(purchase);

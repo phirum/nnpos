@@ -163,6 +163,9 @@ posPurchasePaymentInsertTPL.helpers({
     }
 });
 posPurchasePaymentInsertTPL.events({
+    'click .pay-amount':function(e){
+        $(e.currentTarget).select();
+    },
     'blur #paymentDate': function (e) {
         var paymentDate = $(e.currentTarget).val();
         Session.set("posPurchasePaymentDate", paymentDate);
@@ -220,8 +223,8 @@ posPurchasePaymentInsertTPL.events({
         }
     },
     'keypress .pay-amount': function (evt) {
-       /* var charCode = (evt.which) ? evt.which : evt.keyCode;
-        return !(charCode > 31 && (charCode < 48 || charCode > 57));*/
+        /* var charCode = (evt.which) ? evt.which : evt.keyCode;
+         return !(charCode > 31 && (charCode < 48 || charCode > 57));*/
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if ($(evt.currentTarget).val().indexOf('.') != -1) {
             if (charCode == 46) {
@@ -240,7 +243,7 @@ posPurchasePaymentInsertTPL.events({
     },
     'change select[name="purchaseId"]': function (e) {
         var purchaseId = $(e.currentTarget).val();
-        clearFormData();
+        // clearFormData();
         if (purchaseId == "") {
             Session.set('dueAmount', 0);
             return;
@@ -257,6 +260,8 @@ posPurchasePaymentInsertTPL.events({
                         Meteor.call('findOneRecord', 'Pos.Collection.Purchases', {_id: purchaseId}, {}, function (err, purchase) {
                             if (purchase) {
                                 Session.set('dueAmount', purchase.total);
+                                $('.pay-amount:first').val(purchase.total);
+                                $('.return-amount').val(0);
                             } else {
                                 Session.set('dueAmount', null);
                             }
@@ -266,6 +271,8 @@ posPurchasePaymentInsertTPL.events({
                         Session.set('dueAmount', null);
                     } else {
                         Session.set('dueAmount', payment.balanceAmount);
+                        $('.pay-amount:first').val(payment.balanceAmount);
+                        $('.return-amount').val(0);
                     }
                 }
             });
@@ -332,6 +339,9 @@ posPurchasePaymentUpdateTPL.onRendered(function () {
 });
 
 posPurchasePaymentUpdateTPL.events({
+    'click .pay-amount':function(e){
+        $(e.currentTarget).select();
+    },
     'click #update-payment': function () {
         // var purchaseId = $('select[name="purchaseId"]').val();
         // var paymentDate = $('[name="paymentDate"]').val();
@@ -366,8 +376,8 @@ posPurchasePaymentUpdateTPL.events({
         }
     },
     'keypress .pay-amount': function (evt) {
-       /* var charCode = (evt.which) ? evt.which : evt.keyCode;
-        return !(charCode > 31 && (charCode < 48 || charCode > 57));*/
+        /* var charCode = (evt.which) ? evt.which : evt.keyCode;
+         return !(charCode > 31 && (charCode < 48 || charCode > 57));*/
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if ($(evt.currentTarget).val().indexOf('.') != -1) {
             if (charCode == 46) {
@@ -489,13 +499,13 @@ function pay(purchaseId) {
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
-        returnAmount=math.round(returnAmount,2);
+        returnAmount = math.round(returnAmount, 2);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
         if (currencyId == "KHR") {
             pay = roundRielCurrency(pay);
-        }else{
-            pay=math.round(pay,2);
+        } else {
+            pay = math.round(pay, 2);
         }
         totalPay += pay / rate;
         obj.payments.push(
@@ -511,9 +521,9 @@ function pay(purchaseId) {
     obj.paymentDate = moment($('[name="paymentDate"]').val()).toDate();
     obj.purchaseId = purchaseId;
     //obj.status = "firstPay";
-    obj.payAmount = math.round(totalPay,2);
-    obj.dueAmount = math.round(parseFloat($('#base-total').val().trim()),2);
-    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount),2);
+    obj.payAmount = math.round(totalPay, 2);
+    obj.dueAmount = math.round(parseFloat($('#base-total').val().trim()), 2);
+    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount), 2);
     obj.status = obj.balanceAmount > 0 ? "Owed" : "Paid";
     obj.branchId = branchId;
     debugger;
@@ -539,13 +549,13 @@ function updatePayment(paymentId) {
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
-        returnAmount=math.round(returnAmount,2);
+        returnAmount = math.round(returnAmount, 2);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
         if (currencyId == "KHR") {
             pay = roundRielCurrency(pay);
-        }else{
-            pay=math.round(pay,2);
+        } else {
+            pay = math.round(pay, 2);
         }
         totalPay += pay / rate;
         obj.payments.push(
@@ -562,9 +572,9 @@ function updatePayment(paymentId) {
     //obj.paymentDate = $('[name="paymentDate"]').val();
     //obj.purchaseId = purchaseId;
     //obj.status = "firstPay";
-    obj.payAmount = math.round(totalPay,2);
-    obj.dueAmount = math.round(parseFloat($('#base-total').val().trim()),2);
-    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount),2);
+    obj.payAmount = math.round(totalPay, 2);
+    obj.dueAmount = math.round(parseFloat($('#base-total').val().trim()), 2);
+    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount), 2);
     obj.status = obj.balanceAmount > 0 ? "Owed" : "Paid";
     //obj.branchId = branchId;
 

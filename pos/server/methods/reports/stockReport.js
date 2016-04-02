@@ -66,6 +66,7 @@ Meteor.methods({
                     item.remainQty = 0;
                     item.price = p.purchasePrice;
                 }
+                item.barcode= p.barcode;
                 item.order = i;
                 i++;
                 content.push(item);

@@ -189,6 +189,9 @@ posSalePaymentInsertTPL.helpers({
     }
 });
 posSalePaymentInsertTPL.events({
+    'click .pay-amount':function(e){
+        $(e.currentTarget).select();
+    },
     'blur #paymentDate': function (e) {
         var paymentDate = $(e.currentTarget).val();
         Session.set("posSalePaymentDate", paymentDate);
@@ -265,7 +268,7 @@ posSalePaymentInsertTPL.events({
     },
     'change select[name="saleId"]': function (e) {
         var saleId = $(e.currentTarget).val();
-        clearFormData();
+        //clearFormData();
         if (saleId == "") {
             Session.set('dueAmount', 0);
         }
@@ -282,6 +285,8 @@ posSalePaymentInsertTPL.events({
                     }, {}, function (err, sale) {
                         if (sale) {
                             Session.set('dueAmount', sale.total);
+                            $('.pay-amount:first').val(sale.total);
+                            $('.return-amount').val(0);
                         } else {
                             Session.set('dueAmount', null);
                         }
@@ -291,6 +296,8 @@ posSalePaymentInsertTPL.events({
                     Session.set('dueAmount', null);
                 } else {
                     Session.set('dueAmount', payment.balanceAmount);
+                    $('.pay-amount:first').val(payment.balanceAmount);
+                    $('.return-amount').val(0);
                 }
             }
         });
@@ -337,6 +344,9 @@ posSalePaymentUpdateTPL.onRendered(function () {
     datePicker();
 });
 posSalePaymentUpdateTPL.events({
+    'click .pay-amount':function(e){
+        $(e.currentTarget).select();
+    },
     'click #update-payment': function () {
         // var saleId = $('select[name="saleId"]').val();
         // var paymentDate = $('[name="paymentDate"]').val();
