@@ -118,7 +118,7 @@ Meteor.methods({
         if (baseCurrencyId == "KHR") {
             total = roundRielCurrency(total);
         }else{
-            total=math.round(purchaseSubTotal,2);
+            total=math.round(total,2);
         }
         var set = {};
         set.subTotal = purchaseSubTotal;

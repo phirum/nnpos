@@ -59,7 +59,7 @@ function updatePurchaseTotal(purchaseId) {
         if (baseCurrencyId == "KHR") {
             total = roundRielCurrency(total);
         }else{
-            total=math.round(total);
+            total=math.round(total,2);
         }
         var set = {};
         set.subTotal = purchaseSubTotal;
