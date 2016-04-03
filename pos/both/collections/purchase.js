@@ -1,5 +1,10 @@
 Pos.Collection.Purchases = new Mongo.Collection("pos_purchases");
 Pos.Schema.Purchases = new SimpleSchema({
+    voucher: {
+        type: String,
+        label: "Voucher",
+        optional: true
+    },
     purchaseDate: {
         type: Date,
         label: "Sale Date"

@@ -234,6 +234,9 @@ Template.pos_purchase.events({
     'click .tt-input': function (e) {
         $(e.currentTarget).focus().selected;
     },
+    'keyup #voucher':function(){
+        checkPurchaseIsUpdate();
+    },
     'change #location-id': function () {
         checkPurchaseIsUpdate();
     },
@@ -322,6 +325,7 @@ Template.pos_purchase.events({
     'click #btn-update-purchase-data': function () {
         var purchaseId = $('#purchase-id').val();
         if (purchaseId == "") return;
+        var voucher=$('#voucher').val();
         var supplier = $('#supplier-id').val();
         var staff = $('#staff-id').val();
         var date = $('#input-purchase-date').val();
@@ -329,6 +333,7 @@ Template.pos_purchase.events({
         var description = $('#description').val();
         var locationId = $('#location-id').val();
         var set = {};
+        set.voucher=voucher;
         set.supplierId = supplier;
         set.staffId = staff;
         set.purchaseDate = moment(date).toDate();
@@ -945,13 +950,13 @@ function pay(purchaseId) {
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
-        returnAmount=math.round(returnAmount,2);
+        returnAmount = math.round(returnAmount, 2);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
         if (currencyId == "KHR") {
             pay = roundRielCurrency(pay);
-        }else{
-            pay=math.round(pay,2);
+        } else {
+            pay = math.round(pay, 2);
         }
         totalPay += pay / rate;
         obj.payments.push(
@@ -966,9 +971,9 @@ function pay(purchaseId) {
     var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
     obj.purchaseId = purchaseId;
     //obj.status = "firstPay";
-    obj.payAmount = math.round(totalPay,2);
-    obj.dueAmount = math.round(parseFloat($('#due-grand-total').text().trim()),2);
-    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount),2);
+    obj.payAmount = math.round(totalPay, 2);
+    obj.dueAmount = math.round(parseFloat($('#due-grand-total').text().trim()), 2);
+    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount), 2);
     //obj.balanceAmount = numeral().unformat($('#' + baseCurrencyId).val());
     obj.status = obj.balanceAmount >= 0 ? "Paid" : "Owed";
     obj.branchId = branchId;
@@ -1017,11 +1022,13 @@ function checkPurchaseIsUpdate() {
     var locationId = $('#location-id').val();
     var purchaseDate = moment(purchase.purchaseDate).format('MM/DD/YYYY hh:mm:ss A');
     var hasUpdate = false;
+    var voucher = $('#voucher').val();
+    var purchaseVoucher = purchase.voucher == null ? '' : purchase.voucher;
     var description = $('#description').val();
     var purchaseDescription = purchase.description == null ? '' : purchase.description;
     if (date != purchaseDate || supplier != purchase.supplierId ||
         staff != purchase.staffId || transactionType != purchase.transactionType ||
-        description != purchaseDescription || locationId != purchase.locationId) {
+        description != purchaseDescription || locationId != purchase.locationId || voucher != purchaseVoucher) {
         hasUpdate = true;
     }
     Session.set('purchaseHasUpdate', hasUpdate);
@@ -1066,6 +1073,7 @@ function getValidatedValues() {
      data.message = "Please input exchange rate for this branch.";
      return data;
      }*/
+    var voucher = $('#voucher').val();
     var purchaseDate = $('#input-purchase-date').val();
     if (purchaseDate == '') {
         data.valid = false;
@@ -1100,6 +1108,7 @@ function getValidatedValues() {
     data.message = "Add product to list is successfully.";
     data.valid = true;
     data.purchaseObj = {
+        voucher:voucher,
         purchaseDate: moment(purchaseDate, 'MM/DD/YYYY hh:mm:ss a').toDate(),
         staffId: staffId,
         supplierId: supplierId,
