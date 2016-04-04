@@ -334,7 +334,7 @@ Meteor.methods({
                 saleId,
                 {$set: {totalCost: saleTotalCost}}
             );
-            //--- End Inventory type block "FIFO Inventory"---
+            //--- End Invenetory type block "FIFO Inventory"---
         });
     },
     locationTransferManageStock: function (locationTransferId, branchId) {
