@@ -239,13 +239,26 @@ Template.pos_locationTransfer.helpers({
     locationTransfers: function () {
         var id = FlowRouter.getParam('locationTransferId');
         if (id != null || id != "") {
-            return Pos.Collection.LocationTransfers.find({
+            var locationTransfers = Pos.Collection.LocationTransfers.find({
                 _id: {$ne: id},
                 branchId: Session.get('currentBranch'),
                 status: "Unsaved"
             });
+            if (locationTransfers.count() > 0) {
+                return locationTransfers;
+            } else {
+                return false;
+            }
         } else {
-            return Pos.Collection.LocationTransfers.find({branchId: Session.get('currentBranch'), status: "Unsaved"})
+            var locationTransfers = Pos.Collection.LocationTransfers.find({
+                branchId: Session.get('currentBranch'),
+                status: "Unsaved"
+            });
+            if (locationTransfers.count() > 0) {
+                return locationTransfers;
+            } else {
+                return false;
+            }
         }
     }
 });
@@ -601,12 +614,12 @@ function locationTransferStock(self, oldQty, newQty, e) {
                                             saleQuantity += sd.quantity;
                                         });
                                     }
-                                    remainQuantity=remainQuantity-saleQuantity;
+                                    remainQuantity = remainQuantity - saleQuantity;
                                     if (remainQuantity < 0) {
                                         $(e.currentTarget).val(oldQty);
                                         alertify.warning('Product is out of stock. Quantity in stock is "' +
                                             inventory.remainQty + '". And quantity on locationTransfer of other seller is "'
-                                            + otherQuantity + '". And quantity of sale is "'+saleQuantity+'".');
+                                            + otherQuantity + '". And quantity of sale is "' + saleQuantity + '".');
                                     } else {
                                         var set = {};
                                         set.quantity = newQty;

@@ -277,16 +277,24 @@
             <div class="pull-right">
                 <!--Resume-->
                 <div class="btn-group dropup">
+
                     <button type="button" class="btn btn-primary dropdown-toggle"
                             data-toggle="dropdown"><i class="fa fa-undo"></i>&nbsp;Resume<span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu" role="menu">
-                        {{#each purchases}}
-                            <li><a href="/pos/purchase/{{_id}}" class="resume" data-id="{{_id}}">{{_supplier.name}}
-                                | {{_id}}</a></li>
-                        {{/each}}
-                        <!--<li><a >hello</a></li>-->
-                    </ul>
+                    {{#if purchases}}
+                        <ul class="dropdown-menu" role="menu">
+                            {{#each purchases}}
+                                <li><a href="/pos/purchase/{{_id}}" class="resume" data-id="{{_id}}">{{_supplier.name}}
+                                    | {{_id}}</a></li>
+                            {{/each}}
+                            <!--<li><a >hello</a></li>-->
+                        </ul>
+                    {{else}}
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a >No Invoice</a></li>
+                        </ul>
+                    {{/if}}
+
                 </div>
                 <button type="button" id="suspend" class="btn btn-info"><i class="fa fa-archive"></i>&nbsp;Suspend
                 </button>

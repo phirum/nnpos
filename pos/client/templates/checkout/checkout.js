@@ -217,13 +217,23 @@ Template.pos_checkout.helpers({
     sales: function () {
         var id = FlowRouter.getParam('saleId');
         if (id != null || id != "") {
-            return Pos.Collection.Sales.find({
+            var sales = Pos.Collection.Sales.find({
                 _id: {$ne: id},
                 branchId: Session.get('currentBranch'),
                 status: "Unsaved"
             });
+            if (sales.count() > 0) {
+                return sales;
+            } else {
+                return false;
+            }
         } else {
-            return Pos.Collection.Sales.find({branchId: Session.get('currentBranch'), status: "Unsaved"})
+            var sales = Pos.Collection.Sales.find({branchId: Session.get('currentBranch'), status: "Unsaved"})
+            if (sales.count() > 0) {
+                return sales;
+            } else {
+                return false;
+            }
         }
     }
 });
@@ -1249,7 +1259,7 @@ function pay(saleId) {
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
-        returnAmount=math.round(returnAmount,2);
+        returnAmount = math.round(returnAmount, 2);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
         if (currencyId == "KHR") {
@@ -1272,10 +1282,10 @@ function pay(saleId) {
      }*/
     var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
     obj.saleId = saleId;
-    obj.payAmount = math.round(totalPay,2);
+    obj.payAmount = math.round(totalPay, 2);
     // obj.payAmount = numeral().unformat(numeral(totalPay).format('0,0.00'));
-    obj.dueAmount = math.round(parseFloat($('#due-grand-total').text().trim()),2);
-    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount),2);
+    obj.dueAmount = math.round(parseFloat($('#due-grand-total').text().trim()), 2);
+    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount), 2);
     //obj.balanceAmount = numeral().unformat($('#' + baseCurrencyId).val());
     obj.status = obj.balanceAmount >= 0 ? "Paid" : "Owed";
     obj.branchId = branchId;

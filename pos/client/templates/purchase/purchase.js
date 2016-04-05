@@ -215,18 +215,27 @@ Template.pos_purchase.helpers({
     purchases: function () {
         var id = FlowRouter.getParam('purchaseId');
         if (id != null || id != "") {
-            return Pos.Collection.Purchases.find({
+            var purchases= Pos.Collection.Purchases.find({
                 _id: {$ne: id},
                 branchId: Session.get('currentBranch'),
                 status: "Unsaved"
             });
+            if(purchases.count()>0){
+                return purchases;
+            }else{
+                return false;
+            }
         }
         else {
-            return Pos.Collection.Purchases.find({
+            var purchases= Pos.Collection.Purchases.find({
                 branchId: Session.get('currentBranch'),
                 status: "Unsaved"
             });
-
+            if(purchases.count()>0){
+                return purchases;
+            }else{
+                return false;
+            }
         }
     }
 });

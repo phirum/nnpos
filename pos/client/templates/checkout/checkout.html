@@ -295,14 +295,21 @@
                     <button type="button" class="btn btn-primary dropdown-toggle"
                             data-toggle="dropdown"><i class="fa fa-undo"></i>&nbsp;Resume<span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu" role="menu">
-                        {{#each sales}}
-                            <!--onclick="Session.set('hasUpdate', false);"-->
-                            <li><a href="/pos/checkout/{{_id}}" class="resume" data-id="{{_id}}">{{_customer.name}}
-                                | {{_id}}</a></li>
-                        {{/each}}
 
-                    </ul>
+                    {{#if sales}}
+                        <ul class="dropdown-menu" role="menu">
+                            {{#each sales}}
+                                <!--onclick="Session.set('hasUpdate', false);"-->
+                                <li><a href="/pos/checkout/{{_id}}" class="resume" data-id="{{_id}}">{{_customer.name}}
+                                    | {{_id}}</a></li>
+                            {{/each}}
+
+                        </ul>
+                    {{else}}
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a>No Invoice</a></li>
+                        </ul>
+                    {{/if}}
                 </div>
                 <button type="button" id="suspend" class="btn btn-info"><i class="fa fa-archive"></i>&nbsp;Suspend
                 </button>
