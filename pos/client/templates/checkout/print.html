@@ -1,4 +1,4 @@
-
+<!--
 <template name="pos_printCheckout">
     {{#if data}}
     {{#with data}}
@@ -120,7 +120,7 @@
     {{> loading}}
 {{/if}}
 </template>
-<!--
+-->
 <template name="pos_printCheckout">
     {{#if data}}
         {{#with data}}
@@ -132,15 +132,19 @@
                     Address: {{company.khAddress}}<br>
                     Tel: {{company.telephone}}<br>
                 </div>
-        <h4 style="font-weight: bold;font-size: 15px;text-align: center;">
+                <h4 style="font-weight: bold;font-size: 15px;text-align: center;">
                     Invoice(<span style="font-size: 13px;"> {{sale.InvoiceType}}</span>)
                 </h4><br>
-                Sale ID:{{sale._id}}<br>
-                Staff: {{sale._staff.name}}<br>
-                Date:{{sale.saleDate}}<br>
-
-                <span align="right">Customer:{{sale._customer.name}}</span>
-
+                <table width="100%">
+                    <tr>
+                        <td>Sale ID:{{sale._id}}</td>
+                        <td align="right">Staff: {{sale._staff.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Date:{{sale.saleDate}}</td>
+                        <td align="right">Customer:{{sale._customer.name}}</td>
+                    </tr>
+                </table>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
@@ -181,15 +185,15 @@
 
                     {{#each sale._exchangeRate.rates}}
                         <tr style="text-align: right;">
-                            <td colspan="2" align="right">{{toCurrencyId}}:</td>
-                            <td colspan="2" align="right">{{totalFormatted}}{{symbol}}</td>
+                            <td colspan="6" align="right">{{toCurrencyId}}:</td>
+                            <td align="right" style="font-weight: bold">{{totalFormatted}}{{symbol}}</td>
                         </tr>
                     {{/each}}
 
                     {{#if hasPayment}}
                         {{#each paymentObj.payments}}
                             <tr>
-                                <td colspan="2"></td>
+                                <td colspan="3"></td>
                                 <td>Paid {{currencyId}}:</td>
                                 <td style="font-weight: bold">{{payAmount}}</td>
                                 <td style="text-align: right">Change {{currencyId}}:</td>
@@ -200,8 +204,16 @@
                     {{/if}}
                     </tbody>
                 </table>
+                <div class="imei">
+                    {{#each saleDetails}}
+                        Product Name:{{_product.name}}<br>
+                        {{imei}}<br>
+                    {{/each}}
+                </div>
 
-        <span style="font-size: 10px; text-align: center;"><br><br><br>Powered by: Rabbit, Tel: 053 50 66
+
+
+        <span style="font-size: 10px; text-align: center;">Powered by: Rabbit, Tel: 053 50 66
                         777
                     </span>
 
@@ -214,4 +226,3 @@
     {{/if}}
 </template>
 
--->
