@@ -277,7 +277,8 @@ Template.pos_locationTransfer.events({
             //---Open Inventory type block "FIFO Inventory"---
             Meteor.call('findOneRecord', 'Pos.Collection.FIFOInventory', {
                 branchId: branchId,
-                productId: locationTransferDetail.productId
+                productId: locationTransferDetail.productId,
+                locationId:locationTransferDetail.fromLocationId
                 //price: pd.price
             }, {sort: {createdAt: -1}}, function (error, inventory) {
                 if (inventory) {

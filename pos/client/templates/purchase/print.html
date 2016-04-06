@@ -136,7 +136,7 @@
                 <table width="100%">
                     <tr>
                         <td><span style="font-weight: bold;font-size: 14px;">
-                            Purchase Invoice
+                            PURCHASE INVOICE
                         </span></td>
                         <td align="right"><b>#:</b> {{purchase._id}}</td>
                     </tr>
@@ -208,19 +208,19 @@
                     {{/if}}
                     </tbody>
                 </table>
-                <h4>IMEI</h4>
                 <div class="imei">
                     {{#each purchaseDetails}}
-                        Product Name:{{_product.name}}<br>
-                        {{imei}}<br>
+                        {{#if imei}}
+                            <b>Product Name:</b> {{_product.name}}<br>
+                            {{#each imei}}{{this}}, {{/each}}<br>
+                        {{/if}}
                     {{/each}}
                 </div>
 
 
-
-       <!-- <span style="font-size: 10px; text-align: center;">Powered by: Rabbit, Tel: 053 50 66
-                        777
-                    </span>-->
+                <!-- <span style="font-size: 10px; text-align: center;">Powered by: Rabbit, Tel: 053 50 66
+                                 777
+                             </span>-->
 
 
             </div>

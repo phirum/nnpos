@@ -128,8 +128,8 @@
             <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
                 <!--<img src="/rabbit.png" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>-->
                 <div width="75%" align="center" style="padding-top: 10px;">
-                    <h4 style="font-family:'Khmer OS Muol';font-size: 14px;">{{company.khName}}</h4>
-                    Address: {{company.khAddress}}<br>
+                    <h4 style="font-family:'Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.enName}}</h4>
+                    Address: {{company.enAddress}}<br>
                     Tel: {{company.telephone}}<br>
                 </div>
 
@@ -211,10 +211,11 @@
                     </tbody>
                 </table>
                 <div class="imei">
-                    <h4>IMEI</h4>
                     {{#each saleDetails}}
-                        <b>Product Name:</b>  {{_product.name}}<br>
-                        {{imei}}<br>
+                        {{#if imei}}
+                            <b>Product Name:</b>  {{_product.name}}<br>
+                            {{#each imei}}{{this}}, {{/each}}<br>
+                        {{/if}}
                     {{/each}}
                 </div>
 

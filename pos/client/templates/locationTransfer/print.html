@@ -1,6 +1,7 @@
+<!--
 <template name="pos_printLocationTransfer">
     {{#if data}}
-        {{#with data}}
+    {{#with data}}
             <div align="center"
                  style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:260px; margin: 0 auto;">
                 <table border="0">
@@ -63,6 +64,74 @@
                         </td>
                     </tr>
                 </table>
+
+            </div>
+        {{/with}}
+    {{autoprint close="true"}}
+{{else}}
+    {{> loading}}
+{{/if}}
+</template>
+-->
+<template name="pos_printLocationTransfer">
+    {{#if data}}
+        {{#with data}}
+            <div align="center"></div>
+            <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
+                <!--<img src="/rabbit.png" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>-->
+                <div width="75%" align="center" style="padding-top: 10px;">
+                    <h4 style="font-family:'Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.enName}}</h4>
+                    Address: {{company.enAddress}}<br>
+                    Tel: {{company.telephone}}<br>
+                </div>
+
+                <table width="100%">
+                    <tr>
+                        <td> <span style="font-weight: bold;font-size: 15px;">
+                            LOCATION TRANSFER INVOICE
+                        </span></td>
+                        <td align="right"><b>#:</b> {{locationTransfer._id}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Staff:</b> {{locationTransfer._staff.name}}</td>
+                        <td align="right"><b>Date:</b> {{locationTransfer.locationTransferDate}}</td>
+                    </tr>
+                </table>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th align="left"> N<sup style="text-decoration: underline;">o</sup></th>
+                        <th align="left"> Product</th>
+                        <th align="left"> Unit</th>
+                        <th> Quantity</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each locationTransferDetails}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{_product.name}}</td>
+                            <td align="center">{{_product._unit.name}}</td>
+                            <td align="center">{{quantity}}</td>
+                      </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+                <div class="imei">
+                    {{#each locationTransferDetails}}
+                        {{#if imei}}
+                            <b>Product Name:</b>  {{_product.name}}<br>
+                            {{#each imei}}{{this}}, {{/each}}<br>
+                        {{/if}}
+                    {{/each}}
+                </div>
+
+
+                <!--
+                        <span style="font-size: 10px; text-align: center;">Powered by: Rabbit, Tel: 053 50 66
+                                        777
+                                    </span>-->
+
 
             </div>
         {{/with}}
