@@ -1,6 +1,7 @@
+<!--
 <template name="pos_printPurchase">
     {{#if data}}
-        {{#with data}}
+    {{#with data}}
             <div align="center"
                  style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:260px; margin: 0 auto;">
                 <table border="0">
@@ -30,7 +31,7 @@
                                 </tr>
                                 <tr>
                                     <td>Date:{{purchase.purchaseDate}}</td>
-                                    <!--<td>Table: {{purchase.table}}</td>-->
+
                                     <td align="right">Supplier:{{purchase._supplier.name}}</td>
                                 </tr>
                             </table>
@@ -84,8 +85,7 @@
                                             style="font-weight: bold">{{totalFormatted}} {{symbol}}</td>
                                     </tr>
                                 {{/each}}
-                                    <!-- {{#if purchase.isPay}}-->
-                                {{#if hasPayment}}
+        {{#if hasPayment}}
                                     <tr style="text-align: right;">
                                         <td colspan="5">
                                             <hr>
@@ -100,14 +100,8 @@
                                             <td style="text-align: right;font-weight: bold">{{formatFixTwo return}}</td>
                                         </tr>
                                     {{/each}}
-                                    <!--{{#each paymentObj.payments}}
-                            <tr style="text-align: right;">
-                                <td>Return {{toCurrency}}:</td>
-                                <td>{{return}}</td>
-                            </tr>
-                        {{/each}}-->
-                                        <!--{{/if}}-->
-                            {{/if}}
+
+        {{/if}}
                             </table>
                         </td>
                     </tr>
@@ -120,8 +114,120 @@
 
             </div>
         {{/with}}
+    {{autoprint close="true"}}
+{{else}}
+    {{>loading}}
+{{/if}}
+</template>
+
+-->
+
+<template name="pos_printPurchase">
+    {{#if data}}
+        {{#with data}}
+            <div align="center"></div>
+            <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
+                <!--<img src="/rabbit.png" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>-->
+                <div width="75%" align="center" style="padding-top: 10px;">
+                    <span style="font-family:'Khmer OS Muol';font-size: 15px;font-weight: bold;">{{company.enName}}</span><br>
+                    Address: {{company.enAddress}}<br>
+                    Tel: {{company.telephone}}<br>
+                </div>
+                <table width="100%">
+                    <tr>
+                        <td><span style="font-weight: bold;font-size: 14px;">
+                            Purchase Invoice
+                        </span></td>
+                        <td align="right"><b>#:</b> {{purchase._id}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Voucher:</b> {{purchase.voucher}}</td>
+                        <td align="right"><b>Date:</b> {{purchase.purchaseDate}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Staff:</b> {{purchase._staff.name}}</td>
+                        <td align="right"><b>Supplier:</b> {{purchase._supplier.name}}</td>
+                    </tr>
+                </table>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th align="left"> N<sup style="text-decoration: underline;">o</sup></th>
+                        <th align="left"> Product</th>
+                        <th align="right"> Price</th>
+                        <th> Qty</th>
+                        <th> Unit</th>
+                        <th> Discount</th>
+                        <th align="right"> Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each purchaseDetails}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{_product.name}}</td>
+                            <td align="right">{{price}}</td>
+                            <td align="center">{{quantity}}</td>
+                            <td align="center">{{_product._unit.name}}</td>
+                            <td align="center">{{discount}}</td>
+                            <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
+                        </tr>
+                    {{/each}}
+
+                    <tr style="text-align: right;">
+                        <td colspan="6">Sub Total:</td>
+                        <td>{{purchase.subTotalFormatted}} {{baseCurrency.symbol}}</td>
+                    </tr>
+                    <tr style="text-align: right;">
+                        <td colspan="6" align="right">Discount:</td>
+                        <td align="right">{{purchase.discount}}%</td>
+                    </tr>
+                    <tr style="text-align: right;">
+                        <td colspan="6">Total {{baseCurrency._id}}:</td>
+                        <td style="font-weight: bold">{{purchase.totalFormatted}} {{baseCurrency.symbol}}</td>
+                    </tr>
+
+                    {{#each purchase._exchangeRate.rates}}
+                        <tr style="text-align: right;">
+                            <td colspan="6" align="right">{{toCurrencyId}}:</td>
+                            <td align="right" style="font-weight: bold">{{totalFormatted}}{{symbol}}</td>
+                        </tr>
+                    {{/each}}
+
+                    {{#if hasPayment}}
+                        {{#each paymentObj.payments}}
+                            <tr>
+                                <td colspan="3"></td>
+                                <td>Paid {{currencyId}}:</td>
+                                <td style="font-weight: bold">{{payAmount}}</td>
+                                <td style="text-align: right">Change {{currencyId}}:</td>
+                                <td style="text-align: right;font-weight: bold">{{formatFixTwo return}}</td>
+                            </tr>
+                        {{/each}}
+
+                    {{/if}}
+                    </tbody>
+                </table>
+                <h4>IMEI</h4>
+                <div class="imei">
+                    {{#each purchaseDetails}}
+                        Product Name:{{_product.name}}<br>
+                        {{imei}}<br>
+                    {{/each}}
+                </div>
+
+
+
+       <!-- <span style="font-size: 10px; text-align: center;">Powered by: Rabbit, Tel: 053 50 66
+                        777
+                    </span>-->
+
+
+            </div>
+        {{/with}}
         {{autoprint close="true"}}
     {{else}}
-        {{>loading}}
+        {{> loading}}
     {{/if}}
+
 </template>

@@ -126,24 +126,30 @@
         {{#with data}}
             <div align="center"></div>
             <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
-                <img src="/rabbit.png" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>
+                <!--<img src="/rabbit.png" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>-->
                 <div width="75%" align="center" style="padding-top: 10px;">
                     <h4 style="font-family:'Khmer OS Muol';font-size: 14px;">{{company.khName}}</h4>
                     Address: {{company.khAddress}}<br>
                     Tel: {{company.telephone}}<br>
                 </div>
-                <h4 style="font-weight: bold;font-size: 15px;text-align: center;">
-                    Invoice(<span style="font-size: 13px;"> {{sale.InvoiceType}}</span>)
-                </h4><br>
+
                 <table width="100%">
                     <tr>
-                        <td>Sale ID:{{sale._id}}</td>
-                        <td align="right">Staff: {{sale._staff.name}}</td>
+                        <td> <span style="font-weight: bold;font-size: 15px;">
+                            INVOICE(<span style="font-size: 13px;"> {{sale.InvoiceType}}</span>)
+                        </span></td>
+                        <td align="right"><b>#:</b> {{sale._id}}</td>
                     </tr>
                     <tr>
-                        <td>Date:{{sale.saleDate}}</td>
-                        <td align="right">Customer:{{sale._customer.name}}</td>
+
+                        <td><b>Voucher:</b> {{sale.voucher}}</td>
+                        <td align="right"><b>Date:</b> {{sale.saleDate}}</td>
                     </tr>
+                    <tr>
+                        <td><b>Staff:</b> {{sale._staff.name}}</td>
+                        <td align="right"><b>Customer:</b> {{sale._customer.name}}</td>
+                    </tr>
+
                 </table>
                 <table class="table table-bordered">
                     <thead>
@@ -205,17 +211,18 @@
                     </tbody>
                 </table>
                 <div class="imei">
+                    <h4>IMEI</h4>
                     {{#each saleDetails}}
-                        Product Name:{{_product.name}}<br>
+                        <b>Product Name:</b>  {{_product.name}}<br>
                         {{imei}}<br>
                     {{/each}}
                 </div>
 
 
-
-        <span style="font-size: 10px; text-align: center;">Powered by: Rabbit, Tel: 053 50 66
-                        777
-                    </span>
+                <!--
+                        <span style="font-size: 10px; text-align: center;">Powered by: Rabbit, Tel: 053 50 66
+                                        777
+                                    </span>-->
 
 
             </div>
