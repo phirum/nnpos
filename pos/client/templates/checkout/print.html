@@ -128,15 +128,16 @@
             <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
                 <!--<img src="/rabbit.png" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>-->
                 <div width="75%" align="center" style="padding-top: 10px;">
-                    <h4 style="font-family:'Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.enName}}</h4>
+                    <h4 style="font-family:'Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.khName}}</h4>
+                    <h4 style="font-size: 14px;font-weight: bold;">{{company.enName}}</h4>
                     Address: {{company.enAddress}}<br>
                     Tel: {{company.telephone}}<br>
                 </div>
 
                 <table width="100%">
                     <tr>
-                        <td> <span style="font-weight: bold;font-size: 15px;">
-                            INVOICE(<span style="font-size: 13px;"> {{sale.InvoiceType}}</span>)
+                        <td> <span style="font-weight: bold;font-size: 18px;">
+                            INVOICE(<span style="font-size: 14px;">{{sale.InvoiceType}}</span>)
                         </span></td>
                         <td align="right"><b>#:</b> {{sale._id}}</td>
                     </tr>
@@ -146,21 +147,21 @@
                         <td align="right"><b>Date:</b> {{sale.saleDate}}</td>
                     </tr>
                     <tr>
-                        <td><b>Staff:</b> {{sale._staff.name}}</td>
-                        <td align="right"><b>Customer:</b> {{sale._customer.name}}</td>
+                        <td><b>Customer:</b> {{sale._customer.name}}</td>
+                        <td align="right"><b>Staff:</b> {{sale._staff.name}}</td>
                     </tr>
 
                 </table>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th align="left"> N<sup style="text-decoration: underline;">o</sup></th>
-                        <th align="left"> Product</th>
-                        <th align="right"> Price</th>
+                        <th> N<sup style="text-decoration: underline;">o</sup></th>
+                        <th> Product</th>
+                        <th> Price</th>
                         <th> Qty</th>
                         <th> Unit</th>
                         <th> Discount</th>
-                        <th align="right"> Amount</th>
+                        <th style="text-align: right;"> Amount</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -168,10 +169,10 @@
                         <tr>
                             <td>{{order}}</td>
                             <td>{{_product.name}}</td>
-                            <td align="right">{{price}}</td>
-                            <td align="center">{{quantity}}</td>
-                            <td align="center">{{_product._unit.name}}</td>
-                            <td align="center">{{discount}}</td>
+                            <td>{{price}}</td>
+                            <td>{{quantity}}</td>
+                            <td>{{_product._unit.name}}</td>
+                            <td>{{discount}}</td>
                             <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
                         </tr>
                     {{/each}}
@@ -192,7 +193,7 @@
                     {{#each sale._exchangeRate.rates}}
                         <tr style="text-align: right;">
                             <td colspan="6" align="right">{{toCurrencyId}}:</td>
-                            <td align="right" style="font-weight: bold">{{totalFormatted}}{{symbol}}</td>
+                            <td align="right" style="font-weight: bold">{{totalFormatted}} {{symbol}}</td>
                         </tr>
                     {{/each}}
 
@@ -210,6 +211,19 @@
                     {{/if}}
                     </tbody>
                 </table>
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="footer-header">Stock</td>
+                        <td class="footer-header">Accounting</td>
+                        <td class="footer-header">Customer</td>
+                    </tr>
+                    <tr>
+                        <td class="footer-box"></td>
+                        <td class="footer-box"></td>
+                        <td class="footer-box"></td>
+                    </tr>
+                </table>
+
                 <div class="imei">
                     {{#each saleDetails}}
                         {{#if imei}}

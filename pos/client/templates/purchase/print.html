@@ -129,13 +129,14 @@
             <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
                 <!--<img src="/rabbit.png" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>-->
                 <div width="75%" align="center" style="padding-top: 10px;">
-                    <span style="font-family:'Khmer OS Muol';font-size: 15px;font-weight: bold;">{{company.enName}}</span><br>
+                    <h4 style="font-family:'Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.khName}}</h4>
+                    <h4 style="font-size: 14px;font-weight: bold;">{{company.enName}}</h4>
                     Address: {{company.enAddress}}<br>
                     Tel: {{company.telephone}}<br>
                 </div>
                 <table width="100%">
                     <tr>
-                        <td><span style="font-weight: bold;font-size: 14px;">
+                        <td><span style="font-weight: bold;font-size: 18px;">
                             PURCHASE INVOICE
                         </span></td>
                         <td align="right"><b>#:</b> {{purchase._id}}</td>
@@ -145,20 +146,20 @@
                         <td align="right"><b>Date:</b> {{purchase.purchaseDate}}</td>
                     </tr>
                     <tr>
-                        <td><b>Staff:</b> {{purchase._staff.name}}</td>
-                        <td align="right"><b>Supplier:</b> {{purchase._supplier.name}}</td>
+                        <td><b>Supplier:</b> {{purchase._supplier.name}}</td>
+                        <td align="right"><b>Staff:</b> {{purchase._staff.name}}</td>
                     </tr>
                 </table>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th align="left"> N<sup style="text-decoration: underline;">o</sup></th>
-                        <th align="left"> Product</th>
-                        <th align="right"> Price</th>
+                        <th> N<sup style="text-decoration: underline;">o</sup></th>
+                        <th> Product</th>
+                        <th> Price</th>
                         <th> Qty</th>
                         <th> Unit</th>
                         <th> Discount</th>
-                        <th align="right"> Amount</th>
+                        <th style="text-align: right;"> Amount</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -166,10 +167,10 @@
                         <tr>
                             <td>{{order}}</td>
                             <td>{{_product.name}}</td>
-                            <td align="right">{{price}}</td>
-                            <td align="center">{{quantity}}</td>
-                            <td align="center">{{_product._unit.name}}</td>
-                            <td align="center">{{discount}}</td>
+                            <td>{{price}}</td>
+                            <td>{{quantity}}</td>
+                            <td>{{_product._unit.name}}</td>
+                            <td>{{discount}}</td>
                             <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
                         </tr>
                     {{/each}}
@@ -190,7 +191,7 @@
                     {{#each purchase._exchangeRate.rates}}
                         <tr style="text-align: right;">
                             <td colspan="6" align="right">{{toCurrencyId}}:</td>
-                            <td align="right" style="font-weight: bold">{{totalFormatted}}{{symbol}}</td>
+                            <td align="right" style="font-weight: bold">{{totalFormatted}} {{symbol}}</td>
                         </tr>
                     {{/each}}
 
@@ -208,6 +209,18 @@
                     {{/if}}
                     </tbody>
                 </table>
+              <!--  <table class="table table-bordered">
+                    <tr>
+                        <td class="footer-header">Stock</td>
+                        <td class="footer-header">Accounting</td>
+                        <td class="footer-header">Supplier</td>
+                    </tr>
+                    <tr>
+                        <td class="footer-box"></td>
+                        <td class="footer-box"></td>
+                        <td class="footer-box"></td>
+                    </tr>
+                </table>-->
                 <div class="imei">
                     {{#each purchaseDetails}}
                         {{#if imei}}

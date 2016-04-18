@@ -27,8 +27,8 @@ function getSale(saleId, baseCurrency) {
         });
     }
     s.saleDate = moment(s.saleDate).format("DD-MM-YYYY, HH:mm");
-    s.subTotalFormatted = numeral(s.subTotal).format('0,0.00') + baseCurrency.symbol;
-    s.totalFormatted = numeral(s.total).format('0,0.00') + baseCurrency.symbol;
+    s.subTotalFormatted = numeral(s.subTotal).format('0,0.00');
+    s.totalFormatted = numeral(s.total).format('0,0.00');
     s.InvoiceType = s.isRetail ? 'Retail' : 'Wholesale';
     return s;
 }
@@ -42,7 +42,7 @@ function getSaleDetail(saleId, baseCurrency) {
          var unit = Pos.Collection.Units.findOne(product.unitId).name;
          sd.productName = product.name + "(" + unit + ")";*/
        // sd.price = numeral(sd.price).format('0,0.00') + baseCurrency.symbol;
-        sd.amountFormated = numeral(sd.amount).format('0,0.00') + baseCurrency.symbol;
+        sd.amountFormated = numeral(sd.amount).format('0,0.00');
         // sd.order = pad(i, 2);
         sd.order = i;
         // sd.qtyPrint = sd.quantity - sd.qtyPrinted;

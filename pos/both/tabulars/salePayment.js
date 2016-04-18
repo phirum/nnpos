@@ -32,5 +32,6 @@ Pos.TabularTable.SalePayments = new Tabular.Table({
     ,
     columnDefs: [
         {"width": "12px", "targets": 0}
-    ]
+    ],
+    extraFields:['payments']
 });
