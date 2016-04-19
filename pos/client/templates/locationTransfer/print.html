@@ -80,14 +80,15 @@
             <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
                 <!--<img src="/rabbit.png" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>-->
                 <div width="75%" align="center" style="padding-top: 10px;">
-                    <h4 style="font-family:'Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.enName}}</h4>
+                    <span style="font-family:'Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.khName}}</span><br>
+                    <span style="font-size: 14px;font-weight: bold;">{{company.enName}}</span><br>
                     Address: {{company.enAddress}}<br>
                     Tel: {{company.telephone}}<br>
                 </div>
 
                 <table width="100%">
                     <tr>
-                        <td> <span style="font-weight: bold;font-size: 15px;">
+                        <td> <span style="font-weight: bold;font-size: 18px;">
                             LOCATION TRANSFER INVOICE
                         </span></td>
                         <td align="right"><b>#:</b> {{locationTransfer._id}}</td>
@@ -100,9 +101,9 @@
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th align="left"> N<sup style="text-decoration: underline;">o</sup></th>
-                        <th align="left"> Product</th>
-                        <th align="left"> Unit</th>
+                        <th> N<sup style="text-decoration: underline;">o</sup></th>
+                        <th> Product</th>
+                        <th> Unit</th>
                         <th> Quantity</th>
                     </tr>
                     </thead>
@@ -111,8 +112,8 @@
                         <tr>
                             <td>{{order}}</td>
                             <td>{{_product.name}}</td>
-                            <td align="center">{{_product._unit.name}}</td>
-                            <td align="center">{{quantity}}</td>
+                            <td>{{_product._unit.name}}</td>
+                            <td>{{quantity}}</td>
                       </tr>
                     {{/each}}
                     </tbody>
