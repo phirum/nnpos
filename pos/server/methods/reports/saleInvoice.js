@@ -42,7 +42,7 @@ function getSaleDetail(saleId, baseCurrency) {
          var unit = Pos.Collection.Units.findOne(product.unitId).name;
          sd.productName = product.name + "(" + unit + ")";*/
        // sd.price = numeral(sd.price).format('0,0.00') + baseCurrency.symbol;
-        sd.amountFormated = numeral(sd.amount).format('0,0.00');
+        sd.amountFormated = numeral(sd.amount).format('0,0.00')+ ' ' +baseCurrency.symbol;
         // sd.order = pad(i, 2);
         sd.order = i;
         // sd.qtyPrint = sd.quantity - sd.qtyPrinted;

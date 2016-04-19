@@ -4,3 +4,14 @@
 .footer-box{
     height:50px;
 }
+table.auto
+{
+    table-layout:auto;
+}
+
+tbody.custom > tr >td {
+    padding: 2px;
+    line-height: 1.428571;
+    vertical-align: top;
+    font-size: 13px;
+}
