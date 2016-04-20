@@ -93,7 +93,13 @@ Template.pos_purchase.helpers({
         var purchaseDetailId = Session.get('purchaseDetailId');
         if (purchaseDetailId != null) {
             var pd = Pos.Collection.PurchaseDetails.findOne(purchaseDetailId);
-            return (pd == null || pd.imei == null) ? [] : pd.imei;
+            var imeis = [];
+            if (pd.imei) {
+                for (var i = 0; i < pd.imei.length; i++) {
+                    imeis.push({order: i + 1, code: pd.imei[i]});
+                }
+            }
+            return imeis;
         } else {
             return [];
         }
@@ -215,25 +221,25 @@ Template.pos_purchase.helpers({
     purchases: function () {
         var id = FlowRouter.getParam('purchaseId');
         if (id != null || id != "") {
-            var purchases= Pos.Collection.Purchases.find({
+            var purchases = Pos.Collection.Purchases.find({
                 _id: {$ne: id},
                 branchId: Session.get('currentBranch'),
                 status: "Unsaved"
             });
-            if(purchases.count()>0){
+            if (purchases.count() > 0) {
                 return purchases;
-            }else{
+            } else {
                 return false;
             }
         }
         else {
-            var purchases= Pos.Collection.Purchases.find({
+            var purchases = Pos.Collection.Purchases.find({
                 branchId: Session.get('currentBranch'),
                 status: "Unsaved"
             });
-            if(purchases.count()>0){
+            if (purchases.count() > 0) {
                 return purchases;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -243,7 +249,7 @@ Template.pos_purchase.events({
     'click .tt-input': function (e) {
         $(e.currentTarget).focus().selected;
     },
-    'keyup #voucher':function(){
+    'keyup #voucher': function () {
         checkPurchaseIsUpdate();
     },
     'change #location-id': function () {
@@ -259,7 +265,7 @@ Template.pos_purchase.events({
         var purchaseDetailId = Session.get('purchaseDetailId');
         var thisBtn = $(e.currentTarget);
         // var imei = thisBtn.parents('tr').find('.td-imei').text().trim();
-        var imei = this;
+        var imei = this.code;
         var purchaseDetail = Pos.Collection.PurchaseDetails.findOne(purchaseDetailId);
         var obj = {};
         obj.imei = subtractArray(purchaseDetail.imei, [imei]);
@@ -334,7 +340,7 @@ Template.pos_purchase.events({
     'click #btn-update-purchase-data': function () {
         var purchaseId = $('#purchase-id').val();
         if (purchaseId == "") return;
-        var voucher=$('#voucher').val();
+        var voucher = $('#voucher').val();
         var supplier = $('#supplier-id').val();
         var staff = $('#staff-id').val();
         var date = $('#input-purchase-date').val();
@@ -342,7 +348,7 @@ Template.pos_purchase.events({
         var description = $('#description').val();
         var locationId = $('#location-id').val();
         var set = {};
-        set.voucher=voucher;
+        set.voucher = voucher;
         set.supplierId = supplier;
         set.staffId = staff;
         set.purchaseDate = moment(date).toDate();
@@ -1117,7 +1123,7 @@ function getValidatedValues() {
     data.message = "Add product to list is successfully.";
     data.valid = true;
     data.purchaseObj = {
-        voucher:voucher,
+        voucher: voucher,
         purchaseDate: moment(purchaseDate, 'MM/DD/YYYY hh:mm:ss a').toDate(),
         staffId: staffId,
         supplierId: supplierId,

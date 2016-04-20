@@ -158,8 +158,14 @@ Template.pos_locationTransfer.helpers({
     imeis: function () {
         var locationTransferDetailId = Session.get('locationTransferDetailId');
         if (locationTransferDetailId != null) {
-            var sd = Pos.Collection.LocationTransferDetails.findOne(locationTransferDetailId);
-            return (sd == null || sd.imei == null) ? [] : sd.imei;
+            var ltd = Pos.Collection.LocationTransferDetails.findOne(locationTransferDetailId);
+            var imeis = [];
+            if (ltd.imei) {
+                for (var i = 0; i < ltd.imei.length; i++) {
+                    imeis.push({order: i + 1, code: ltd.imei[i]});
+                }
+            }
+            return imeis;
         } else {
             return [];
         }
@@ -321,7 +327,7 @@ Template.pos_locationTransfer.events({
         var locationTransferDetailId = Session.get('locationTransferDetailId');
         var thisBtn = $(e.currentTarget);
         // var imei = thisBtn.parents('tr').find('.td-imei').text().trim();
-        var imei = this;
+        var imei = this.code;
         var locationTransferDetail = Pos.Collection.LocationTransferDetails.findOne(locationTransferDetailId);
         var obj = {};
         obj.imei = subtractArray(locationTransferDetail.imei, [imei]);

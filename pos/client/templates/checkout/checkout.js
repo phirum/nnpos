@@ -73,7 +73,13 @@ Template.pos_checkout.helpers({
         var saleDetailId = Session.get('saleDetailId');
         if (saleDetailId != null) {
             var sd = Pos.Collection.SaleDetails.findOne(saleDetailId);
-            return (sd == null || sd.imei == null) ? [] : sd.imei;
+            var imeis = [];
+            if (sd.imei) {
+                for (var i = 0; i < sd.imei.length; i++) {
+                    imeis.push({order: i + 1, code: sd.imei[i]});
+                }
+            }
+            return imeis;
         } else {
             return [];
         }
@@ -354,7 +360,7 @@ Template.pos_checkout.events({
         var saleDetailId = Session.get('saleDetailId');
         var thisBtn = $(e.currentTarget);
         // var imei = thisBtn.parents('tr').find('.td-imei').text().trim();
-        var imei = this;
+        var imei = this.code;
         var saleDetail = Pos.Collection.SaleDetails.findOne(saleDetailId);
         var obj = {};
         obj.imei = subtractArray(saleDetail.imei, [imei]);

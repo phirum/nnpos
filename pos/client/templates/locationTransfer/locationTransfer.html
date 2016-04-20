@@ -205,16 +205,18 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
+                            <th>No</th>
                             <th>IMEI</th>
                             <th style="width: 20%">Remove</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="custom">
                         {{#each imeis}}
                             <tr>
-                                <td class="td-imei">{{this}}</td>
+                                <td>{{order}}</td>
+                                <td class="td-imei">{{code}}</td>
                                 <td>
-                                    <a class="btn btn-sm btn-danger btn-remove-imei">
+                                    <a class="btn btn-xs btn-danger btn-remove-imei">
                                         <i class="fa fa-times"></i>
                                     </a>
                                 </td>
