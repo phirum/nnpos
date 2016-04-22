@@ -231,7 +231,7 @@ function checkPromotion(saleDetail, saleDate) {
                         saleDetailObj.quantity = promotionQuantity;
                         saleDetailObj.discount = 0;
                         saleDetailObj.locationId = saleDetail.locationId;
-                        //saleDetailObj.discount = 100;
+                        saleDetailObj.imei = [];
                         saleDetailObj.status = "Unsaved";
                         saleDetailObj.price = 0;
                         //saleDetailObj.price = isRetail ? product.retailPrice : product.wholesalePrice;
