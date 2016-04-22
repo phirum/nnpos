@@ -49,8 +49,8 @@ var getCategoryList = function (selector, array, categories, alreadyUse) {
     return array;
 };
 
-Pos.ListForReport={
-    locations:function(){
+Pos.ListForReport = {
+    locations: function () {
         var list = [{label: "All", value: ""}];
         var branchIdSession = Session.get('branchIds');
         var branchIds = [];
@@ -69,9 +69,9 @@ Pos.ListForReport={
 
 
 Pos.List = {
-    locations:function(){
+    locations: function () {
         var list = [{label: "(Select One)", value: ""}];
-        Pos.Collection.Locations.find({branchId:Session.get('currentBranch')}).forEach(function (obj) {
+        Pos.Collection.Locations.find({branchId: Session.get('currentBranch')}).forEach(function (obj) {
             list.push({label: obj._id + ' : ' + obj.name, value: obj._id});
         });
         return list;
@@ -172,7 +172,12 @@ Pos.List = {
             var userId = Meteor.userId();
             branchIds = Meteor.users.findOne(userId).rolesBranch;
         }
-        Pos.Collection.Customers.find({branchId: {$in: branchIds}}).forEach(function (obj) {
+        var params = {branchId: {$in: branchIds}};
+        var locationId = Session.get('locationIdSession');
+        if (locationId) {
+            params.locationId = locationId;
+        }
+        Pos.Collection.Customers.find(params).forEach(function (obj) {
             list.push({label: obj._id + ' : ' + obj.name, value: obj._id});
         });
 

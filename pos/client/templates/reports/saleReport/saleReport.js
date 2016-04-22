@@ -4,6 +4,14 @@ Template.pos_saleReport.onRendered(function () {
     DateTimePicker.dateRange(name);
 });
 Template.pos_saleReport.events({
+    'change select[name="locationId"]': function (e) {
+        var locationId = $(e.currentTarget).val();
+        if (locationId == "") {
+            Session.set('locationIdSession', null);
+        } else {
+            Session.set('locationIdSession', locationId);
+        }
+    },
     'change select[name="branch"]': function (e) {
         var branchId = $(e.currentTarget).val();
         if (branchId == "") {
@@ -19,8 +27,8 @@ Template.pos_saleReport.events({
 });
 
 Template.pos_saleReportGen.helpers({
-    getGrandTotalConvert:function(obj,key){
-      return obj[key];
+    getGrandTotalConvert: function (obj, key) {
+        return obj[key];
     },
     multiply: function (val1, val2, id) {
         var value = (val1 * val2);
@@ -99,37 +107,37 @@ Template.pos_saleReportGen.helpers({
 
 /*
 
-function calculateSaleHelper(sl) {
-    var grandTotal = 0;
-    var grandTotalConvert = {};
-    var saleList = [];
-    var i = 1;
-    sl.forEach(function (s) {
-        grandTotal += s.total;
-        s.saleDate = moment(s.saleDate).format("DD-MM-YY, HH:mm");
-        s.total = numeral(s.total).format('0,0.00');
-        s.customer = Pos.Collection.Customers.findOne(s.customerId).name;
-        s.staff = Pos.Collection.Staffs.findOne(s.staffId).name;
-        s.order = i;
-        s.exchangeRates = [];
-        Pos.Collection.ExchangeRates.findOne(s.exchangeRateId).rates.
-            forEach(function (ex) {
-                ex.exTotal = s.total * ex.rate;
-                if(grandTotalConvert[ex.toCurrencyId]==null){grandTotalConvert[ex.toCurrencyId]=0}
-                grandTotalConvert[ex.toCurrencyId]+= ex.exTotal;
-                s.exchangeRates.push(ex);
+ function calculateSaleHelper(sl) {
+ var grandTotal = 0;
+ var grandTotalConvert = {};
+ var saleList = [];
+ var i = 1;
+ sl.forEach(function (s) {
+ grandTotal += s.total;
+ s.saleDate = moment(s.saleDate).format("DD-MM-YY, HH:mm");
+ s.total = numeral(s.total).format('0,0.00');
+ s.customer = Pos.Collection.Customers.findOne(s.customerId).name;
+ s.staff = Pos.Collection.Staffs.findOne(s.staffId).name;
+ s.order = i;
+ s.exchangeRates = [];
+ Pos.Collection.ExchangeRates.findOne(s.exchangeRateId).rates.
+ forEach(function (ex) {
+ ex.exTotal = s.total * ex.rate;
+ if(grandTotalConvert[ex.toCurrencyId]==null){grandTotalConvert[ex.toCurrencyId]=0}
+ grandTotalConvert[ex.toCurrencyId]+= ex.exTotal;
+ s.exchangeRates.push(ex);
 
-            });
-        i++;
-        saleList.push(s);
-    });
-    saleList.grandTotal = numeral(grandTotal).format('0,0.00');
-    saleList.grandTotalConvert=[];
-    $.each(grandTotalConvert,function(key,value){
-        saleList.grandTotalConvert.push({toCurrencyId:key,totalConvert:value});
-    });
-    return saleList;
-}
-*/
+ });
+ i++;
+ saleList.push(s);
+ });
+ saleList.grandTotal = numeral(grandTotal).format('0,0.00');
+ saleList.grandTotalConvert=[];
+ $.each(grandTotalConvert,function(key,value){
+ saleList.grandTotalConvert.push({toCurrencyId:key,totalConvert:value});
+ });
+ return saleList;
+ }
+ */
 
 

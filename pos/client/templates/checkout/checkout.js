@@ -208,9 +208,15 @@ Template.pos_checkout.helpers({
         }
     },
     customers: function () {
-        return Pos.Collection.Customers.find({
-            branchId: Session.get('currentBranch')
-        }, {fields: {_id: 1, name: 1}});
+        var locationSetting = Pos.Collection.LocationSettings.findOne();
+        if (locationSetting) {
+            return Pos.Collection.Customers.find({
+                branchId: Session.get('currentBranch'),
+                locationId: locationSetting.saleLocationId
+            }, {fields: {_id: 1, name: 1}});
+        } else {
+            return [];
+        }
     },
     // products: function () {
     // return Pos.Collection.Products.find({status: "enable"}, {fields: {_id: 1, name: 1, _unit: 1}, limit: 10});

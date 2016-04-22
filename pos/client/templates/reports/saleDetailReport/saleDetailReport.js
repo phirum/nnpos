@@ -4,6 +4,14 @@ Template.pos_saleDetailReport.onRendered(function () {
     DateTimePicker.dateRange(name);
 });
 Template.pos_saleDetailReport.events({
+    'change select[name="locationId"]': function (e) {
+        var locationId = $(e.currentTarget).val();
+        if (locationId == "") {
+            Session.set('locationIdSession', null);
+        } else {
+            Session.set('locationIdSession', locationId);
+        }
+    },
     'change select[name="branch"]': function (e) {
         var branchId = $(e.currentTarget).val();
         if (branchId == "") {
