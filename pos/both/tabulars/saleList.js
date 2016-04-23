@@ -8,8 +8,9 @@ Pos.TabularTable.Sales = new Tabular.Table({
         },
         {data: "_id", title: "ID"},
         {data: "voucher", title: "Voucher"},
-        {data: "saleDate", title: "Sale Date",
-            render:function(val,type,doc){
+        {
+            data: "saleDate", title: "Sale Date",
+            render: function (val, type, doc) {
                 return moment(val).format("DD-MM-YYYY HH:mm");
             }
         },
@@ -19,7 +20,18 @@ Pos.TabularTable.Sales = new Tabular.Table({
         {data: "total", title: "Total"},
         //{data: "paidAmount", title: "Paid"},
         {data: "owedAmount", title: "Owed"},
-        {data: "status", title: "Status"},
+        {
+            data: "status", title: "Status",
+            render: function (val, type, doc) {
+                if (val == 'Unsaved') {
+                    return "<p class='label label-danger'>" + val + "</p>";
+                } else if (val == 'Owed') {
+                    return "<p class='label label-warning'>" + val + "</p>";
+                } else {
+                    return "<p class='label label-success'>" + val + "</p>";
+                }
+            }
+        },
         {
             data: "isRetail", title: "Invoice Type",
             render: function (val, type, doc) {
@@ -35,5 +47,5 @@ Pos.TabularTable.Sales = new Tabular.Table({
     columnDefs: [
         {"width": "12px", "targets": 0}
     ],
-    extraFields:['_paymentCount']
+    extraFields: ['_paymentCount']
 });
