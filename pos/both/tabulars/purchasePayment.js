@@ -19,13 +19,22 @@ Pos.TabularTable.PurchasePayments = new Tabular.Table({
         {data: "dueAmount", title: "Due"},
         {data: "payAmount", title: "Paid"},
         {data: "balanceAmount", title: "Balance"},
-      /*  {
-            data: "payments", title: "Payment",
+        /*  {
+         data: "payments", title: "Payment",
+         render: function (val, type, doc) {
+         return JSON.stringify(val);
+         }
+         },*/
+        {
+            data: "status", title: "Status",
             render: function (val, type, doc) {
-                return JSON.stringify(val);
+                if (val == 'Owed') {
+                    return "<p class='label label-warning'>" + val + "</p>";
+                } else {
+                    return "<p class='label label-success'>" + val + "</p>";
+                }
             }
-        },*/
-        {data: "status", title: "Status"},
+        },
         {data: "_branch.enName", title: "Branch"}
     ],
     order: [['1', 'desc']]
@@ -33,5 +42,5 @@ Pos.TabularTable.PurchasePayments = new Tabular.Table({
     columnDefs: [
         {"width": "12px", "targets": 0}
     ],
-    extraFields:['payments']
+    extraFields: ['payments']
 });

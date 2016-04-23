@@ -14,7 +14,14 @@ Pos.TabularTable.LocationTransfers = new Tabular.Table({
             }
         },
         {data: "_staff.name", title: "Staff"},
-        {data: "status", title: "Status"},
+        {data: "status", title: "Status",
+            render: function (val, type, doc) {
+                if (val == 'Unsaved') {
+                    return "<p class='label label-danger'>" + val + "</p>";
+                } else {
+                    return "<p class='label label-success'>" + val + "</p>";
+                }
+            }},
         {data: "_fromLocation.name", title: "From"},
         {data: "_toLocation.name", title: "To"}
     ],
