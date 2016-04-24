@@ -1,0 +1,85 @@
+<!--Form-->
+<template name="pos_locationTransferReport">
+    {{#autoForm schema=Pos.Schema.LocationTransferReport id="pos_locationTransferReport" action="locationTransferReportGen" target="_blank"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='date'}}
+                {{> afQuickField name='branch'}}
+                {{> afQuickField name='staffId'}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name='fromLocationId'}}
+                {{> afQuickField name='toLocationId'}}
+
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>
+
+<!--Generate-->
+<template name="pos_locationTransferReportGen">
+    {{#if data}}
+        {{#reportTpl options}}
+            {{#with data}}
+                {{#with title}}
+                    <div class="title">
+                        <div class="title-1x-kh-muol">{{khName}}</div>
+                        <div class="title-1x">{{enName}}</div>
+                        <div style="text-decoration: underline;">LocationTransfer Summary Report</div>
+                        <div class="title-2x">{{enAddress}}</div>
+                    </div>
+                {{/with}}
+                {{#with header}}
+                    <div style="width: 100%">
+                        <div style="width: 50%; float: left">
+                            <ul class="list-unstyled">
+                                <li><strong>Branch:</strong> {{branch}}</li>
+                                <li><strong>Date:</strong> {{date}}</li>
+                                 <li><strong>Staff:</strong> {{staff}}</li>
+                            </ul>
+                        </div>
+                        <div style="width: 50%; float: right">
+                            <ul class="list-unstyled">
+                                <li><strong>From Location:</strong> {{fromLocation}}</li>
+                                <li><strong>To Location:</strong> {{toLocation}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                {{/with}}
+
+                <!--Content-->
+                <table class="report-content">
+                    <thead class="content-header">
+                    <tr>
+                        <th>No</th>
+                        <th>InvoiceId</th>
+                        <th>Date</th>
+                        <th>Staff</th>
+                    </tr>
+                    </thead>
+                    <tbody class="content-body">
+                    {{#each content}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{_id}}</td>
+                            <td>{{locationTransferDate}}</td>
+                            <td>{{staff}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+
+            {{/with}}
+
+            <!--Sign-->
+            {{> signFooter}}
+        {{/reportTpl}}
+        <!--Auto print-->
+        <!--{{autoprint close="true"}}-->
+    {{else}}
+        {{> loading}}
+    {{/if}}
+
+</template>
