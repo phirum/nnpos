@@ -1,3 +1,6 @@
+#promotion-toggle{
+    cursor: pointer;
+}
 /* CSS declarations go here */
 .auto-fix{
     white-space: nowrap;

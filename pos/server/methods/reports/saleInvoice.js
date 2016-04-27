@@ -9,6 +9,7 @@ Meteor.methods({
         data.company = Cpanel.Collection.Company.findOne();
         data.sale = getSale(saleId, data.baseCurrency);
         data.saleDetails = getSaleDetail(saleId, data.baseCurrency);
+        data.promotionSaleDetails = getPromotionSaleDetail(saleId, data.baseCurrency);
         data.paymentObj = Pos.Collection.Payments.findOne({saleId: saleId}, {sort: {_id: 1}});
         data.hasPayment = data.paymentObj != null;
         return data;
@@ -34,18 +35,23 @@ function getSale(saleId, baseCurrency) {
 }
 function getSaleDetail(saleId, baseCurrency) {
     var saleDetailItems = [];
-    var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
+    var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: {$ne: true}});
     var i = 1;
     saleDetails.forEach(function (sd) {
-        // var item = _.extend(sd,{});
-        /*var product = Pos.Collection.Products.findOne(sd.productId);
-         var unit = Pos.Collection.Units.findOne(product.unitId).name;
-         sd.productName = product.name + "(" + unit + ")";*/
-       // sd.price = numeral(sd.price).format('0,0.00') + baseCurrency.symbol;
-        sd.amountFormated = numeral(sd.amount).format('0,0.00')+ ' ' +baseCurrency.symbol;
-        // sd.order = pad(i, 2);
+        sd.amountFormated = numeral(sd.amount).format('0,0.00') + ' ' + baseCurrency.symbol;
         sd.order = i;
-        // sd.qtyPrint = sd.quantity - sd.qtyPrinted;
+        i++;
+        saleDetailItems.push(sd);
+    });
+    return saleDetailItems;
+}
+function getPromotionSaleDetail(saleId, baseCurrency) {
+    var saleDetailItems = [];
+    var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true});
+    var i = 1;
+    saleDetails.forEach(function (sd) {
+        sd.amountFormated = numeral(sd.amount).format('0,0.00') + ' ' + baseCurrency.symbol;
+        sd.order = i;
         i++;
         saleDetailItems.push(sd);
     });

@@ -23,6 +23,27 @@ Template.pos_checkout.onRendered(function () {
     }, 500);
 });
 Template.pos_checkout.helpers({
+    searchProductPromotion: function (query, sync, callback) {
+        Meteor.call('searchProduct', query, {}, function (err, res) {
+            if (err) {
+                console.log(err);
+                return;
+            } else {
+                callback(res);
+            }
+
+        })
+    },
+    selectedPromotion: function (event, suggestion, dataSetName) {
+        var id = suggestion._id;
+        var saleId = $('#sale-id').val();
+        if (saleId == '') {
+            return;
+        }
+        var selector = {_id: id};
+        checkBeforeAddOrUpdatePromotion(selector);
+        $('#product-barcode-promotion').focus();
+    },
     search: function (query, sync, callback) {
         Meteor.call('searchProduct', query, {}, function (err, res) {
             if (err) {
@@ -177,7 +198,10 @@ Template.pos_checkout.helpers({
     },
     saleDetails: function () {
         var saleDetailItems = [];
-        var sD = Pos.Collection.SaleDetails.find({saleId: FlowRouter.getParam('saleId')});
+        var sD = Pos.Collection.SaleDetails.find({
+            saleId: FlowRouter.getParam('saleId'),
+            isPromotion: {$ne: true}
+        });
         if (sD.count() > 0) {
             var i = 1;
             sD.forEach(function (sd) {
@@ -187,6 +211,28 @@ Template.pos_checkout.helpers({
                  sd.productName = product.name + "(" + unit + ")";*/
                 sd.amountFormatted = numeral(sd.amount).format('0,0.00');
                 //sd.order = pad(i, 2);
+                sd.order = i;
+                i++;
+                saleDetailItems.push(sd);
+            });
+            return saleDetailItems;
+        } else {
+            return [];
+        }
+    },
+    numberOfPromotionItems:function(){
+        var saleId = FlowRouter.getParam('saleId');
+        var sD = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true});
+        return sD.count();
+    },
+    promotionSaleDetails: function () {
+        var saleDetailItems = [];
+        var saleId = FlowRouter.getParam('saleId');
+        var sD = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true});
+        if (sD.count() > 0) {
+            var i = 1;
+            sD.forEach(function (sd) {
+                sd.amountFormatted = numeral(sd.amount).format('0,0.00');
                 sd.order = i;
                 i++;
                 saleDetailItems.push(sd);
@@ -347,6 +393,9 @@ function checkBeforeAddOrUpdate(selector, data) {
     });
 }
 Template.pos_checkout.events({
+    'click #promotion-toggle':function(){
+      $('#promotion-div').toggle();
+    },
     'keyup #voucher': function () {
         checkIsUpdate();
     },
@@ -591,21 +640,7 @@ Template.pos_checkout.events({
             $(e.currentTarget).focus();
             return;
         }
-        var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
-        var discountPercentage = 100 * discount / sale.subTotal;
-        var total = sale.subTotal - discount;
-        if (baseCurrencyId == "KHR") {
-            total = roundRielCurrency(total);
-        }
-        /*var set = {};
-         set.discount = discountPercentage;
-         set.discountAmount = discount;
-         set.total = total;
-
-         Meteor.call('directUpdateSale', saleId, set, function (error, result) {
-         if (error) alertify.error(error.message);
-         });*/
-        Meteor.call('updateSaleTotalByDiscount', saleId, discountPercentage, function (error, result) {
+        Meteor.call('updateSaleTotalByDiscountAmount', saleId, discount, function (error, result) {
             if (error) alertify.error(error.message);
         });
     },
@@ -788,12 +823,17 @@ Template.pos_checkout.events({
         // updateSaleSubTotal(FlowRouter.getParam('saleId'));
     },
     'click .btn-remove': function () {
-        Pos.Collection.SaleDetails.remove(this._id);
-        var sd = Pos.Collection.SaleDetails.find({saleId: FlowRouter.getParam('saleId'), isPromotion: {$ne: true}});
+        var sd = Pos.Collection.SaleDetails.find({
+            _id: {$ne: this._id},
+            saleId: FlowRouter.getParam('saleId'),
+            isPromotion: {$ne: true}
+        });
         if (sd.count() == 0) {
             Pos.Collection.Sales.remove(FlowRouter.getParam('saleId'));
             FlowRouter.go('pos.checkout');
             prepareForm();
+        } else {
+            Pos.Collection.SaleDetails.remove(this._id);
         }
         /*else {
          updateSaleSubTotal(FlowRouter.getParam('saleId'));
@@ -835,6 +875,19 @@ Template.pos_checkout.events({
                 alertify.warning(data.message);
             }
             $('#product-barcode').focus();
+        }
+    },
+    'keyup #product-barcode-promotion': function (e) {
+        var charCode = e.which;
+        if (e.which == 13) {
+            var saleId = $('#sale-id').val();
+            if (saleId == '') {
+                return;
+            }
+            var barcode = $(e.currentTarget).val();
+            var selector = {barcode: barcode, status: "enable"};
+            checkBeforeAddOrUpdatePromotion(selector);
+            $('#product-barcode-promotion').focus();
         }
     }
 });
@@ -1361,4 +1414,147 @@ function subtractArray(src, filt) {
         }
     }
     return (result);
+}
+
+function checkBeforeAddOrUpdatePromotion(selector) {
+    var locationId = $('#location-id').val();
+    var isRetail = Session.get('isRetail');
+    var saleId = $('#sale-id').val();
+    var branchId = Session.get('currentBranch');
+    Meteor.call('findOneRecord', 'Pos.Collection.Products', selector, {}, function (error, product) {
+        var defaultQuantity = $('#default-quantity-promotion').val() == "" ? 1 : parseInt($('#default-quantity-promotion').val());
+        if (product) {
+            if (product.productType == "Stock") {
+                var saleDetails = Pos.Collection.SaleDetails.find({
+                    productId: product._id,
+                    saleId: saleId,
+                    locationId: locationId
+                });
+                if (saleDetails.count() > 0) {
+                    var saleDetailQty = 0;
+                    saleDetails.forEach(function (saleDetail) {
+                        saleDetailQty += saleDetail.quantity;
+                    });
+                    defaultQuantity = defaultQuantity + saleDetailQty;
+                }
+                debugger;
+                //---Open Inventory type block "FIFO Inventory"---
+                Meteor.call('findOneRecord', 'Pos.Collection.FIFOInventory', {
+                    branchId: branchId,
+                    productId: product._id,
+                    locationId: locationId
+                }, {sort: {createdAt: -1}}, function (error, inventory) {
+                    if (inventory) {
+                        var remainQuantity = inventory.remainQty - defaultQuantity;
+                        if (remainQuantity < 0) {
+                            alertify.warning('Product is out of stock. Quantity in stock is "' + inventory.remainQty + '".');
+                        } else {
+                            var unSavedSaleId = Pos.Collection.Sales.find({
+                                status: "Unsaved",
+                                branchId: Session.get('currentBranch'),
+                                locationId: locationId,
+                                _id: {$ne: saleId}
+                            }, {fields: {_id: 1}}).map(function (s) {
+                                return s._id;
+                            });
+                            var otherSaleDetails = Pos.Collection.SaleDetails.find({
+                                saleId: {$in: unSavedSaleId},
+                                productId: product._id,
+                                locationId: locationId
+                            }, {fields: {quantity: 1}});
+                            var otherQuantity = 0;
+                            if (otherSaleDetails.count() > 0) {
+                                otherSaleDetails.forEach(function (sd) {
+                                    otherQuantity += sd.quantity;
+                                });
+                            }
+
+                            remainQuantity = remainQuantity - otherQuantity;
+                            if (remainQuantity < 0) {
+                                alertify.warning('Product is out of stock. Quantity in stock is "' +
+                                    inventory.remainQty + '". And quantity on sale of other seller is "' + otherQuantity + '".');
+                            }
+                            else {
+                                var unSavedLocationTransferId = Pos.Collection.LocationTransfers.find({
+                                    status: "Unsaved",
+                                    branchId: Session.get('currentBranch'),
+                                    fromLocationId: locationId,
+                                }, {fields: {_id: 1}}).map(function (lt) {
+                                    return lt._id;
+                                });
+                                var otherLocationTransferDetails = Pos.Collection.LocationTransferDetails.find({
+                                    locationTransferId: {$in: unSavedLocationTransferId},
+                                    fromLocationId: locationId,
+                                    productId: product._id
+                                }, {fields: {quantity: 1}});
+                                var locationTransferQuantity = 0;
+                                if (otherLocationTransferDetails.count() > 0) {
+                                    otherLocationTransferDetails.forEach(function (ltd) {
+                                        locationTransferQuantity += ltd.quantity;
+                                    });
+                                }
+                                remainQuantity = remainQuantity - locationTransferQuantity;
+                                if (remainQuantity < 0) {
+                                    alertify.warning('Product is out of stock. Quantity in stock is "' +
+                                        inventory.remainQty + '". And quantity on sale of other seller is "' + otherQuantity +
+                                        '". And quantity of location transfer is "' + locationTransferQuantity + '".');
+                                } else {
+                                    addOrUpdatePromotionProducts(branchId, saleId, product, locationId);
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        alertify.warning("Don't have product in stock.");
+                    }
+                });
+                //---End Inventory type block "FIFO Inventory"---
+            }
+            else {
+                addOrUpdatePromotionProducts(branchId, saleId, product, locationId);
+            }
+        }
+        else {
+            alertify.warning("Can't find this Product");
+        }
+    });
+}
+
+function addOrUpdatePromotionProducts(branchId, saleId, product, locationId) {
+    var defaultQuantity = $('#default-quantity-promotion').val() == "" ? 1 : parseInt($('#default-quantity').val());
+    var saleDetail = Pos.Collection.SaleDetails.findOne({
+        productId: product._id,
+        saleId: saleId,
+        isPromotion: true
+    });
+    if (saleDetail == null) {
+        var saleDetailObj = {};
+        saleDetailObj._id = idGenerator.genWithPrefix(Pos.Collection.SaleDetails, saleId, 3);
+        saleDetailObj.saleId = saleId;
+        saleDetailObj.quantity = defaultQuantity;
+        saleDetailObj.discount = 0;
+        saleDetailObj.productId = product._id;
+        saleDetailObj.price = 0;
+        saleDetailObj.amount = 0;
+        saleDetailObj.branchId = branchId;
+        saleDetailObj.locationId = locationId;
+        saleDetailObj.imei = [];
+        saleDetailObj.status = "Unsaved";
+        saleDetailObj.isPromotion = true;
+        Meteor.call('insertSaleDetails', saleDetailObj, function (error, result) {
+            if (error) alertify.error(error.message);
+        });
+    }
+    else {
+        var set = {};
+        set.quantity = (saleDetail.quantity + defaultQuantity);
+        Meteor.call('updateSaleDetails', saleDetail._id, set, function (error, result) {
+            if (error) alertify.error(error.message);
+        });
+    }
+    $('#product-barcode-promotion').val('');
+    $('#product-barcode-promotion').focus();
+    $('#product-id').select2('val', '');
+    // updateSaleSubTotal(saleId);
+
 }

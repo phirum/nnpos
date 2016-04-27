@@ -108,14 +108,13 @@ function updateSaleTotal(saleId) {
                     discount = item.discount;
                 }
             });
-            set.discount = discount;
         } else if (promotionPercentage != null) {
-            set.discount = discount = promotionPercentage.percentage;
-        } else {
-            set.discount = discount = 0;
-        }
-
-
+            discount = promotionPercentage.percentage;
+        }/* else {
+            discount = 0;
+        }*/
+        set.discount = math.round(discount, 2);
+        //----have to check-----
         var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
         //var total = saleSubTotal - discount;
         saleSubTotal = math.round(saleSubTotal, 2);
