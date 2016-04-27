@@ -19,6 +19,7 @@ Meteor.methods({
         var locationId = arg.locationId;
         var categoryId = arg.categoryId;
         var branchIds = [];
+        var promotion = arg.itemType == null || arg.itemType == '' ? '' : eval(arg.itemType);
         if (branchId == "" || branchId == null) {
             //var userId = Meteor.userId();
             var userId = this.userId;
@@ -58,7 +59,7 @@ Meteor.methods({
 
         if (arg.status != null && arg.status != "") {
             params.status = arg.status;
-            status = status;
+            status = arg.status;
         } else {
             params.status = {$ne: "Unsaved"};
         }
@@ -71,7 +72,7 @@ Meteor.methods({
 
         /****** Header *****/
         data.header = header;
-        var content = getSaleProducts(params, categoryId);
+        var content = getSaleProducts(params, categoryId, promotion);
         data.grandTotal = content.grandTotal;
         data.grandTotalCost = content.grandTotalCost;
         //return reportHelper;
@@ -84,14 +85,24 @@ Meteor.methods({
 });
 
 
-function getSaleProducts(params, categoryId) {
+function getSaleProducts(params, categoryId, promotion) {
     var saleIds = Pos.Collection.Sales.find(params, {fields: {_id: 1}}).map(function (sale) {
         return sale._id;
     });
 
     var selectorObj = {};
     selectorObj.saleId = {$in: saleIds};
-
+    console.log(promotion);
+    if (promotion != '') {
+        if (promotion) {
+            selectorObj.isPromotion = promotion;
+        } else {
+            selectorObj.isPromotion = {$ne: true};
+        }
+    } else if (promotion == false) {
+        selectorObj.isPromotion = {$ne: true};
+    }
+    console.log(selectorObj);
     if (categoryId != null && categoryId != "") {
         var categoryIds = getCategoryIdAndChildrenIds(categoryId, [categoryId]);
         var productIds = Pos.Collection.Products.find({
@@ -105,7 +116,7 @@ function getSaleProducts(params, categoryId) {
     var result = [];
     var saleDetails = Pos.Collection.SaleDetails.find(
         selectorObj,
-        {fields: {productId: 1, quantity: 1, price: 1, amount: 1, totalCost: 1,_product:1}});
+        {fields: {productId: 1, quantity: 1, price: 1, amount: 1, totalCost: 1, _product: 1}});
     (saleDetails.fetch()).reduce(function (res, value) {
         if (!res[value.productId]) {
             res[value.productId] = {
@@ -113,7 +124,7 @@ function getSaleProducts(params, categoryId) {
                 amount: value.amount,
                 quantity: 0,
                 productId: value.productId,
-                _product:value._product
+                _product: value._product
             };
             result.push(res[value.productId])
         } else {
@@ -128,10 +139,10 @@ function getSaleProducts(params, categoryId) {
     var granTotalCost = 0;
     var grandTotal = 0;
     result.forEach(function (r) {
-       // var product = Pos.Collection.Products.findOne(r.productId);
+        // var product = Pos.Collection.Products.findOne(r.productId);
         grandTotal += r.amount;
         granTotalCost += r.totalCost;
-       // var unit = Pos.Collection.Units.findOne(product.unitId).name;
+        // var unit = Pos.Collection.Units.findOne(product.unitId).name;
         arr.push({
             order: i,
             productId: r.productId,
