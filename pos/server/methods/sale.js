@@ -145,33 +145,72 @@ Meteor.methods({
          } else {
          set.discount = discount = 0;
          }*/
-        saleSubTotal=math.round(saleSubTotal,2);
+        saleSubTotal = math.round(saleSubTotal, 2);
+        discount = math.round(discount, 2);
         set.discount = discount;
+
         var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
         //var total = saleSubTotal - discount;
         var total = saleSubTotal * (1 - discount / 100);
         if (baseCurrencyId == "KHR") {
             total = roundRielCurrency(total);
-        }else{
-            total=math.round(total,2);
+        } else {
+            total = math.round(total, 2);
         }
         var discountAmount = saleSubTotal * discount / 100;
 
         set.subTotal = saleSubTotal;
         set.total = total;
-        set.discountAmount = math.round(discountAmount,2);
+        set.discountAmount = math.round(discountAmount, 2);
+        //set.discountAmount=saleSubTotal-total;
+        Pos.Collection.Sales.direct.update(saleId, {$set: set});
+        //Meteor.call('updateSale', saleId, set);
+
+    },
+    updateSaleTotalByDiscountAmount: function (saleId, discountAmount) {
+        var set = {};
+        //var discount = Pos.Collection.Sales.findOne(saleId).discountAmount;
+        //var sale = Pos.Collection.Sales.findOne(saleId);
+        var saleSubTotal = 0;
+        var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
+        saleDetails.forEach(function (saleDetail) {
+            saleSubTotal += parseFloat(saleDetail.amount);
+        });
+
+        saleSubTotal = math.round(saleSubTotal, 2);
+        discountAmount = math.round(discountAmount, 2);
+        set.discountAmount = discountAmount;
+
+        var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
+        //var total = saleSubTotal - discount;
+        var total = saleSubTotal - discountAmount;
+
+        if (baseCurrencyId == "KHR") {
+            total = roundRielCurrency(total);
+        } else {
+            total = math.round(total, 2);
+        }
+        //var discountAmount = saleSubTotal * discount / 100;
+        var discount = discountAmount * 100 / saleSubTotal;
+
+        set.subTotal = saleSubTotal;
+        set.total = total;
+        set.discount = math.round(discount, 2);
         //set.discountAmount=saleSubTotal-total;
         Pos.Collection.Sales.direct.update(saleId, {$set: set});
         //Meteor.call('updateSale', saleId, set);
 
     },
     updateSaleToUnsavedAndRemovePayment: function (saleId, total) {
-        var saleSet = {owedAmount: total,status:'Unsaved'};
+        var saleSet = {owedAmount: total, status: 'Unsaved'};
         var saleUnset = {totalCost: ''};
-        var saleDetailSet={status:'Unsaved'};
+        var saleDetailSet = {status: 'Unsaved'};
         var saleDetailUnset = {transaction: '', totalCost: ''};
         Pos.Collection.Sales.direct.update(saleId, {$set: saleSet, $unset: saleUnset});
-        Pos.Collection.SaleDetails.direct.update({saleId: saleId}, {$set:saleDetailSet,$unset: saleDetailUnset}, {multi: true});
+        Pos.Collection.SaleDetails.direct.update({saleId: saleId}, {
+            $set: saleDetailSet,
+            $unset: saleDetailUnset
+        }, {multi: true});
         Pos.Collection.Payments.direct.remove({saleId: saleId});
     }
 });
