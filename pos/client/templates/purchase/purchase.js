@@ -990,7 +990,7 @@ function pay(purchaseId) {
     obj.dueAmount = math.round(parseFloat($('#due-grand-total').text().trim()), 2);
     obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount), 2);
     //obj.balanceAmount = numeral().unformat($('#' + baseCurrencyId).val());
-    obj.status = obj.balanceAmount >= 0 ? "Paid" : "Owed";
+    obj.status = obj.balanceAmount <= 0 ? "Paid" : "Owed";
     obj.branchId = branchId;
     Meteor.call('insertPurchasePayment', obj);
     Meteor.call('purchaseManageStock', purchaseId, branchId, function (er, re) {
