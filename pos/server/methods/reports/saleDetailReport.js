@@ -19,7 +19,7 @@ Meteor.methods({
         var locationId = arg.locationId;
         var categoryId = arg.categoryId;
         var branchIds = [];
-        var promotion = arg.itemType == null || arg.itemType == '' ? '' : eval(arg.itemType);
+        var promotion = arg.itemType == null || arg.itemType == '' ? '' : arg.itemType;
         if (branchId == "" || branchId == null) {
             //var userId = Meteor.userId();
             var userId = this.userId;
@@ -92,17 +92,11 @@ function getSaleProducts(params, categoryId, promotion) {
 
     var selectorObj = {};
     selectorObj.saleId = {$in: saleIds};
-    console.log(promotion);
-    if (promotion != '') {
-        if (promotion) {
-            selectorObj.isPromotion = promotion;
-        } else {
-            selectorObj.isPromotion = {$ne: true};
-        }
-    } else if (promotion == false) {
+    if (promotion == 'true') {
+        selectorObj.isPromotion = true;
+    } else if (promotion == 'false') {
         selectorObj.isPromotion = {$ne: true};
     }
-    console.log(selectorObj);
     if (categoryId != null && categoryId != "") {
         var categoryIds = getCategoryIdAndChildrenIds(categoryId, [categoryId]);
         var productIds = Pos.Collection.Products.find({
