@@ -176,6 +176,20 @@
                             <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
                         </tr>
                     {{/each}}
+                    <tr>
+                        <td colspan="7" style="text-align: center;"><b>Promotion Items</b></td>
+                    </tr>
+                    {{#each promotionSaleDetails}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{_product.name}}</td>
+                            <td>{{price}}</td>
+                            <td>{{quantity}}</td>
+                            <td>{{_product._unit.name}}</td>
+                            <td>{{discount}}</td>
+                            <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
+                        </tr>
+                    {{/each}}
 
                     <tr style="text-align: right;">
                         <td colspan="6">Sub Total:</td>
@@ -183,7 +197,11 @@
                     </tr>
                     <tr style="text-align: right;">
                         <td colspan="6" align="right">Discount:</td>
-                        <td align="right">{{sale.discount}}%</td>
+                        <td align="right">{{sale.discount}} %</td>
+                    </tr>
+                    <tr style="text-align: right;">
+                        <td colspan="6" align="right">Discount:</td>
+                        <td align="right">{{sale.discountAmount}} {{baseCurrency.symbol}}</td>
                     </tr>
                     <tr style="text-align: right;">
                         <td colspan="6">Total {{baseCurrency._id}}:</td>

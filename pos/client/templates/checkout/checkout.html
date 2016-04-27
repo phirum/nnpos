@@ -194,10 +194,85 @@
                                     </td>
                                 </tr>
                             {{/each}}
+                            <tr>
+                                <td colspan="6" id="promotion-toggle">Promotion Items <b class='label label-danger'>{{numberOfPromotionItems}}</b> </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
+                    <div id="promotion-div">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" id="product-barcode-promotion" class="form-control input-sm"
+                                       placeholder="Barcode"
+                                       autofocus>
+                            </div>
+                            <div class="col-md-5">
+                                <!-- <select id="product-id" class="form-control input-sm select-two">
+                                <option value="">(Select One)</option>
+                                {{#each products}}
+                                    <option value="{{_id}}">{{name}} ({{_unit.name}})</option>
+                                {{/each}}
+                            </select>-->
+                                <input class="form-control typeahead input-sm" name="search" type="text"
+                                       placeholder="Type your product name" autocomplete="on" spellcheck="off"
+                                       data-source="searchProductPromotion" data-select='selectedPromotion'
+                                       data-highlight=true
+                                       data-template='repo'/>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" id="default-quantity-promotion" class="form-control input-sm"
+                                       placeholder="Quantity" value="1">
+                            </div>
 
+                        </div>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-responsive table-condensed table-hover">
+                                <tbody>
+                                {{#each promotionSaleDetails}}
+                                    <tr data-id="{{_id}}">
+
+                                        <td align="left">
+                                            {{_product.name}} ({{_product._unit.name}})
+                                        </td>
+                                        <td>
+                                            <input type="text" class="la-box price validation" step="0.01"
+                                                   value="{{price}}" readonly/>
+
+                                        </td>
+                                        <td>
+                                            <input type="text" style="width: 100px;" min="1"
+                                                   class="la-box quantity validation"
+                                                   value="{{quantity}}"/>
+
+                                        </td>
+                                        <td>
+                                            <input type="text" min="0" max="100" class="la-box discount validation"
+                                                   value="{{discount}}" readonly/>
+
+                                        </td>
+                                        <td class="total-amount">
+                                            <input type="text" class="la-box total validation" step="0.01"
+                                                   value="{{amountFormatted}} {{baseCurrency.symbol}}" readonly/>
+
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="">
+                                                <!--<a href="" class="btn btn-warning btn-imei">IMEI</a>-->
+                                                <a href="" class="btn btn-danger btn-remove"><i
+                                                        class="fa fa-trash"></i></a>
+                                            </div>
+
+                                            <!-- <a href="" class="btn btn-xs btn-danger btn-remove"><i
+                                                     class="fa fa-trash"></i></a>-->
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div class="col-md-11 col-md-offset-1">
                         <form class="form-horizontal">
                             <div class="row">
