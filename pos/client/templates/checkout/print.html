@@ -137,7 +137,7 @@
                 <table width="100%">
                     <tr>
                         <td> <span style="font-weight: bold;font-size: 18px;">
-                            INVOICE(<span style="font-size: 14px;">{{sale.InvoiceType}}</span>)
+                            INVOICE<!--(<span style="font-size: 14px;">{{sale.InvoiceType}}</span>)-->
                         </span></td>
                         <td align="right"><b>#:</b> {{sale._id}}</td>
                     </tr>
@@ -176,7 +176,7 @@
                             <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
                         </tr>
                     {{/each}}
-                    <tr>
+                    <!--<tr>
                         <td colspan="7" style="text-align: center;"><b>Promotion Items</b></td>
                     </tr>
                     {{#each promotionSaleDetails}}
@@ -189,7 +189,7 @@
                             <td>{{discount}}</td>
                             <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
                         </tr>
-                    {{/each}}
+                    {{/each}}-->
 
                     <tr style="text-align: right;">
                         <td colspan="6">Sub Total:</td>
