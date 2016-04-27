@@ -91,5 +91,20 @@ Pos.Schema.SaleDetailReport = new SimpleSchema({
             }
         },
         optional: true
+    },
+    itemType: {
+        type: String,
+        label: "Item Type",
+        optional: true,
+        autoform: {
+            type: "select2",
+            options: function () {
+                return [
+                    {value: '', label: 'All'},
+                    {value: 'true', label: 'Promotion'},
+                    {value: 'false', label: 'No-Promotion'}
+                ]
+            }
+        }
     }
 });
