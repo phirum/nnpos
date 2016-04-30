@@ -28,15 +28,18 @@ Module.Pos = {
             'Pos.Collection.UserStaffs',
             'Pos.Collection.Sales',
             'Pos.Collection.SaleDetails',
-            'Pos.Collection.Purchases,',
+            'Pos.Collection.Purchases',
             'Pos.Collection.PurchaseDetails',
             'Pos.Collection.Promotions',
             'Pos.Collection.PromotionPercentages',
             'Pos.Collection.PromotionQuantities',
+            'Pos.Collection.PromotionTotalAmounts',
             'Pos.Collection.Payments',
+            'Pos.Collection.PurchasePayments',
             'Pos.Collection.Locations',
             'Pos.Collection.LocationSettings',
             'Pos.Collection.LocationTransfers',
+            'Pos.Collection.LocationTransferDetails',
             'Pos.Collection.FIFOInventory'
         ]
     }
