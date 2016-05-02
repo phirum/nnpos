@@ -208,7 +208,7 @@ Template.pos_locationTransfer.helpers({
     },
     locationTransferDetails: function () {
         var locationTransferDetailItems = [];
-        var sD = Pos.Collection.LocationTransferDetails.find({locationTransferId: FlowRouter.getParam('locationTransferId')});
+        var sD = Pos.Collection.LocationTransferDetails.find({locationTransferId: FlowRouter.getParam('locationTransferId')},{sort:{'_product.barcode':1}});
         var i = 1;
         sD.forEach(function (sd) {
             // var item = _.extend(sd,{});

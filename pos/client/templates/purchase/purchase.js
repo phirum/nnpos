@@ -181,7 +181,7 @@ Template.pos_purchase.helpers({
     },
     purchaseDetails: function () {
         var purchaseDetailItems = [];
-        var sD = Pos.Collection.PurchaseDetails.find({purchaseId: FlowRouter.getParam('purchaseId')});
+        var sD = Pos.Collection.PurchaseDetails.find({purchaseId: FlowRouter.getParam('purchaseId')}, {sort: {'_product.barcode': 1}});
         var i = 1;
         sD.forEach(function (sd) {
             // var item = _.extend(sd,{});

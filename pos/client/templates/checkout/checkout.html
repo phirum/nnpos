@@ -145,7 +145,8 @@
                         <table class="table table-striped table-responsive table-condensed table-hover">
                             <thead class="jumbotron">
                             <tr>
-                                <th>Product Name</th>
+                                <th>Product</th>
+                                <th>Barcode</th>
                                 <th class="align-center">Price</th>
                                 <th class="align-center">Quantity</th>
                                 <th class="align-center">Discount</th>
@@ -160,6 +161,9 @@
 
                                     <td align="left">
                                         {{_product.name}} ({{_product._unit.name}})
+                                    </td>
+                                    <td>
+                                        {{_product.barcode}}
                                     </td>
                                     <td>
                                         <input type="text" class="la-box price validation" step="0.01"
@@ -195,7 +199,8 @@
                                 </tr>
                             {{/each}}
                             <tr>
-                                <td colspan="6" id="promotion-toggle">Promotion Items <b class='label label-danger'>{{numberOfPromotionItems}}</b> </td>
+                                <td colspan="7" id="promotion-toggle">Promotion Items <b
+                                        class='label label-danger'>{{numberOfPromotionItems}}</b></td>
                             </tr>
                             </tbody>
                         </table>
@@ -235,6 +240,9 @@
 
                                         <td align="left">
                                             {{_product.name}} ({{_product._unit.name}})
+                                        </td>
+                                        <td>
+                                            {{_product.barcode}}
                                         </td>
                                         <td>
                                             <input type="text" class="la-box price validation" step="0.01"

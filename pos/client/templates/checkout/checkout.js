@@ -201,7 +201,7 @@ Template.pos_checkout.helpers({
         var sD = Pos.Collection.SaleDetails.find({
             saleId: FlowRouter.getParam('saleId'),
             isPromotion: {$ne: true}
-        });
+        }, {sort: {'_product.barcode': 1}});
         if (sD.count() > 0) {
             var i = 1;
             sD.forEach(function (sd) {
@@ -220,7 +220,7 @@ Template.pos_checkout.helpers({
             return [];
         }
     },
-    numberOfPromotionItems:function(){
+    numberOfPromotionItems: function () {
         var saleId = FlowRouter.getParam('saleId');
         var sD = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true});
         return sD.count();
@@ -228,7 +228,7 @@ Template.pos_checkout.helpers({
     promotionSaleDetails: function () {
         var saleDetailItems = [];
         var saleId = FlowRouter.getParam('saleId');
-        var sD = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true});
+        var sD = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true},{sort: {'_product.barcode': 1}});
         if (sD.count() > 0) {
             var i = 1;
             sD.forEach(function (sd) {
@@ -393,8 +393,8 @@ function checkBeforeAddOrUpdate(selector, data) {
     });
 }
 Template.pos_checkout.events({
-    'click #promotion-toggle':function(){
-      $('#promotion-div').toggle();
+    'click #promotion-toggle': function () {
+        $('#promotion-div').toggle();
     },
     'keyup #voucher': function () {
         checkIsUpdate();

@@ -118,7 +118,8 @@
                         <table class="table table-striped table-responsive table-condensed table-hover">
                             <thead class="jumbotron">
                             <tr>
-                                <th>Product Name</th>
+                                <th>Product</th>
+                                <th>Barcode</th>
                                 <th class="align-center">Unit</th>
                                 <th class="align-center">Quantity</th>
                                 <th class="align-center">&nbsp;&nbsp;Action&nbsp;&nbsp;</th>
@@ -127,8 +128,12 @@
                             <tbody class="align-center" id="product-list">
                             {{#each locationTransferDetails}}
                                 <tr data-id="{{_id}}">
+
                                     <td align="left">
                                         {{_product.name}}
+                                    </td>
+                                    <td>
+                                        {{_product.barcode}}
                                     </td>
                                     <td>
                                         <input type="text" class="la-box price validation" step="0.01"
