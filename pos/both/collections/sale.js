@@ -63,7 +63,8 @@ Pos.Schema.Sales = new SimpleSchema({
     },
     locationId: {
         type: String,
-        label: "Location"
+        label: "Location",
+        optional:true
     },
     owedAmount: {
         type: Number,

@@ -24,16 +24,18 @@
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
                             </div>
-                            <label for="location-id"> <b>Locations <span style="color:red">*</span></b></label>
-                            <!-- <select id="location-id" class="form-control input-sm select-two">
+                            <div class="hidden">
+                                <label for="location-id"> <b>Locations <span style="color:red">*</span></b></label>
+                                <!-- <select id="location-id" class="form-control input-sm select-two">
                                {{#each locations}}
                                     <option value="{{_id}}"
                                             selected="{{#if compareTwoValue _id sale.locationId}}selected{{/if}}">{{name}}</option>
                                 {{/each}}
                             </select>-->
-                            <input type="text" class="form-control input-sm" value="{{location.name}}" readonly>
-                            <input type="text" id="location-id" class="form-control input-sm hidden"
-                                   value="{{location._id}}" readonly>
+                                <input type="text" class="form-control input-sm" value="{{location.name}}" readonly>
+                                <input type="text" id="location-id" class="form-control input-sm hidden"
+                                       value="{{location._id}}" readonly>
+                            </div>
 
 
                             <label for="staff-id"> <b>Staff <span style="color:red">*</span></b></label>
@@ -64,16 +66,18 @@
                             <a> <i class="fa fa-plus"></i> </a>
                             </span>
                             </div>
-                            <label for="transaction-type"> <b>Transaction Type
-                                <span style="color:red">*</span></b></label>
+                            <div class="hidden">
+                                <label for="transaction-type"> <b>Transaction Type
+                                    <span style="color:red">*</span></b></label>
 
-                            <!--<div class="input-group select2-bootstrap-append">-->
-                            <select id="transaction-type" class="form-control input-sm select-two">
-                                {{#each transactionType}}
-                                    <option value="{{value}}"
-                                            selected="{{#if compareTwoValue value sale.transactionType}}selected{{/if}}">{{name}}</option>
-                                {{/each}}
-                            </select>
+                                <!--<div class="input-group select2-bootstrap-append">-->
+                                <select id="transaction-type" class="form-control input-sm select-two">
+                                    {{#each transactionType}}
+                                        <option value="{{value}}"
+                                                selected="{{#if compareTwoValue value sale.transactionType}}selected{{/if}}">{{name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
                             <label for="description">Description</label>
                             <textarea id="description" class="form-control"
                                       rows="4">{{sale.description}}</textarea>

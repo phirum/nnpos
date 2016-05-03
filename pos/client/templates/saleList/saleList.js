@@ -44,19 +44,19 @@ posSaleListTPL.events({
             alertify.confirm("Are you sure to update this invoice: [" + id + "]? It will recalculate inventory and remove all it's payment(if it has). ")
                 .set({
                     onok: function (closeEvent) {
-                        Meteor.call('returnToInventory', id, branchId, function (error, result) {
-                            if (error) {
-                                alertify.error(error.message);
+                        /*   Meteor.call('returnToInventory', id, branchId, function (error, result) {
+                         if (error) {
+                         alertify.error(error.message);
+                         } else {*/
+                        Meteor.call('updateSaleToUnsavedAndRemovePayment', id, total, function (err, re) {
+                            if (err) {
+                                alertify.error(err.message);
                             } else {
-                                Meteor.call('updateSaleToUnsavedAndRemovePayment', id, total, function (err, re) {
-                                    if (err) {
-                                        alertify.error(err.message);
-                                    } else {
-                                        FlowRouter.go('pos.checkout', {saleId: id});
-                                    }
-                                })
+                                FlowRouter.go('pos.checkout', {saleId: id});
                             }
                         });
+                        /*      }
+                         });*/
                     },
                     title: '<i class="fa fa-remove"></i> Update Sale'
                 });
@@ -118,7 +118,7 @@ posSaleListTPL.events({
                 }
             });
         }
-        else{
+        else {
             alertify.confirm("Are you sure to delete [" + id + "]?")
                 .set({
                     onok: function (closeEvent) {
