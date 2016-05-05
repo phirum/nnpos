@@ -4,7 +4,7 @@ Images = new FS.Collection("images", {
         maxSize: 1048576, // in bytes
         allow: {
             contentTypes: ['image/*'],
-            extensions: ['png','jpg']
+            extensions: ['png', 'jpg']
         },
         onInvalid: function (message) {
             if (Meteor.isClient) {
@@ -26,7 +26,7 @@ Pos.Schema.Products = new SimpleSchema({
                 collection: 'Images'
             }
         },
-        optional:true
+        optional: true
     },
     name: {
         type: String,
@@ -85,17 +85,40 @@ Pos.Schema.Products = new SimpleSchema({
         label: "Description",
         optional: true
     },
-    /*subCategoryId: {
+    salePrice: {
+        type: Object,
+        label: 'Sale Price'
+    },
+    'salePrice.rate': {
+        type: Number,
+        decimal: true
+    },
+    'salePrice.currencyId': {
         type: String,
-        label: "Sub Category",
+        label: 'currency',
         autoform: {
             type: "select2",
             options: function () {
-                return Pos.List.subCategory();
+                var arr = [{value: '', label: '(Select One)'}];
+                var currencies = Cpanel.Collection.Currency.find({_id: {$ne: 'KHR'}});
+                currencies.forEach(function (cur) {
+                    arr.push({value: cur._id, label: cur._id});
+                });
+                return arr;
             }
         }
-    }
-    ,*/
+    },
+    /*subCategoryId: {
+     type: String,
+     label: "Sub Category",
+     autoform: {
+     type: "select2",
+     options: function () {
+     return Pos.List.subCategory();
+     }
+     }
+     }
+     ,*/
     unitId: {
         type: String,
         label: "Unit",
@@ -117,15 +140,15 @@ Pos.Schema.Products = new SimpleSchema({
             }
         }
     },
-    _category:{
-        type:Object,
-        blackbox:true,
-        optional:true
+    _category: {
+        type: Object,
+        blackbox: true,
+        optional: true
     },
-    _unit:{
-        type:Object,
-        blackbox:true,
-        optional:true
+    _unit: {
+        type: Object,
+        blackbox: true,
+        optional: true
     }
 })
 ;
