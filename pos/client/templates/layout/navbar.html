@@ -44,6 +44,9 @@
                             href="{{pathFor 'pos.purchasePayment'}}">
                         Purchase Payment</a>
                     </li>
+                    <li class="{{isActiveRoute name='pos.endOfProcess'}}"><a href="{{pathFor 'pos.endOfProcess'}}">
+                        Stock End Of Process</a>
+                    </li>
                     <!--<li class="{{isActiveRoute name='pos.adjustment'}}"><a href="{{pathFor 'pos.adjustment'}}">
                          Stock Adjustment</a>
                     </li>-->
@@ -144,7 +147,8 @@
                         <i class="fa fa-file-text"></i> Purchase Items Detail</a>
                     </li>
                     <li class="divider"></li>
-                    <li class="{{isActiveRoute name='pos.locationTransferReport'}}"><a href="{{pathFor 'pos.locationTransferReport'}}">
+                    <li class="{{isActiveRoute name='pos.locationTransferReport'}}"><a
+                            href="{{pathFor 'pos.locationTransferReport'}}">
                         <i class="fa fa-file-text"></i> Location Transfer Summary</a>
                     </li>
                     <li class="{{isActiveRoute name='pos.locationTransferDetailReport'}}"><a
@@ -154,6 +158,9 @@
                     <li class="divider"></li>
                     <li class="{{isActiveRoute name='pos.stockReport'}}"><a href="{{pathFor 'pos.stockReport'}}">
                         <i class="fa fa-file-text"></i> Stock Balance</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.stockHistoryReport'}}"><a href="{{pathFor 'pos.stockHistoryReport'}}">
+                        <i class="fa fa-file-text"></i> Stock History</a>
                     </li>
                     <li class="divider"></li>
                     <li class="{{isActiveRoute name='pos.owedCustomerReport'}}"><a

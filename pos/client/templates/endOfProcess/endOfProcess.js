@@ -1,6 +1,6 @@
-function getStockList(qty,products,branches) {
-     products = Pos.Collection.Products.find();
-     branches = Cpanel.Collection.Branch.find();
+function getStockList(qty, products, branches) {
+    products = Pos.Collection.Products.find();
+    branches = Cpanel.Collection.Branch.find();
     var stockList = [];
     branches.forEach(function (b) {
         products.forEach(function (p) {
@@ -15,8 +15,8 @@ function getStockList(qty,products,branches) {
                 quantity: quantity,
                 branchId: b._id,
                 branchName: b.enName,
-                createdAt:new Date(),
-                updatedAt:new Date()
+                createdAt: new Date(),
+                updatedAt: new Date()
             });
         });
 
@@ -25,13 +25,17 @@ function getStockList(qty,products,branches) {
     //var st=$.grep(stockList, function(s){ return s.quantity <=3 ; });
     return stockList;
 }
-
+Template.pos_endOfProcess.helpers({
+    selector: function () {
+        return {branchId: Session.get('currentBranch')};
+    }
+});
 Template.pos_endOfProcess.events({
-    'click #end-of-process':function(){
-        Meteor.call('insertStockHistory',Session.get('currentBranch'),function(error,result){
-            if(error!=null){
+    'click #end-of-process': function () {
+        Meteor.call('insertStockHistory', Session.get('currentBranch'), function (error, result) {
+            if (error != null) {
                 alertify.error(error.message);
-            }else{
+            } else {
                 alertify.success("End of Process is successfully.");
             }
         });
