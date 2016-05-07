@@ -2,9 +2,9 @@
     {{#autoForm schema=Pos.Schema.ProductStockReport id="pos_productStockReport" action="productStockReportGen" target="_blank"}}
         <div class="row">
             <div class="col-md-6">
-                <label>Sale ID</label>
+                <label>Product</label>
                 <input class="form-control typeahead" name="search" type="text"
-                       placeholder="Type your Sale ID" autocomplete="on" spellcheck="off"
+                       placeholder="Type your product" autocomplete="on" spellcheck="off"
                        data-source="search" data-select='selected' data-highlight=true
                        data-template='repo'/>
             </div>
@@ -35,7 +35,7 @@
                     <div style="width: 100%">
                         <div style="width: 50%; float: left">
                             <ul class="list-unstyled">
-                                <li><strong>Sale ID:</strong> {{saleId}}</li>
+                                <li><strong>Product:</strong> {{product}}</li>
                             </ul>
                         </div>
                         <div style="width: 50%; float: right">
@@ -44,37 +44,31 @@
                         </div>
                     </div>
                 {{/with}}
+                <div style="clear: both"></div>
 
                 <!--Content-->
-                <table class="report-content">
-                    <thead class="content-header">
-                    <tr>
-                        <th>No</th>
-                        <th>InvoiceId</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Due Amount</th>
-                        <th>Paid Amount</th>
-                        <th>Balance Amount</th>
-                    </tr>
-                    </thead>
-
-                    <tbody class="content-body">
+                <div style="text-align: left;">
                     {{#each content}}
-                        <tr>
-                            <td>{{order}}</td>
-                            <td>{{_id}}</td>
-                            <td>{{paymentDate}}</td>
-                            <td>{{status}}</td>
-                            <td>{{dueAmount}}</td>
-                            <td>{{payAmount}}</td>
-                            <td>{{balanceAmount}}</td>
-                        </tr>
+                        <h5 style="text-align: left; margin-bottom: -25px;">Stock Location:
+                            <b>{{location}}</b></h5>
+                        <table class="report-content">
+                            <thead class="content-header">
+                            <tr>
+                                <th>Quantity</th>
+                                <th>IMEI</th>
+                            </tr>
+                            </thead>
+                            <tbody class="content-body">
+                            <tr>
+                                <td>{{inventory.remainQty}}</td>
+                                <td>{{inventory.imei}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     {{/each}}
-                    </tbody>
-                </table>
-
+                </div>
             {{/with}}
+
 
             <!--Sign-->
             {{> signFooter}}

@@ -1,10 +1,9 @@
 Session.set('branchIds', null);
-Template.pos_salePaymentHistoryReport.onRendered(function () {
+Template.pos_productStockReport.onRendered(function () {
     Meteor.typeahead.inject();
 });
-Template.pos_salePaymentHistoryReport.events({
-});
-Template.pos_salePaymentHistoryReport.helpers({
+Template.pos_productStockReport.events({});
+Template.pos_productStockReport.helpers({
     search: function (query, sync, callback) {
         Meteor.call('searchProduct', query, {}, function (err, res) {
             if (err) {
@@ -26,7 +25,7 @@ Template.pos_salePaymentHistoryReport.helpers({
     }
 });
 
-Template.pos_salePaymentHistoryReportGen.helpers({
+Template.pos_productStockReportGen.helpers({
     options: function () {
         return {
             //fontSize: 'bg',
@@ -39,7 +38,8 @@ Template.pos_salePaymentHistoryReportGen.helpers({
         //FlowRouter.watchPathChange();
         var q = FlowRouter.current().queryParams;
         var callId = JSON.stringify(q);
-        var call = Meteor.callAsync(callId, 'posProductStockReport', q);
+        var branchId = Session.get('currentBranch');
+        var call = Meteor.callAsync(callId, 'posProductStockReport', q, branchId);
         if (!call.ready()) {
             return false;
         }
