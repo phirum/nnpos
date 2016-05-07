@@ -1,0 +1,98 @@
+<!--Form-->
+<template name="pos_stockHistoryReport">
+    {{#autoForm schema=Pos.Schema.StockHistoryReport id="pos_stockHistoryReport" action="stockHistoryReportGen" target="_blank"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='date'}}
+                {{> afQuickField name='branch'}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name='locationId'}}
+                {{> afQuickField name='categoryId'}}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>
+
+<!--Generate-->
+<template name="pos_stockHistoryReportGen">
+    {{#if data}}
+        {{#reportTpl options}}
+            {{#with data}}
+                {{#with title}}
+                    <div class="title">
+                        <div class="title-1x-kh-muol">{{khName}}</div>
+                        <div class="title-1x">{{enName}}</div>
+                        <div style="text-decoration: underline;">Stock Balance Report</div>
+                        <div class="title-2x">{{enAddress}}</div>
+                    </div>
+                {{/with}}
+                {{#with header}}
+                    <div style="width: 100%">
+                        <div style="width: 50%; float: left">
+                            <ul class="list-unstyled">
+                                <li><strong>Branch:</strong> {{branch}}</li>
+                                <li><strong>Location:</strong> {{location}}</li>
+                            </ul>
+                        </div>
+
+                        <div style="width: 50%; float: right">
+                            <ul class="list-unstyled">
+                                  <li><strong>Date:</strong> {{date}}</li>
+                                  <li><strong>Category:</strong> {{category}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                {{/with}}
+
+                <!--Content-->
+                <table class="report-content">
+                    <thead class="content-header">
+                    <tr>
+                        <th>No</th>
+                        <th>Product Name</th>
+                        <th>Barcode</th>
+                        <th>Retail Price</th>
+                        <th>Wholesale Price</th>
+                        <th>Purchase Price</th>
+                        <th>Remain Qty</th>
+                        <th>Location Name</th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="content-body">
+                    {{#each content}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{productName}}</td>
+                            <td>{{barcode}}</td>
+                            <td>{{retailPrice}}</td>
+                            <td>{{wholesalePrice}}</td>
+                            <td>{{purchasePrice}}</td>
+                            <td>{{quantity}}</td>
+                            <td>{{location}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+
+            {{/with}}
+
+            <!--Sign-->
+            {{> signFooter}}
+
+        {{/reportTpl}}
+
+        <!--Auto print-->
+        <!--{{autoprint close="true"}}-->
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+
+</template>
+
+
+
