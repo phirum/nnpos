@@ -1,10 +1,9 @@
 Session.set('branchIds', null);
-Template.pos_stockReport.onRendered(function () {
+Template.pos_stockHistoryReport.onRendered(function () {
     var name = $('[name="date"]');
     DateTimePicker.date(name);
-
 });
-Template.pos_stockReport.events({
+Template.pos_stockHistoryReport.events({
     'change select[name="branch"]': function (e) {
         var branchId = $(e.currentTarget).val();
         if (branchId == "") {
@@ -19,7 +18,7 @@ Template.pos_stockReport.events({
     }
 });
 
-Template.pos_stockReportGen.helpers({
+Template.pos_stockHistoryReportGen.helpers({
     /*reportHelper: function () {
         var params = {};
         // var date=new Date(this.date);
@@ -75,7 +74,7 @@ Template.pos_stockReportGen.helpers({
         var q = FlowRouter.current().queryParams;
 
         var callId = JSON.stringify(q);
-        var call = Meteor.callAsync(callId, 'posStockReport', q);
+        var call = Meteor.callAsync(callId, 'posStockHistoryReport', q);
 
         if (!call.ready()) {
             return false;
