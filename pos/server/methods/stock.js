@@ -239,8 +239,8 @@ Meteor.methods({
                         quantity: quantity,
                         categoryId: p.categoryId,
                         categoryName: p._category.name,
-                        locationId: inventory.locationId,
-                        location: inventory._location.name
+                        locationId: location._id,
+                        location: location.name
                     });
                 });
             });
