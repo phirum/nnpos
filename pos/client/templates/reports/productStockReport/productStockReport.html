@@ -61,7 +61,7 @@
                             <tbody class="content-body">
                             <tr>
                                 <td>{{inventory.remainQty}}</td>
-                                <td>{{inventory.imei}}</td>
+                                <td>{{#each inventory.imei}}{{this}}, {{/each}}</td>
                             </tr>
                             </tbody>
                         </table>
