@@ -336,6 +336,7 @@ Meteor.methods({
                     if (transaction.count() > 0) {
                         transaction.forEach(function (t) {
                             setObj.totalCost += parseFloat(t.price) * parseFloat(t.quantity);
+                            setObj.totalCost = math.round(setObj.totalCost, 2);
                         });
                     }
                     saleTotalCost += setObj.totalCost;
