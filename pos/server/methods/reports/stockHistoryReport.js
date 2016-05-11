@@ -47,7 +47,7 @@ Meteor.methods({
             if (locationIds.length > 0) {
                 if (categoryIds.length > 0) {
                     stockHistory.stockList.forEach(function (stock) {
-                        if (locationIds.indexOf(stock.locationId) != -1 && categoryIds.indexOf(stock.categoryId)) {
+                        if (locationIds.indexOf(stock.locationId) != -1 && categoryIds.indexOf(stock.categoryId)!=-1) {
                             stock.order = i;
                             i++;
                             content.push(stock);
@@ -65,7 +65,7 @@ Meteor.methods({
             } else {
                 if (categoryIds.length > 0) {
                     stockHistory.stockList.forEach(function (stock) {
-                        if (categoryIds.indexOf(stock.categoryId)) {
+                        if (categoryIds.indexOf(stock.categoryId)!=-1) {
                             stock.order = i;
                             i++;
                             content.push(stock);
