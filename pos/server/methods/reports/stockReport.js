@@ -1,6 +1,6 @@
 Meteor.methods({
     posStockReport: function (arg) {
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
         var data = {
@@ -11,12 +11,12 @@ Meteor.methods({
         };
         var params = {};
         // var date=new Date(this.date);
-        var date = moment(arg.date + " 23:59:59").toDate();
+       // var date = moment(arg.date + " 23:59:59").toDate();
         var locationId = arg.locationId;
         var categoryId = arg.categoryId;
         var branchId = arg.branch;
         var category = "All", location = "All";
-        if (date != null) params.createdAt = {$lte: date};
+       // if (date != null) params.createdAt = {$lte: date};
         if (branchId != null && branchId != null) params.branchId = branchId;
         var locationIds = [];
         if (locationId != null && locationId != "") {
@@ -38,41 +38,40 @@ Meteor.methods({
         header.category = category;
         header.location = location;
         header.branch = Cpanel.Collection.Branch.findOne(branchId).enName;
-        header.date = arg.date;
+        //header.date = arg.date;
         data.header = header;
         var stockArray = [];
         var i = 1;
         var products = Pos.Collection.Products.find(productSelector);
         var content = [];
 
-        for(var j=0;j<locationIds.length;j++){
+        for (var j = 0; j < locationIds.length; j++) {
             products.forEach(function (p) {
                 var item = {};
                 var inventory = Pos.Collection.FIFOInventory.findOne({
                     branchId: branchId,
                     productId: p._id,
                     locationId: locationIds[j],
-                    createdAt: {$lte: date}
+                    //createdAt: {$lte: date}
                 }, {sort: {createdAt: -1, _id: -1}});
                 if (inventory != null) {
                     item = inventory;
                     item.productName = inventory._product.name + ' (' + inventory._product._unit.name + ')';
                     //item.branchName = inventory._branch.enName;
-                    item.locationName= inventory._location.name;
+                    item.locationName = inventory._location.name;
                 } else {
                     item.productName = p.name + ' (' + p._unit.name + ')';
                     //item.branchName = Cpanel.Collection.Branch.findOne(branchId).enName;
-                    item.locationName=Pos.Collection.Locations.findOne(locationIds[j]).name;
+                    item.locationName = Pos.Collection.Locations.findOne(locationIds[j]).name;
                     item.remainQty = 0;
                     item.price = p.purchasePrice;
                 }
-                item.barcode= p.barcode;
+                item.barcode = p.barcode;
                 item.order = i;
                 i++;
                 content.push(item);
             });
         }
-
 
 
         /*     var stockHistories = Pos.Collection.StockHistories.findOne(params, {sort: {createdAt: -1}});

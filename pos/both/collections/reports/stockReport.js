@@ -4,18 +4,19 @@
 Pos.Schema.StockReport = new SimpleSchema({
     date: {
         type: String,
-        label: "Date"
+        label: "Date",
+        optional: true
     },
     locationId: {
         type: String,
         label: "Location",
         autoform: {
             type: "select2",
-            options:function(){
+            options: function () {
                 return Pos.ListForReport.locations();
             }
         },
-        optional:true
+        optional: true
     },
     categoryId: {
         type: String,
@@ -26,14 +27,14 @@ Pos.Schema.StockReport = new SimpleSchema({
                 return Pos.List.category("All");
             }
         },
-        optional:true
+        optional: true
     },
-    branch:{
-        type:String,
-        label:"Branch",
+    branch: {
+        type: String,
+        label: "Branch",
         autoform: {
             type: "select2",
-            options:function(){
+            options: function () {
                 return Cpanel.List.branchForUser();
             }
         }
