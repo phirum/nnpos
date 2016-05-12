@@ -98,7 +98,7 @@ function getLocationTransferProducts(params, categoryId) {
     var result = [];
     var locationTransferDetails = Pos.Collection.LocationTransferDetails.find(
         selectorObj,
-        {fields: {productId: 1, quantity: 1, price: 1, amount: 1, totalCost: 1, _product: 1}});
+        {sort: {'_product.barcode':1},fields: {productId: 1, quantity: 1, price: 1, amount: 1, totalCost: 1, _product: 1}});
     (locationTransferDetails.fetch()).reduce(function (res, value) {
         if (!res[value.productId]) {
             res[value.productId] = {
@@ -122,6 +122,7 @@ function getLocationTransferProducts(params, categoryId) {
             order: i,
             productId: r.productId,
             productName: r._product.name + "(" + r._product._unit.name + ")",
+            barcode: r._product.barcode,
             // price: numeral(r.price).format('0,0.00'),
             quantity: r.quantity
         });

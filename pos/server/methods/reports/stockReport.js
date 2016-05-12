@@ -11,12 +11,12 @@ Meteor.methods({
         };
         var params = {};
         // var date=new Date(this.date);
-       // var date = moment(arg.date + " 23:59:59").toDate();
+        // var date = moment(arg.date + " 23:59:59").toDate();
         var locationId = arg.locationId;
         var categoryId = arg.categoryId;
         var branchId = arg.branch;
         var category = "All", location = "All";
-       // if (date != null) params.createdAt = {$lte: date};
+        // if (date != null) params.createdAt = {$lte: date};
         if (branchId != null && branchId != null) params.branchId = branchId;
         var locationIds = [];
         if (locationId != null && locationId != "") {
@@ -42,7 +42,7 @@ Meteor.methods({
         data.header = header;
         var stockArray = [];
         var i = 1;
-        var products = Pos.Collection.Products.find(productSelector);
+        var products = Pos.Collection.Products.find(productSelector, {sort: {barcode: 1}});
         var content = [];
 
         for (var j = 0; j < locationIds.length; j++) {

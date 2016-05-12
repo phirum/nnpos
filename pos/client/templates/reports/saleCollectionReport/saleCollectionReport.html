@@ -1,6 +1,6 @@
 <!--Form-->
-<template name="pos_saleReport">
-    {{#autoForm schema=Pos.Schema.SaleReport id="pos_saleReport" action="saleReportGen" target="_blank"}}
+<template name="pos_saleCollectionReport">
+    {{#autoForm schema=Pos.Schema.SaleCollectionReport id="pos_saleCollectionReport" action="saleCollectionReportGen" target="_blank"}}
         <div class="row">
             <div class="col-md-6">
                 {{> afQuickField name='date'}}
@@ -21,7 +21,7 @@
 </template>
 
 <!--Generate-->
-<template name="pos_saleReportGen">
+<template name="pos_saleCollectionReportGen">
     {{#if data}}
         {{#reportTpl options}}
             {{#with data}}
@@ -92,6 +92,76 @@
                                 <td>{{exTotal}}</td>
                             {{/each}}
                         </tr>
+                        <tr style="background: #f5f5f5;">
+                            <th colspan="3"></th>
+                            <th colspan="3">
+                                Product
+                            </th>
+                            <th>Barcode</th>
+                            <th>
+                                Price
+                            </th>
+                            <th>
+                                Qty
+                            </th>
+                            <th>
+                                Dis(%)
+                            </th>
+                            <th>
+                                Amount
+                            </th>
+                            {{#each exchangeRates}}
+                                <td></td>
+                            {{/each}}
+                        </tr>
+                        {{#each saleDetails}}
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="3">
+                                    {{_product.name}} ({{_product._unit.name}})
+                                </td>
+                                <td>{{_product.barcode}}</td>
+                                <td align="center">
+                                    {{numFormat price '0,0'}}
+                                </td>
+                                <td align="center">
+                                    {{quantity}}
+                                </td>
+                                <td align="center">
+                                    {{discount}}
+                                </td>
+                                <td align="right">
+                                    {{numFormat amount '0,0'}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                        {{#if hasPromotion}}
+                            <tr style="background: #f0f0f0;">
+                                <td colspan="3"></td>
+                                <td colspan="8"><b>Promotion</b></td>
+                            </tr>
+                            {{#each promotionSaleDetails}}
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td colspan="3">
+                                        {{_product.name}} ({{_product._unit.name}})
+                                    </td>
+                                    <td>{{_product.barcode}}</td>
+                                    <td align="center">
+                                        {{numFormat price '0,0'}}
+                                    </td>
+                                    <td align="center">
+                                        {{quantity}}
+                                    </td>
+                                    <td align="center">
+                                        {{discount}}
+                                    </td>
+                                    <td align="right">
+                                        {{numFormat amount '0,0'}}
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        {{/if}}
                     {{/each}}
                     </tbody>
                     <tbody>

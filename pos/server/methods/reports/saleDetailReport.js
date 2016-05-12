@@ -110,7 +110,7 @@ function getSaleProducts(params, categoryId, promotion) {
     var result = [];
     var saleDetails = Pos.Collection.SaleDetails.find(
         selectorObj,
-        {fields: {productId: 1, quantity: 1, price: 1, amount: 1, totalCost: 1, _product: 1}});
+        {sort: {'_product.barcode':1},fields: {productId: 1, quantity: 1, price: 1, amount: 1, totalCost: 1, _product: 1}});
     (saleDetails.fetch()).reduce(function (res, value) {
         if (!res[value.productId]) {
             res[value.productId] = {
@@ -141,6 +141,7 @@ function getSaleProducts(params, categoryId, promotion) {
             order: i,
             productId: r.productId,
             productName: r._product.name + "(" + r._product._unit.name + ")",
+            barcode: r._product.barcode,
             // price: numeral(r.price).format('0,0.00'),
             quantity: r.quantity,
             total: numeral(r.amount).format('0,0.00'),

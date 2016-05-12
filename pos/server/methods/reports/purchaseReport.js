@@ -66,7 +66,7 @@ Meteor.methods({
         header.transactionType = arg.transactionType;
         data.header = header;
 
-        var purchase = Pos.Collection.Purchases.find(params);
+        var purchase = Pos.Collection.Purchases.find(params, {sort: {purchaseDate: 1}});
         var content = calculatePurchaseHelper(purchase);
         data.grandTotalPaid = content.grandTotalPaid;
         data.grandTotalOwed = content.grandTotalOwed;

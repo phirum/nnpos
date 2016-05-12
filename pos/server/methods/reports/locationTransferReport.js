@@ -44,7 +44,7 @@ Meteor.methods({
         }
         params.branchId = {$in: branchIds};
         params.status = "Saved";
-        var locationTransfers = Pos.Collection.LocationTransfers.find(params);
+        var locationTransfers = Pos.Collection.LocationTransfers.find(params, {sort: {locationTransferDate: 1}});
 
         var header = {};
         var branchNames = "";

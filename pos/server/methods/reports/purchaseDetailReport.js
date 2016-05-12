@@ -74,7 +74,6 @@ Meteor.methods({
         data.header = header;
 
 
-
         var content = getPurchaseProducts(params, categoryId);
         data.grandTotal = content.grandTotal;
 
@@ -105,7 +104,7 @@ function getPurchaseProducts(params, categoryId) {
     var result = [];
     var purchaseDetails = Pos.Collection.PurchaseDetails.find(
         selectorObj,
-        {fields: {productId: 1, quantity: 1, price: 1, amount: 1, _product: 1}});
+        {sort: {'_product.barcode':1},fields: {productId: 1, quantity: 1, price: 1, amount: 1, _product: 1}});
     (purchaseDetails.fetch()).reduce(function (res, value) {
         if (!res[value.productId]) {
             res[value.productId] = {
@@ -132,6 +131,7 @@ function getPurchaseProducts(params, categoryId) {
             order: i,
             productId: r.productId,
             productName: r._product.name + "(" + r._product._unit.name + ")",
+            barcode: r._product.barcode,
             // productName: product.name,
             // price: numeral(r.price).format('0,0.00'),
             quantity: r.quantity,

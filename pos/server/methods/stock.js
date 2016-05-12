@@ -210,7 +210,7 @@ Meteor.methods({
         }
         var userId = Meteor.userId();
         Meteor.defer(function () {
-            var products = Pos.Collection.Products.find({productType: "Stock"});
+            var products = Pos.Collection.Products.find({productType: "Stock"},{sort:{barcode:1}});
             var locations = Pos.Collection.Locations.find({branchId: branchId});
             //var branches = Cpanel.Collection.Branch.find();
             var today = moment(new Date).format('YYYYMMDD');

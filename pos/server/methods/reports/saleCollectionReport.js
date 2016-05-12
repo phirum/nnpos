@@ -1,5 +1,5 @@
 Meteor.methods({
-    posSaleReport: function (arg) {
+    posSaleCollectionReport: function (arg) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
@@ -93,6 +93,9 @@ function calculateSaleHelper(sl) {
     var saleList = [];
     var i = 1;
     sl.forEach(function (s) {
+        s.saleDetails = Pos.Collection.SaleDetails.find({saleId: s._id, isPromotion: {$ne: true}}).fetch();
+        s.promotionSaleDetails = Pos.Collection.SaleDetails.find({saleId: s._id, isPromotion: true}).fetch();
+        s.hasPromotion = s.promotionSaleDetails.length > 0 ? true : false;
         grandTotal += s.total;
         grandTotalCost += s.totalCost;
         s.order = i;
