@@ -1,7 +1,6 @@
-<!--
 <template name="pos_printCheckout">
     {{#if data}}
-    {{#with data}}
+        {{#with data}}
             <div align="center"
                  style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:260px; margin: 0 auto;">
                 <table border="0">
@@ -85,7 +84,7 @@
                                     </tr>
                                 {{/each}}
 
-        {{#if hasPayment}}
+                                {{#if hasPayment}}
                                     <tr style="text-align: right;">
                                         <td colspan="5">
                                             <hr>
@@ -102,7 +101,7 @@
                                     {{/each}}
 
 
-        {{/if}}
+                                {{/if}}
                             </table>
                         </td>
                     </tr>
@@ -115,15 +114,15 @@
 
             </div>
         {{/with}}
-    {{autoprint close="true"}}
-{{else}}
-    {{> loading}}
-{{/if}}
+        {{autoprint close="true"}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
 </template>
--->
+<!--
 <template name="pos_printCheckout">
     {{#if data}}
-        {{#with data}}
+    {{#with data}}
             <div align="center"></div>
             <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
                 <img src="/logo.jpg" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>
@@ -137,132 +136,111 @@
                 <table width="100%">
                     <tr>
                         <td> <span style="font-weight: bold;font-size: 18px;">
-                            INVOICE<!--(<span style="font-size: 14px;">{{sale.InvoiceType}}</span>)-->
-                        </span></td>
-                        <td align="right"><b>#:</b> {{sale._id}}</td>
-                    </tr>
-                    <tr>
+                            INVOICE
 
-                        <td><b>Voucher:</b> {{sale.voucher}}</td>
-                        <td align="right"><b>Date:</b> {{sale.saleDate}}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Customer:</b> {{sale._customer.name}}</td>
-                        <td align="right"><b>Staff:</b> {{sale._staff.name}}</td>
-                    </tr>
+    </span></td>
+    <td align="right"><b>#:</b> {{sale._id}}</td>
+    </tr>
+    <tr>
 
-                </table>
-                <table class="table table-bordered auto">
-                    <thead>
-                    <tr>
-                        <th> N<sup style="text-decoration: underline;">o</sup></th>
-                        <th> Product</th>
-                        <th> Price</th>
-                        <th> Qty</th>
-                        <th> Unit</th>
-                        <th> Discount</th>
-                        <th style="text-align: right;"> Amount</th>
-                    </tr>
-                    </thead>
-                    <tbody class="custom">
-                    {{#each saleDetails}}
-                        <tr>
-                            <td>{{order}}</td>
-                            <td>{{_product.name}}</td>
-                            <td>{{price}}</td>
-                            <td>{{quantity}}</td>
-                            <td>{{_product._unit.name}}</td>
-                            <td>{{discount}}</td>
-                            <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
-                        </tr>
-                    {{/each}}
-                    <!--<tr>
-                        <td colspan="7" style="text-align: center;"><b>Promotion Items</b></td>
-                    </tr>
-                    {{#each promotionSaleDetails}}
-                        <tr>
-                            <td>{{order}}</td>
-                            <td>{{_product.name}}</td>
-                            <td>{{price}}</td>
-                            <td>{{quantity}}</td>
-                            <td>{{_product._unit.name}}</td>
-                            <td>{{discount}}</td>
-                            <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
-                        </tr>
-                    {{/each}}-->
+        <td><b>Voucher:</b> {{sale.voucher}}</td>
+        <td align="right"><b>Date:</b> {{sale.saleDate}}</td>
+    </tr>
+    <tr>
+        <td><b>Customer:</b> {{sale._customer.name}}</td>
+        <td align="right"><b>Staff:</b> {{sale._staff.name}}</td>
+    </tr>
 
-                    <tr style="text-align: right;">
-                        <td colspan="6">Sub Total:</td>
-                        <td>{{sale.subTotalFormatted}} {{baseCurrency.symbol}}</td>
-                    </tr>
-                    <tr style="text-align: right;">
-                        <td colspan="6" align="right">Discount:</td>
-                        <td align="right">{{sale.discount}} %</td>
-                    </tr>
-                    <tr style="text-align: right;">
-                        <td colspan="6" align="right">Discount:</td>
-                        <td align="right">{{sale.discountAmount}} {{baseCurrency.symbol}}</td>
-                    </tr>
-                    <tr style="text-align: right;">
-                        <td colspan="6">Total {{baseCurrency._id}}:</td>
-                        <td style="font-weight: bold">{{sale.totalFormatted}} {{baseCurrency.symbol}}</td>
-                    </tr>
+    </table>
+    <table class="table table-bordered auto">
+        <thead>
+        <tr>
+            <th> N<sup style="text-decoration: underline;">o</sup></th>
+            <th> Product</th>
+            <th> Price</th>
+            <th> Qty</th>
+            <th> Unit</th>
+            <th> Discount</th>
+            <th style="text-align: right;"> Amount</th>
+        </tr>
+        </thead>
+        <tbody class="custom">
+        {{#each saleDetails}}
+            <tr>
+                <td>{{order}}</td>
+                <td>{{_product.name}}</td>
+                <td>{{price}}</td>
+                <td>{{quantity}}</td>
+                <td>{{_product._unit.name}}</td>
+                <td>{{discount}}</td>
+                <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
+            </tr>
+        {{/each}}
+        <tr style="text-align: right;">
+            <td colspan="6">Sub Total:</td>
+            <td>{{sale.subTotalFormatted}} {{baseCurrency.symbol}}</td>
+        </tr>
+        <tr style="text-align: right;">
+            <td colspan="6" align="right">Discount:</td>
+            <td align="right">{{sale.discount}} %</td>
+        </tr>
+        <tr style="text-align: right;">
+            <td colspan="6" align="right">Discount:</td>
+            <td align="right">{{sale.discountAmount}} {{baseCurrency.symbol}}</td>
+        </tr>
+        <tr style="text-align: right;">
+            <td colspan="6">Total {{baseCurrency._id}}:</td>
+            <td style="font-weight: bold">{{sale.totalFormatted}} {{baseCurrency.symbol}}</td>
+        </tr>
 
-                    {{#each sale._exchangeRate.rates}}
-                        <tr style="text-align: right;">
-                            <td colspan="6" align="right">{{toCurrencyId}}:</td>
-                            <td align="right" style="font-weight: bold">{{totalFormatted}} {{symbol}}</td>
-                        </tr>
-                    {{/each}}
+        {{#each sale._exchangeRate.rates}}
+            <tr style="text-align: right;">
+                <td colspan="6" align="right">{{toCurrencyId}}:</td>
+                <td align="right" style="font-weight: bold">{{totalFormatted}} {{symbol}}</td>
+            </tr>
+        {{/each}}
 
-                    {{#if hasPayment}}
-                        {{#each paymentObj.payments}}
-                            <tr>
-                                <td colspan="3"></td>
-                                <td>Paid {{currencyId}}:</td>
-                                <td style="font-weight: bold">{{payAmount}}</td>
-                                <td style="text-align: right">Change {{currencyId}}:</td>
-                                <td style="text-align: right;font-weight: bold">{{formatFixTwo return}}</td>
-                            </tr>
-                        {{/each}}
+        {{#if hasPayment}}
+            {{#each paymentObj.payments}}
+                <tr>
+                    <td colspan="3"></td>
+                    <td>Paid {{currencyId}}:</td>
+                    <td style="font-weight: bold">{{payAmount}}</td>
+                    <td style="text-align: right">Change {{currencyId}}:</td>
+                    <td style="text-align: right;font-weight: bold">{{formatFixTwo return}}</td>
+                </tr>
+            {{/each}}
 
-                    {{/if}}
-                    </tbody>
-                </table>
-                <table class="table table-bordered">
-                    <tr>
-                        <td class="footer-header">Stock</td>
-                        <td class="footer-header">Accounting</td>
-                        <td class="footer-header">Customer</td>
-                    </tr>
-                    <tr>
-                        <td class="footer-box"></td>
-                        <td class="footer-box"></td>
-                        <td class="footer-box"></td>
-                    </tr>
-                </table>
+        {{/if}}
+        </tbody>
+    </table>
+    <table class="table table-bordered">
+        <tr>
+            <td class="footer-header">Stock</td>
+            <td class="footer-header">Accounting</td>
+            <td class="footer-header">Customer</td>
+        </tr>
+        <tr>
+            <td class="footer-box"></td>
+            <td class="footer-box"></td>
+            <td class="footer-box"></td>
+        </tr>
+    </table>
 
-                <div class="imei">
-                    {{#each saleDetails}}
-                        {{#if imei}}
-                            <b>Product Name:</b>  {{_product.name}}<br>
-                            {{#each imei}}{{this}}, {{/each}}<br>
-                        {{/if}}
-                    {{/each}}
-                </div>
-
-
-                <!--
-                        <span style="font-size: 10px; text-align: center;">Powered by: Rabbit, Tel: 053 50 66
-                                        777
-                                    </span>-->
-
-
-            </div>
-        {{/with}}
-        {{autoprint close="true"}}
-    {{else}}
-        {{> loading}}
-    {{/if}}
+    <div class="imei">
+        {{#each saleDetails}}
+            {{#if imei}}
+                <b>Product Name:</b>  {{_product.name}}<br>
+                {{#each imei}}{{this}}, {{/each}}<br>
+            {{/if}}
+        {{/each}}
+    </div>
+    </div>
+    {{/with}}
+    {{autoprint close="true"}}
+{{else}}
+    {{> loading}}
+{{/if}}
 </template>
+-->
 
