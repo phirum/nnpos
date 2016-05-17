@@ -1,4 +1,4 @@
-<!--
+
 <template name="pos_printLocationTransfer">
     {{#if data}}
     {{#with data}}
@@ -20,8 +20,7 @@
                             Address: {{company.khAddress}}<br>
                             Tel: {{company.telephone}}<br>
 						<span style="font-weight: bold;font-size: 15px;">
-                            Location Transfer(<span
-                                style="font-size: 13px;"> {{locationTransfer.InvoiceType}}</span>)</span>
+                            Location Transfer</span>
                             <hr>
                         </td>
                     </tr>
@@ -29,11 +28,11 @@
                         <td>
                             <table width="100%">
                                 <tr>
-                                    <td>LocationTransfer ID:{{locationTransfer._id}}</td>
-                                    <td align="right">Staff: {{locationTransfer._staff.name}}</td>
+                                    <td><b>No:</b> {{locationTransfer._id}}</td>
+                                    <td align="right"><b>Staff:</b> {{locationTransfer._staff.name}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Date:{{locationTransfer.locationTransferDate}}</td>
+                                    <td><b>Date:</b> {{locationTransfer.locationTransferDate}}</td>
                                 </tr>
                             </table>
                         </td>
@@ -44,15 +43,15 @@
                                 <tr style="text-align: center; text-decoration: underline;">
                                     <td align="left">N<sup><span style="text-decoration: underline;">o</span></sup></td>
                                     <td align="left">Product</td>
-                                    <td align="right">Unit</td>
                                     <td>Qty</td>
+                                    <td align="right">Unit</td>
                                 </tr>
                                 {{#each locationTransferDetails}}
                                     <tr>
                                         <td>{{order}}</td>
                                         <td>{{_product.name}}</td>
-                                        <td align="right">{{_product._unit.name}}</td>
                                         <td align="center">{{quantity}}</td>
+                                        <td align="right">{{_product._unit.name}}</td>
                                     </tr>
                                 {{/each}}
                             </table>
@@ -72,7 +71,7 @@
     {{> loading}}
 {{/if}}
 </template>
--->
+<!--
 <template name="pos_printLocationTransfer">
     {{#if data}}
         {{#with data}}
@@ -138,14 +137,6 @@
                         {{/if}}
                     {{/each}}
                 </div>
-
-
-                <!--
-                        <span style="font-size: 10px; text-align: center;">Powered by: Rabbit, Tel: 053 50 66
-                                        777
-                                    </span>-->
-
-
             </div>
         {{/with}}
         {{autoprint close="true"}}
@@ -153,3 +144,4 @@
         {{> loading}}
     {{/if}}
 </template>
+-->
