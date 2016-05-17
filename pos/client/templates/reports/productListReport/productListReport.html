@@ -1,0 +1,86 @@
+<!--Form-->
+<template name="pos_productListReport">
+    {{#autoForm schema=Pos.Schema.ProductListReport id="pos_productListReport" action="productListReportGen" target="_blank"}}
+        <div class="row">
+
+            <div class="col-md-6">
+                {{> afQuickField name='categoryId'}}
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>
+
+<template name="pos_productListReportGen">
+    {{#if data}}
+        {{#reportTpl options}}
+            {{#with data}}
+                {{#with title}}
+                    <div class="title">
+                        <div class="title-1x-kh-muol">{{khName}}</div>
+                        <div class="title-1x">{{enName}}</div>
+                        <div style="text-decoration: underline;">Product List Report</div>
+                        <div class="title-2x">{{enAddress}}</div>
+                    </div>
+                {{/with}}
+                {{#with header}}
+                    <div style="width: 100%">
+                        <div style="width: 50%; float: left">
+                            <ul class="list-unstyled">
+                                <li><strong>Category:</strong> {{category}}</li>
+                            </ul>
+                        </div>
+
+                        <div style="width: 50%; float: right">
+                            <ul class="list-unstyled">
+                            </ul>
+                        </div>
+                    </div>
+                {{/with}}
+
+                <!--Content-->
+                <table class="report-content">
+                    <thead class="content-header">
+                    <tr>
+                        <th>No</th>
+                        <th>Product</th>
+                        <th>Unit</th>
+                        <th>Category</th>
+                        <th>Retail Price</th>
+                        <th>Wholesale Price</th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="content-body">
+                    {{#each content}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{name}}</td>
+                            <td>{{_unit.name}}</td>
+                            <td>{{_category.name}}</td>
+                            <td>{{retailPrice}}</td>
+                            <td>{{wholesalePrice}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+
+                </table>
+
+            {{/with}}
+
+            <!--Sign-->
+            {{> signFooter}}
+
+        {{/reportTpl}}
+
+        <!--Auto print-->
+        <!--{{autoprint close="true"}}-->
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+
+</template>
