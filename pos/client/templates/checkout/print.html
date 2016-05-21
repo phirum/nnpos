@@ -54,7 +54,7 @@
                                         <td>{{price}}</td>
                                         <td align="center">{{quantity}}</td>
                                         <td>{{discount}}</td>
-                                        <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
+                                        <td style="text-align: right;">{{amountFormated}}{{baseCurrency.symbol}}</td>
                                     </tr>
                                 {{/each}}
 
@@ -63,21 +63,21 @@
                             <table width="100%">
                                 <tr style="text-align: right;">
                                     <td colspan="2">Sub Total:</td>
-                                    <td colspan="2">{{sale.subTotalFormatted}} {{baseCurrency.symbol}}</td>
+                                    <td colspan="2">{{sale.subTotalFormatted}}{{baseCurrency.symbol}}</td>
                                 </tr>
                                 <tr style="text-align: right;">
                                     <td colspan="2" align="right">Dis:</td>
-                                    <td colspan="2" align="right">{{sale.discount}} %</td>
+                                    <td colspan="2" align="right">{{sale.discount}}%</td>
 
                                 </tr>
                                 <tr style="text-align: right;">
                                     <td colspan="2">Total {{baseCurrency._id}}:</td>
-                                    <td colspan="2">{{sale.totalFormatted}} {{baseCurrency.symbol}}</td>
+                                    <td colspan="2">{{sale.totalFormatted}}{{baseCurrency.symbol}}</td>
                                 </tr>
                                 {{#each sale._exchangeRate.rates}}
                                     <tr style="text-align: right;">
                                         <td colspan="2" align="right">{{toCurrencyId}}:</td>
-                                        <td colspan="2" align="right">{{totalFormatted}} {{symbol}}</td>
+                                        <td colspan="2" align="right">{{totalFormatted}}{{symbol}}</td>
                                     </tr>
                                 {{/each}}
 
