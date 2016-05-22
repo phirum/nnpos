@@ -27,8 +27,8 @@ function getPurchase(purchaseId) {
         });
     }
     s.purchaseDate = moment(s.purchaseDate).format("DD-MM-YYYY, HH:mm");
-    s.subTotalFormatted = numeral(s.subTotal).format('0,0.00');
-    s.totalFormatted = numeral(s.total).format('0,0.00');
+    s.subTotalFormatted = numeral(s.subTotal).format('0,0');
+    s.totalFormatted = numeral(s.total).format('0,0');
     return s;
 }
 function getPurchaseDetail(purchaseId) {
@@ -40,7 +40,7 @@ function getPurchaseDetail(purchaseId) {
         /*var product = Pos.Collection.Products.findOne(pd.productId);
          var unit = Pos.Collection.Units.findOne(product.unitId).name;
          pd.productName = product.name + "(" + unit + ")";*/
-        pd.amountFormated = numeral(pd.amount).format('0,0.00');
+        pd.amountFormated = numeral(pd.amount).format('0,0');
         // pd.order = pad(i, 2);
         pd.order = i;
         // pd.qtyPrint = pd.quantity - pd.qtyPrinted;
