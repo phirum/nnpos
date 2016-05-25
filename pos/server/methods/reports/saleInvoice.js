@@ -35,7 +35,7 @@ function getSale(saleId, baseCurrency) {
 }
 function getSaleDetail(saleId, baseCurrency) {
     var saleDetailItems = [];
-    var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: {$ne: true}});
+    var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: {$ne: true}}, {sort: {_id: -1}});
     var i = 1;
     saleDetails.forEach(function (sd) {
         sd.amountFormated = numeral(sd.amount).format('0,0') + baseCurrency.symbol;
@@ -47,7 +47,7 @@ function getSaleDetail(saleId, baseCurrency) {
 }
 function getPromotionSaleDetail(saleId, baseCurrency) {
     var saleDetailItems = [];
-    var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true});
+    var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true}, {sort: {_id: -1}});
     var i = 1;
     saleDetails.forEach(function (sd) {
         sd.amountFormated = numeral(sd.amount).format('0,0') + baseCurrency.symbol;

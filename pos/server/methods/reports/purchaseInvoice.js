@@ -33,7 +33,7 @@ function getPurchase(purchaseId) {
 }
 function getPurchaseDetail(purchaseId) {
     var purchaseDetailItems = [];
-    var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
+    var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId}, {sort: {_id: -1}});
     var i = 1;
     purchaseDetails.forEach(function (pd) {
         // var item = _.extend(pd,{});
