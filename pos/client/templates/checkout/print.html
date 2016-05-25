@@ -3,16 +3,20 @@
         {{#with data}}
             <div align="center"
                  style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:260px; margin: 0 auto;">
+
                 <table border="0">
+                    <tr style="text-align: center;">
+                        <span style="font-weight: bold;font-size: 15px;">NaNa Computer</span>
+                    </tr>
                     <tr>
                         <td style="text-align: center;">
                             <table width="100%">
                                 <tr>
-                                    <td width="25%">
-                                        <img src="/logo.jpg" class="logo" style="width:63px;"/>
+                                    <td width="20%">
+                                        <img src="/logo.jpg" class="logo" style="width:54px;"/>
                                     </td>
-                                    <td width="75%" align="center" style="padding-top: 10px;">
-                                        <span style="font-family:'Khmer OS Muol';font-size: 14px;">{{company.khName}}</span><br><br>
+                                    <td width="80%" align="center" style="padding-top: 10px;">
+                                        <span style="font-family:'Khmer OS Muol';font-size: 13px;"> {{company.khName}}</span><br><br>
                                     </td>
                                 </tr>
                             </table>
@@ -119,7 +123,7 @@
 <!--
 <template name="pos_printCheckout">
     {{#if data}}
-        {{#with data}}
+    {{#with data}}
             <div align="center"></div>
             <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
                 <img src="/logo.jpg" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>
@@ -197,8 +201,8 @@
                         </tr>
                     {{/each}}
 
-                    {{#if hasPayment}}
-                        {{#each paymentObj.payments}}
+        {{#if hasPayment}}
+            {{#each paymentObj.payments}}
                             <tr>
                                 <td colspan="3"></td>
                                 <td>Paid {{currencyId}}:</td>
@@ -208,7 +212,7 @@
                             </tr>
                         {{/each}}
 
-                    {{/if}}
+        {{/if}}
                     </tbody>
                 </table>
                 <table class="table table-bordered">
@@ -226,18 +230,18 @@
 
                 <div class="imei">
                     {{#each saleDetails}}
-                        {{#if imei}}
+            {{#if imei}}
                             <b>Product Name:</b>  {{_product.name}}<br>
                             {{#each imei}}{{this}}, {{/each}}<br>
                         {{/if}}
-                    {{/each}}
+        {{/each}}
                 </div>
             </div>
         {{/with}}
-        {{autoprint close="true"}}
-    {{else}}
-        {{> loading}}
-    {{/if}}
+    {{autoprint close="true"}}
+{{else}}
+    {{> loading}}
+{{/if}}
 </template>
 -->
 <!--<tr>
