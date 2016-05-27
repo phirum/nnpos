@@ -3,7 +3,9 @@ Session.setDefault('hasUpdate', false);
 Template.pos_checkout.onRendered(function () {
     Meteor.typeahead.inject();
     createNewAlertify(["customer", "userStaff"]);
-    Session.set('isRetail', true);
+    if (Session.get('isRetail') == null) {
+        Session.set('isRetail', true);
+    }
     $('#sale-date').datetimepicker({
         format: "MM/DD/YYYY hh:mm:ss A"
     });
@@ -480,6 +482,7 @@ Template.pos_checkout.events({
         var saleId = $(e.currentTarget).attr('data-id');
         var sale = Pos.Collection.Sales.findOne(saleId);
         Session.set('hasUpdate', false);
+        Session.set('isRetail', sale.isRetail);
         $('#customer-id').select2('val', sale.customerId);
         $('#staff-id').select2('val', sale.staffId);
         $('#input-sale-date').val(moment(sale.saleDate).format('MM/DD/YYYY hh:mm:ss A'));
