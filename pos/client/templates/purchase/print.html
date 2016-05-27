@@ -44,9 +44,9 @@
                                 <tr style="text-align: center; text-decoration: underline;">
                                     <td>#</td>
                                     <td align="left">Product</td>
-                                    <td align="right">Price</td>
-                                    <td align="center">Qty</td>
-                                    <td>Dis</td>
+                                    <td align="right"> Price </td>
+                                    <td align="center"> Qty </td>
+                                    <td> Dis </td>
                                     <td align="right">Amount</td>
                                 </tr>
                                 {{#each purchaseDetails}}
@@ -54,10 +54,10 @@
 
                                         <td>{{order}}</td>
                                         <td>{{_product.name}}({{_product._unit.name}})</td>
-                                        <td align="right">{{price}}</td>
-                                        <td align="center">{{quantity}}</td>
-                                        <td align="center">{{discount}}</td>
-                                        <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
+                                        <td align="right"> {{price}} </td>
+                                        <td align="center"> {{quantity}} </td>
+                                        <td align="center"> {{discount}} </td>
+                                        <td style="text-align: right;">{{amountFormated}}{{baseCurrency.symbol}}</td>
                                     </tr>
                                 {{/each}}
                             </table>
@@ -65,23 +65,23 @@
                             <table width="100%">
                                 <tr style="text-align: right;">
                                     <td colspan="2">Sub Total:</td>
-                                    <td colspan="2">{{purchase.subTotalFormatted}} {{baseCurrency.symbol}}</td>
+                                    <td colspan="2">{{purchase.subTotalFormatted}}{{baseCurrency.symbol}}</td>
                                 </tr>
                                 <tr style="text-align: right;">
                                     <td colspan="2" align="right">Dis:</td>
-                                    <td colspan="2" align="right">{{purchase.discount}} %</td>
+                                    <td colspan="2" align="right">{{purchase.discount}}%</td>
 
                                 </tr>
                                 <tr style="text-align: right;">
                                     <td colspan="2">Total {{baseCurrency._id}}:</td>
                                     <td colspan="2"
-                                        style="font-weight: bold">{{purchase.totalFormatted}} {{baseCurrency.symbol}}</td>
+                                        style="font-weight: bold">{{purchase.totalFormatted}}{{baseCurrency.symbol}}</td>
                                 </tr>
                                 {{#each purchase._exchangeRate.rates}}
                                     <tr style="text-align: right;">
                                         <td colspan="2" align="right">{{toCurrencyId}}:</td>
                                         <td colspan="2" align="right"
-                                            style="font-weight: bold">{{totalFormatted}} {{symbol}}</td>
+                                            style="font-weight: bold">{{totalFormatted}}{{symbol}}</td>
                                     </tr>
                                 {{/each}}
                                 {{#if hasPayment}}

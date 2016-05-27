@@ -38,7 +38,7 @@ function getSaleDetail(saleId, baseCurrency) {
     var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: {$ne: true}});
     var i = 1;
     saleDetails.forEach(function (sd) {
-        sd.amountFormated = numeral(sd.amount).format('0,0.00') + ' ' + baseCurrency.symbol;
+        sd.amountFormated = numeral(sd.amount).format('0,0.00') + baseCurrency.symbol;
         sd.order = i;
         i++;
         saleDetailItems.push(sd);
@@ -50,7 +50,7 @@ function getPromotionSaleDetail(saleId, baseCurrency) {
     var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true});
     var i = 1;
     saleDetails.forEach(function (sd) {
-        sd.amountFormated = numeral(sd.amount).format('0,0.00') + ' ' + baseCurrency.symbol;
+        sd.amountFormated = numeral(sd.amount).format('0,0.00') + baseCurrency.symbol;
         sd.order = i;
         i++;
         saleDetailItems.push(sd);

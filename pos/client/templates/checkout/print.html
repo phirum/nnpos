@@ -5,12 +5,15 @@
                  style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:260px; margin: 0 auto;">
 
                 <table border="0">
-                    <tr style="text-align: center;">
-                        <span style="font-weight: bold;font-size: 20px;">NaNa Computer</span>
+				     <tr style="text-align: center;">
+					 <img src="/logo.jpg" class="logo" style="width:45px;float:left"/>                                
+                   
+                        <span style="font-weight: bold;font-size: 20px;">NaNa Computer</span><br>
+						 <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
                     </tr>
-					 <tr style="text-align: center;">
+					<!-- <tr style="text-align: center;">
                         <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
-                    </tr>
+                    </tr>-->
                     <tr>
                         <td style="text-align: center;">
                             <table width="100%">
@@ -46,9 +49,9 @@
                                 <tr style="text-decoration: underline;">
                                     <td>#</td>
                                     <td>Product</td>
-                                    <td>Price</td>
-                                    <td align="center">Qty</td>
-                                    <td>Dis</td>
+                                    <td> Price </td>
+                                    <td align="center">&nbsp; Qty &nbsp;</td>
+                                    <td>&nbsp; Dis &nbsp;</td>
                                     <td align="right">Amount</td>
                                 </tr>
                                 {{#each saleDetails}}
@@ -56,9 +59,9 @@
                                         <td>{{order}}</td>
                                         <td>{{_product.name}}({{_product._unit.name}})</td>
                                         <td>{{price}}</td>
-                                        <td align="center">{{quantity}}</td>
-                                        <td>{{discount}}</td>
-                                        <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
+                                        <td align="center"> &nbsp;{{quantity}} &nbsp;</td>
+                                        <td> &nbsp;{{discount}}&nbsp; </td>
+                                        <td style="text-align: right;">{{amountFormated}}{{baseCurrency.symbol}}</td>
                                     </tr>
                                 {{/each}}
 
@@ -67,21 +70,21 @@
                             <table width="100%">
                                 <tr style="text-align: right;">
                                     <td colspan="2">Sub Total:</td>
-                                    <td colspan="2">{{sale.subTotalFormatted}} {{baseCurrency.symbol}}</td>
+                                    <td colspan="2">{{sale.subTotalFormatted}}{{baseCurrency.symbol}}</td>
                                 </tr>
                                 <tr style="text-align: right;">
                                     <td colspan="2" align="right">Dis:</td>
-                                    <td colspan="2" align="right">{{sale.discount}} %</td>
+                                    <td colspan="2" align="right">{{sale.discount}}%</td>
 
                                 </tr>
                                 <tr style="text-align: right;">
                                     <td colspan="2">Total {{baseCurrency._id}}:</td>
-                                    <td colspan="2">{{sale.totalFormatted}} {{baseCurrency.symbol}}</td>
+                                    <td colspan="2">{{sale.totalFormatted}}{{baseCurrency.symbol}}</td>
                                 </tr>
                                 {{#each sale._exchangeRate.rates}}
                                     <tr style="text-align: right;">
                                         <td colspan="2" align="right">{{toCurrencyId}}:</td>
-                                        <td colspan="2" align="right">{{totalFormatted}} {{symbol}}</td>
+                                        <td colspan="2" align="right">{{totalFormatted}}{{symbol}}</td>
                                     </tr>
                                 {{/each}}
 
