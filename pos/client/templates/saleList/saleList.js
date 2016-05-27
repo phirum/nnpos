@@ -39,6 +39,7 @@ posSaleListTPL.events({
     'click .update': function (e, t) {
         var id = this._id;
         var total = this.total;
+        var isRetail = this.isRetail;
         branchId = Session.get('currentBranch');
         if (this.status != "Unsaved") {
             alertify.confirm("Are you sure to update this invoice: [" + id + "]? It will recalculate inventory and remove all it's payment(if it has). ")
@@ -52,6 +53,7 @@ posSaleListTPL.events({
                                     if (err) {
                                         alertify.error(err.message);
                                     } else {
+                                        Session.set('isRetail',isRetail);
                                         FlowRouter.go('pos.checkout', {saleId: id});
                                     }
                                 })
@@ -64,6 +66,7 @@ posSaleListTPL.events({
             // alertify.saleUpdate(fa('pencil', 'Update Existing Sale'), renderTemplate(posSaleUpdate, sale));
         }
         else {
+            Session.set('isRetail',isRetail);
             FlowRouter.go('pos.checkout', {saleId: id});
         }
         /* Meteor.call('findOneRecord', 'Pos.Collection.Sales', {_id: id}, {}, function (error, sale) {

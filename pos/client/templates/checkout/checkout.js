@@ -3,7 +3,9 @@ Session.setDefault('hasUpdate', false);
 Template.pos_checkout.onRendered(function () {
     Meteor.typeahead.inject();
     createNewAlertify(["customer", "userStaff"]);
-    Session.set('isRetail', true);
+    if (Session.get('isRetail') == null) {
+        Session.set('isRetail', true);
+    }
     $('#sale-date').datetimepicker({
         format: "MM/DD/YYYY hh:mm:ss A"
     });
