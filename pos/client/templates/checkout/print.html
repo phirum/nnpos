@@ -46,21 +46,21 @@
                     <tr>
                         <td>
                             <table width="100%">
-                                <tr style="text-decoration: underline;">
-                                    <td>#</td>
-                                    <td>Product</td>
-                                    <td> Price </td>
-                                    <td align="center">&nbsp; Qty &nbsp;</td>
-                                    <td>&nbsp; Dis &nbsp;</td>
-                                    <td align="right">Amount</td>
+                                <tr>
+                                    <td style="text-decoration: underline;">#</td>
+                                    <td style="text-decoration: underline;">Product</td>
+                                    <td style="text-decoration: underline;"> Price </td>
+                                    <td align="center">&nbsp;<span style="text-decoration: underline;">Qty</span>&nbsp;</td>
+                                    <td >&nbsp;<span style="text-decoration: underline;">Dis</span>&nbsp;</td>
+                                    <td align="right" style="text-decoration: underline;">Amount</td>
                                 </tr>
                                 {{#each saleDetails}}
                                     <tr>
                                         <td>{{order}}</td>
                                         <td>{{_product.name}}({{_product._unit.name}})</td>
                                         <td>{{price}}</td>
-                                        <td align="center"> &nbsp;{{quantity}} &nbsp;</td>
-                                        <td> &nbsp;{{discount}}&nbsp; </td>
+                                        <td align="center">&nbsp;{{quantity}}&nbsp;</td>
+                                        <td>&nbsp;{{discount}}&nbsp;</td>
                                         <td style="text-align: right;">{{amountFormated}}{{baseCurrency.symbol}}</td>
                                     </tr>
                                 {{/each}}
