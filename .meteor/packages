@@ -95,7 +95,7 @@ aldeed:autoform
 #zimme:select2-bootstrap3-css
 aldeed:autoform-select2
 chhib:selectize-bootstrap-3
-comerc:autoform-selectize
+#comerc:autoform-selectize
 rajit:bootstrap3-datepicker
 aldeed:autoform-bs-datepicker
 tsega:bootstrap3-datetimepicker
@@ -157,7 +157,7 @@ numeral:numeral
 bigdsk:inputmask
 natestrauser:animate-css
 rzymek:fullcalendar
-#meteorhacks:kadira
+meteorhacks:kadira
 matteodem:easy-search
 simple:markdown-templating
 
@@ -184,3 +184,4 @@ mizzao:timesync
 natestrauser:select2
 zimme:select2-bootstrap3-css
 sergeyt:typeahead
+vazco:universe-autoform-select

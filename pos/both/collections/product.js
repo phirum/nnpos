@@ -4,7 +4,7 @@ Images = new FS.Collection("images", {
         maxSize: 1048576, // in bytes
         allow: {
             contentTypes: ['image/*'],
-            extensions: ['png','jpg']
+            extensions: ['png', 'jpg']
         },
         onInvalid: function (message) {
             if (Meteor.isClient) {
@@ -26,7 +26,7 @@ Pos.Schema.Products = new SimpleSchema({
                 collection: 'Images'
             }
         },
-        optional:true
+        optional: true
     },
     name: {
         type: String,
@@ -73,9 +73,21 @@ Pos.Schema.Products = new SimpleSchema({
         type: String,
         label: "Category",
         autoform: {
-            type: "select2",
-            options: function () {
-                return Pos.List.category();
+            type: 'universe-select',
+            afFieldInput: {
+                uniPlaceholder: 'Select One | ',
+                optionsMethod: 'getCategoryOptions',
+               /* optionsMethodParams: function () {
+                    if (Meteor.isClient) {
+                        let categoryId = Session.get('currentBranch');
+                        if (categoryId == null) {
+                            return {};
+                        } else {
+                            return {parentId: categoryId};
+                        }
+
+                    }
+                }*/
             }
         }
     }
@@ -86,16 +98,16 @@ Pos.Schema.Products = new SimpleSchema({
         optional: true
     },
     /*subCategoryId: {
-        type: String,
-        label: "Sub Category",
-        autoform: {
-            type: "select2",
-            options: function () {
-                return Pos.List.subCategory();
-            }
-        }
-    }
-    ,*/
+     type: String,
+     label: "Sub Category",
+     autoform: {
+     type: "select2",
+     options: function () {
+     return Pos.List.subCategory();
+     }
+     }
+     }
+     ,*/
     unitId: {
         type: String,
         label: "Unit",
@@ -117,15 +129,15 @@ Pos.Schema.Products = new SimpleSchema({
             }
         }
     },
-    _category:{
-        type:Object,
-        blackbox:true,
-        optional:true
+    _category: {
+        type: Object,
+        blackbox: true,
+        optional: true
     },
-    _unit:{
-        type:Object,
-        blackbox:true,
-        optional:true
+    _unit: {
+        type: Object,
+        blackbox: true,
+        optional: true
     }
 })
 ;

@@ -15,13 +15,13 @@ Pos.Schema.Categories = new SimpleSchema({
         type:String,
         label:"ParentId",
         optional:true,
-        autoform: {
+       /* autoform: {
             type: "select2",
             options: function () {
                 //return Pos.List.category();
                return Pos.List.category("Select Parent | No Parent");
             }
-        }
+        }*/
     },
     level:{
         type:Number,
