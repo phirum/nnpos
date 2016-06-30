@@ -20,7 +20,7 @@ Meteor.publish('posSubCategory', function (selector) {
 });
 Meteor.publish('posUnit', function (selector) {
     if (this.userId) {
-        //selector = selector == null ? {} : selector;
+        selector = selector == null ? {} : selector;
         return Pos.Collection.Units.find(selector);
     }
 });
