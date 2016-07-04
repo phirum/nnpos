@@ -30,7 +30,7 @@
                     <label class="control-label" for="address">Category</label>
 
                     <div class="input-group select2-bootstrap-append">
-                        {{> afFieldInput name='categoryId' id="category-id"}}
+                        {{> afFieldInput name='categoryId' id="category-id" options=categoryList}}
                         <span class="input-group-addon categoryInsertAddon">
                             <a>
                                 <i class="fa fa-plus"></i>
@@ -77,7 +77,7 @@
                 {{> afQuickField name='retailPrice'}}
                 {{> afQuickField name='wholesalePrice'}}
                 <!--{{> afQuickField name='purchasePrice'}}-->
-                           </div>
+            </div>
             <div class="col-md-6">
                 {{> afQuickField name='productType' type="hidden" value="Stock"}}
                 {{> afQuickField name='status' type="hidden" value="enable"}}
@@ -117,7 +117,7 @@
                     <label class="control-label" for="address">Category</label>
 
                     <div class="input-group select2-bootstrap-append">
-                        {{> afFieldInput name='categoryId' id="category-id"}}
+                        {{> afFieldInput name='categoryId' id="category-id" options=categoryList}}
                         <span class="input-group-addon categoryInsertAddon">
                             <a>
                                 <i class="fa fa-plus"></i>
