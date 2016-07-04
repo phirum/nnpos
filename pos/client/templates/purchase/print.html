@@ -4,18 +4,18 @@
             <div align="center"
                  style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:260px; margin: 0 auto;">
                 <table border="0">
-                 <tr style="text-align: center;">
-                        <span style="font-weight: bold;font-size: 20px;">NaNa Computer</span>
-                    </tr>
-					 <tr style="text-align: center;">
-                        <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
-                    </tr>
+                    <!--     <tr style="text-align: center;">
+                             <span style="font-weight: bold;font-size: 20px;">NaNa Computer</span>
+                         </tr>
+                         <tr style="text-align: center;">
+                             <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
+                         </tr>-->
                     <tr>
                         <td style="text-align: center;">
                             <table width="100%">
-                                <tr>                          
+                                <tr>
                                     <td align="center" style="padding-top: 10px;">
-                                        <span style="font-weight: bold;font-family:'Khmer OS Battambang';font-size: 12px;"> {{company.khName}}</span><br><br>
+                                        <span style="font-family:'Khmer OS Muol Light', Khmer OS;font-size: 14px;"> {{company.khName}}</span><br><br>
                                     </td>
                                 </tr>
                             </table>
@@ -44,9 +44,9 @@
                                 <tr style="text-align: center; text-decoration: underline;">
                                     <td>#</td>
                                     <td align="left">Product</td>
-                                    <td align="right"> Price </td>
-                                    <td align="center"> Qty </td>
-                                    <td> Dis </td>
+                                    <td align="right"> Price</td>
+                                    <td align="center"> Qty</td>
+                                    <td> Dis</td>
                                     <td align="right">Amount</td>
                                 </tr>
                                 {{#each purchaseDetails}}
@@ -102,18 +102,19 @@
 
                                 {{/if}}
                             </table>
-							                <div class="imei" style="text-align:left">
-                    {{#each purchaseDetails}}
-                        {{#if imei}}
-                            <b>Product Name:</b> {{_product.name}}<br>
-                            {{#each imei}}{{this}}, {{/each}}<br>
-                        {{/if}}
-                    {{/each}}
-                </div>
+                            <!-- <div class="imei" style="text-align:left">
+                                {{#each purchaseDetails}}
+                                {{#if imei}}
+                                        <b>Product Name:</b> {{_product.name}}<br>
+                                        {{#each imei}}{{this}}, {{/each}}<br>
+                                    {{/if}}
+                            {{/each}}
+                            </div>-->
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-size: 10px; text-align: center;"><br><br><br>Powered by: Rabbit IT Solution, Tel: 053 50 66
+                        <td style="font-size: 10px; text-align: center;"><br><br><br>Powered by: Rabbit IT Solution,
+                            Tel: 053 50 66
                             777
                         </td>
                     </tr>
@@ -130,7 +131,7 @@
 <!--
 <template name="pos_printPurchase">
     {{#if data}}
-        {{#with data}}
+    {{#with data}}
             <div align="center"></div>
             <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
               <img src="/logo.jpg" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>
@@ -201,8 +202,8 @@
                         </tr>
                     {{/each}}
 
-                    {{#if hasPayment}}
-                        {{#each paymentObj.payments}}
+        {{#if hasPayment}}
+            {{#each paymentObj.payments}}
                             <tr>
                                 <td colspan="3"></td>
                                 <td>Paid {{currencyId}}:</td>
@@ -212,7 +213,7 @@
                             </tr>
                         {{/each}}
 
-                    {{/if}}
+        {{/if}}
                     </tbody>
                 </table>
                 <table class="table table-bordered">
@@ -229,19 +230,19 @@
                 </table>
                 <div class="imei">
                     {{#each purchaseDetails}}
-                        {{#if imei}}
+            {{#if imei}}
                             <b>Product Name:</b> {{_product.name}}<br>
                             {{#each imei}}{{this}}, {{/each}}<br>
                         {{/if}}
-                    {{/each}}
+        {{/each}}
                 </div>
 
             </div>
         {{/with}}
-        {{autoprint close="true"}}
-    {{else}}
-        {{> loading}}
-    {{/if}}
+    {{autoprint close="true"}}
+{{else}}
+    {{> loading}}
+{{/if}}
 
 </template>
 

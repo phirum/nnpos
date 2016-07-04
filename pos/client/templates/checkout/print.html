@@ -5,21 +5,21 @@
                  style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:260px; margin: 0 auto;">
 
                 <table border="0">
-				     <tr style="text-align: center;">
-					 <img src="/logo.jpg" class="logo" style="width:45px;float:left"/>                                
-                   
-                        <span style="font-weight: bold;font-size: 20px;">NaNa Computer</span><br>
-						 <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
-                    </tr>
-					<!-- <tr style="text-align: center;">
-                        <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
-                    </tr>-->
+                    <!--  <tr style="text-align: center;">
+                      <img src="/logo.jpg" class="logo" style="width:45px;float:left"/>
+
+                         <span style="font-weight: bold;font-size: 20px;">NaNa Computer</span><br>
+                          <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</>
+                     </tr>
+                      <tr style="text-align: center;">
+                         <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
+                     </tr>-->
                     <tr>
                         <td style="text-align: center;">
                             <table width="100%">
-                                <tr>                          
+                                <tr>
                                     <td align="center" style="padding-top: 10px;">
-                                        <span style="font-weight: bold;font-family:'Khmer OS Battambang';font-size: 12px;"> {{company.khName}}</span><br><br>
+                                        <span style="font-family:'Khmer OS Muol Light',Khmer OS;font-size: 14px;"> {{company.khName}}</span><br><br>
                                     </td>
                                 </tr>
                             </table>
@@ -49,9 +49,10 @@
                                 <tr>
                                     <td style="text-decoration: underline;">#</td>
                                     <td style="text-decoration: underline;">Product</td>
-                                    <td style="text-decoration: underline;"> Price </td>
-                                    <td align="center">&nbsp;<span style="text-decoration: underline;">Qty</span>&nbsp;</td>
-                                    <td >&nbsp;<span style="text-decoration: underline;">Dis</span>&nbsp;</td>
+                                    <td style="text-decoration: underline;"> Price</td>
+                                    <td align="center">&nbsp;<span style="text-decoration: underline;">Qty</span>&nbsp;
+                                    </td>
+                                    <td>&nbsp;<span style="text-decoration: underline;">Dis</span>&nbsp;</td>
                                     <td align="right" style="text-decoration: underline;">Amount</td>
                                 </tr>
                                 {{#each saleDetails}}
@@ -107,18 +108,19 @@
 
                                 {{/if}}
                             </table>
-							<div class="imei" style="text-align:left">
-                    {{#each saleDetails}}
-            {{#if imei}}
-                            <b>Product Name:</b>  {{_product.name}}<br>
-                            {{#each imei}}{{this}}, {{/each}}<br>
-                        {{/if}}
-        {{/each}}
-                </div>
+                            <!--<div class="imei" style="text-align:left">
+                                {{#each saleDetails}}
+                                    {{#if imei}}
+                                        <b>Product Name:</b>  {{_product.name}}<br>
+                                        {{#each imei}}{{this}}, {{/each}}<br>
+                                    {{/if}}
+                                {{/each}}
+                            </div>-->
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-size: 10px; text-align: center;"><br><br><br>Powered by: Rabbit IT Solution, Tel: 053 50 66
+                        <td style="font-size: 10px; text-align: center;"><br><br><br>Powered by: Rabbit IT Solution,
+                            Tel: 053 50 66
                             777
                         </td>
                     </tr>
