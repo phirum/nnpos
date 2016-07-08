@@ -579,6 +579,13 @@ Template.pos_checkout.events({
         window.open(url, '_blank');
         prepareForm();
     },
+    'click #print-invoice-small': function () {
+        var saleId = $('#sale-id').val();
+        if (saleId == "") return;
+        var url = '/pos/checkout/printSmallInvoice/' + saleId;
+        window.open(url, '_blank');
+        prepareForm();
+    },
     'click #print-sale': function () {
         var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
         var t = true;
@@ -595,6 +602,24 @@ Template.pos_checkout.events({
         var saleId = $('#sale-id').val();
         pay(saleId);
         var url = $('#btn-print').attr('href');
+        window.open(url, '_blank');
+    },
+    'click #print-sale-small': function () {
+        var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
+        var t = true;
+        $('#payment-list tr').each(function () {
+            t = $(this).find('.pay-amount').val() == "" ? true : false;
+            if (t == false) {
+                return false
+            }
+        });
+        if ($('#' + baseCurrencyId).val() == "" || t) {
+            alertify.warning("Please input payment amount.");
+            return;
+        }
+        var saleId = $('#sale-id').val();
+        pay(saleId);
+        var url = '/pos/checkout/printSmallInvoice/' + saleId;
         window.open(url, '_blank');
     },
     'click #save-sale': function () {
