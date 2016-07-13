@@ -15,6 +15,7 @@ var subs = new SubsManager();
 posRoutes.route('/product', {
     name: 'pos.product',
     subscriptions: function (params, queryParams) {
+       // var branchId = Session.get('currentBranch');
         this.register(
             'pos_image',
             Meteor.subscribe('images')
@@ -26,7 +27,7 @@ posRoutes.route('/product', {
          );*/
         this.register(
             'pos_unit',
-            Meteor.subscribe('posUnit')
+            Meteor.subscribe('posUnit',{})
         );
     },
     action: function (params, queryParams) {

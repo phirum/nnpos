@@ -1,15 +1,15 @@
-
 var subs = new SubsManager();
 posRoutes.route('/locationSetting', {
     name: 'pos.locationSetting',
     subscriptions: function (params, queryParams) {
+        var branchId = Session.get('currentBranch');
         this.register(
             'pos_locationSetting',
-            Meteor.subscribe('posLocationSetting')
+            Meteor.subscribe('posLocationSetting', {branchId: branchId})
         );
         this.register(
             'pos_location',
-            Meteor.subscribe('posLocation')
+            Meteor.subscribe('posLocation', {branchId: branchId})
         );
     },
     action: function (params, queryParams) {
