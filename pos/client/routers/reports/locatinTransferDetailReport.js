@@ -3,16 +3,16 @@ posRoutes.route('/locationTransferDetailReport', {
     subscriptions: function (params, queryParams) {
         this.register(
             'pos_staff',
-            Meteor.subscribe('posStaff')
+            Meteor.subscribe('posStaff',{})
         );
         this.register(
             'pos_location',
-            Meteor.subscribe('posLocation')
+            Meteor.subscribe('posLocation',{})
         );
-        this.register(
+        /*this.register(
             'pos_category',
-            Meteor.subscribe('posCategory')
-        );
+            Meteor.subscribe('posCategory',{})
+        );*/
     },
     action: function (params, queryParams) {
         Layout.main('pos_locationTransferDetailReport');

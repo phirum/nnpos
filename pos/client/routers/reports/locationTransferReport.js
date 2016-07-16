@@ -3,11 +3,11 @@ posRoutes.route('/locationTransferReport', {
     subscriptions: function (params, queryParams) {
         this.register(
             'pos_staff',
-            Meteor.subscribe('posStaff')
+            Meteor.subscribe('posStaff',{})
         );
         this.register(
             'pos_location',
-            Meteor.subscribe('posLocation')
+            Meteor.subscribe('posLocation',{})
         );
     },
     action: function (params, queryParams) {

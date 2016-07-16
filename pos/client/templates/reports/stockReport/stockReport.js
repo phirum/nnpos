@@ -4,6 +4,20 @@ Template.pos_stockReport.onRendered(function () {
     DateTimePicker.date(name);
 
 });
+Template.pos_stockReport.helpers({
+    categoryList: function () {
+        var categories;
+        var list = [];
+        categories = ReactiveMethod.call('categoryList', 'All', null);
+        categories.forEach(function (category) {
+            list.push({
+                label: Spacebars.SafeString(category.label),
+                value: category.value
+            });
+        });
+        return list;
+    }
+});
 Template.pos_stockReport.events({
     'change select[name="branch"]': function (e) {
         var branchId = $(e.currentTarget).val();
@@ -21,44 +35,44 @@ Template.pos_stockReport.events({
 
 Template.pos_stockReportGen.helpers({
     /*reportHelper: function () {
-        var params = {};
-        // var date=new Date(this.date);
-        var date = moment(this.date + " 23:59:59").toDate();
-        var branchId = this.branch;
-        if (date != null) params.createdAt = {$lte: date};
-        if (branchId != null && branchId != null) params.branchId = branchId;
+     var params = {};
+     // var date=new Date(this.date);
+     var date = moment(this.date + " 23:59:59").toDate();
+     var branchId = this.branch;
+     if (date != null) params.createdAt = {$lte: date};
+     if (branchId != null && branchId != null) params.branchId = branchId;
 
-        var reportHelper = {};
-        reportHelper.companyName = Cpanel.Collection.Company.findOne().enName;
-        var branchNames = "";
+     var reportHelper = {};
+     reportHelper.companyName = Cpanel.Collection.Company.findOne().enName;
+     var branchNames = "";
 
-        reportHelper.branch = Cpanel.Collection.Branch.findOne(branchId).enName;
-        reportHelper.reportName = 'Stock Balance Report';
-        reportHelper.date = this.date;
+     reportHelper.branch = Cpanel.Collection.Branch.findOne(branchId).enName;
+     reportHelper.reportName = 'Stock Balance Report';
+     reportHelper.date = this.date;
 
-        reportHelper.header = [
-            {col1: "", col2: '', col3: ''}
-        ];
+     reportHelper.header = [
+     {col1: "", col2: '', col3: ''}
+     ];
 
-        var stockArray = [];
-        var i = 1;
-        var stockHistories = Pos.Collection.StockHistories.findOne(params, {sort: {createdAt: -1}});
-        if (stockHistories != null) {
-            var branchName = Cpanel.Collection.Branch.findOne(stockHistories.branchId).enName;
-            stockHistories.stockList.forEach(function (stockObj) {
-                var product = Pos.Collection.Products.findOne(stockObj.productId);
-                stockObj.order = i;
-                i++;
-                stockObj.productName = product.name;
-                stockObj.barcode = product.barcode;
-                stockObj.purchasePrice = product.purchasePrice;
-                stockObj.branchName = branchName;
-                stockArray.push(stockObj);
-            });
-        }
-        reportHelper.stock = stockArray;
-        return reportHelper;
-    },*/
+     var stockArray = [];
+     var i = 1;
+     var stockHistories = Pos.Collection.StockHistories.findOne(params, {sort: {createdAt: -1}});
+     if (stockHistories != null) {
+     var branchName = Cpanel.Collection.Branch.findOne(stockHistories.branchId).enName;
+     stockHistories.stockList.forEach(function (stockObj) {
+     var product = Pos.Collection.Products.findOne(stockObj.productId);
+     stockObj.order = i;
+     i++;
+     stockObj.productName = product.name;
+     stockObj.barcode = product.barcode;
+     stockObj.purchasePrice = product.purchasePrice;
+     stockObj.branchName = branchName;
+     stockArray.push(stockObj);
+     });
+     }
+     reportHelper.stock = stockArray;
+     return reportHelper;
+     },*/
     options: function () {
         // font size = null (default), bg
         // paper = a4, a5, mini

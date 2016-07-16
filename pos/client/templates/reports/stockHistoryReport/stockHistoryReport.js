@@ -3,6 +3,20 @@ Template.pos_stockHistoryReport.onRendered(function () {
     var name = $('[name="date"]');
     DateTimePicker.date(name);
 });
+Template.pos_stockHistoryReport.helpers({
+    categoryList: function () {
+        var categories;
+        var list = [];
+        categories = ReactiveMethod.call('categoryList', 'All', null);
+        categories.forEach(function (category) {
+            list.push({
+                label: Spacebars.SafeString(category.label),
+                value: category.value
+            });
+        });
+        return list;
+    }
+});
 Template.pos_stockHistoryReport.events({
     'change select[name="branch"]': function (e) {
         var branchId = $(e.currentTarget).val();
