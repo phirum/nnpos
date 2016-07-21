@@ -1,26 +1,25 @@
 /*Router.route('pos/purchaseReport', function () {
-        this.render('pos_purchaseReport');
-    },
-    {
-        name: 'pos.purchaseReport',
-        header: {title: 'Purchase Report', sub: '', icon: 'file-text-o'},
-        title:'pos-purchase-report'
-    });
-Router.route('pos/purchaseReportGen', function () {
-    var q = this.params.query;
-    this.layout('reportLayout', {
-        data: {
-            pageSize: 'a4',
-            orientation: 'portrait'
-        }
-    });
-    this.render('pos_purchaseReportGen', {
-        data: function () {
-            return q;
-        }
-    });
-});*/
-
+ this.render('pos_purchaseReport');
+ },
+ {
+ name: 'pos.purchaseReport',
+ header: {title: 'Purchase Report', sub: '', icon: 'file-text-o'},
+ title:'pos-purchase-report'
+ });
+ Router.route('pos/purchaseReportGen', function () {
+ var q = this.params.query;
+ this.layout('reportLayout', {
+ data: {
+ pageSize: 'a4',
+ orientation: 'portrait'
+ }
+ });
+ this.render('pos_purchaseReportGen', {
+ data: function () {
+ return q;
+ }
+ });
+ });*/
 
 
 posRoutes.route('/purchaseReport', {
@@ -28,15 +27,15 @@ posRoutes.route('/purchaseReport', {
     subscriptions: function (params, queryParams) {
         this.register(
             'pos_supplier',
-            Meteor.subscribe('posSupplier')
+            Meteor.subscribe('posSupplier', {})
         );
         this.register(
             'pos_staff',
-            Meteor.subscribe('posStaff')
+            Meteor.subscribe('posStaff', {})
         );
         this.register(
             'pos_location',
-            Meteor.subscribe('posLocation')
+            Meteor.subscribe('posLocation', {})
         );
     },
     action: function (params, queryParams) {

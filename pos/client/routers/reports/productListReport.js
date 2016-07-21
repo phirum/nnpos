@@ -1,10 +1,6 @@
 posRoutes.route('/productListReport', {
     name: 'pos.productListReport',
     subscriptions: function (params, queryParams) {
-        this.register(
-            'pos_category',
-            Meteor.subscribe('posCategory')
-        );
     },
     action: function (params, queryParams) {
         Layout.main('pos_productListReport');
