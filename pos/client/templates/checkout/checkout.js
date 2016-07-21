@@ -255,10 +255,18 @@ Template.pos_checkout.helpers({
             return [];
         }
     },
-    customers: function () {
-        return Pos.Collection.Customers.find({
+    customerLocations: function () {
+        return Pos.Collection.CustomerLocations.find({
             branchId: Session.get('currentBranch')
         }, {fields: {_id: 1, name: 1}});
+    },
+    customers: function () {
+        var selector = {branchId: Session.get('currentBranch')};
+        var customerLocationId = Session.get('customerLocationId');
+        if (customerLocationId) {
+            selector.customerLocationId = customerLocationId;
+        }
+        return Pos.Collection.Customers.find(selector, {fields: {_id: 1, name: 1}});
     },
     // products: function () {
     // return Pos.Collection.Products.find({status: "enable"}, {fields: {_id: 1, name: 1, _unit: 1}, limit: 10});
@@ -395,6 +403,9 @@ function checkBeforeAddOrUpdate(selector, data) {
     });
 }
 Template.pos_checkout.events({
+    'change #customer-location-id': function (e) {
+        Session.set('customerLocationId', $(e.currentTarget).val());
+    },
     'click #promotion-toggle': function () {
         $('#promotion-div').toggle();
     },

@@ -18,3 +18,4 @@ Meteor.subscribe('posUserStaff');
 Meteor.subscribe('images');
 Meteor.subscribe('adjustment');*/
 Meteor.subscribe('posOwedSale');
+Meteor.subscribe('posCustomerLocation', {});

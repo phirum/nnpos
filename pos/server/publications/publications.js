@@ -141,6 +141,12 @@ Meteor.publish('posLocation', function (selector) {
         return Pos.Collection.Locations.find(selector);
     }
 });
+Meteor.publish('posCustomerLocation', function (selector) {
+    if (this.userId) {
+        return Pos.Collection.CustomerLocations.find(selector);
+    }
+});
+
 Meteor.publish('posLocationTransfer', function (selector) {
     if (this.userId) {
         return Pos.Collection.LocationTransfers.find(selector);

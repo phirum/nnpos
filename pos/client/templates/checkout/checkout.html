@@ -50,6 +50,19 @@
                              </span>
                              </div>-->
 
+
+                            <label for="customer-location-id"> <b>Customer Location <span style="color:red">*</span></b></label>
+
+                            <div class="input-group select2-bootstrap-append">
+                                <select id="customer-location-id" value="" class="form-control input-sm select-two">
+                                    {{#each customerLocations}}
+                                        <option value="{{_id}}"> {{_id}} | {{name}}</option>
+                                    {{/each}}
+                                </select>
+                                <span class="input-group-addon customerInsertAddon">
+                            <a> <i class="fa fa-plus"></i> </a>
+                            </span>
+                            </div>
                             <label for="customer-id"> <b>Customer <span style="color:red">*</span></b></label>
 
                             <div class="input-group select2-bootstrap-append">
@@ -60,7 +73,7 @@
                                             | {{name}}</option>
                                     {{/each}}
                                 </select>
-                                 <span class="input-group-addon customerInsertAddon">
+                                <span class="input-group-addon customerInsertAddon">
                             <a> <i class="fa fa-plus"></i> </a>
                             </span>
                             </div>
@@ -485,7 +498,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="print-sale">Save and Print</button>
-                        <button type="button" class="btn btn-primary" id="print-sale-small">Save and Print Small</button>
+                        <button type="button" class="btn btn-primary" id="print-sale-small">Save and Print Small
+                        </button>
                         <button type="button" class="btn btn-primary" id="save-sale">Save</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>

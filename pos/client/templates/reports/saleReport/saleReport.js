@@ -4,6 +4,9 @@ Template.pos_saleReport.onRendered(function () {
     DateTimePicker.dateRange(name);
 });
 Template.pos_saleReport.events({
+    'change [name="customerLocationId"]': function (e) {
+        Session.set('customerLocationId', $(e.currentTarget).val());
+    },
     'change select[name="branch"]': function (e) {
         var branchId = $(e.currentTarget).val();
         if (branchId == "") {

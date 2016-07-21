@@ -6,6 +6,17 @@ Pos.Schema.Customers = new SimpleSchema({
         unique: true,
         max: 200
     },
+    customerLocationId: {
+        type: String,
+        optional: true,
+        label: "Customer Location",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return Pos.List.customerLocations();
+            }
+        }
+    },
     locationId: {
         type: String,
         label: "Location",
@@ -46,14 +57,14 @@ Pos.Schema.Customers = new SimpleSchema({
         type: String,
         label: "Branch"
     },
-    _branch:{
-        type:Object,
-        blackbox:true,
-        optional:true
+    _branch: {
+        type: Object,
+        blackbox: true,
+        optional: true
     },
-    _saleCount:{
-        type:Number,
-        optional:true
+    _saleCount: {
+        type: Number,
+        optional: true
     }
 });
 Pos.Collection.Customers.attachSchema(Pos.Schema.Customers);

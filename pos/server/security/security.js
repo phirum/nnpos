@@ -33,7 +33,8 @@ Security.permit(['insert', 'update', 'remove']).collections([
     Pos.Collection.Locations,
     Pos.Collection.LocationSettings,
     Pos.Collection.LocationTransfers,
-    Pos.Collection.LocationTransferDetails
+    Pos.Collection.LocationTransferDetails,
+    Pos.Collection.CustomerLocations
 ]).posIsAdmin().apply();
 
 Security.permit(['insert', 'update', 'remove']).collections([

@@ -49,8 +49,8 @@ var getCategoryList = function (selector, array, categories, alreadyUse) {
     return array;
 };
 
-Pos.ListForReport={
-    locations:function(){
+Pos.ListForReport = {
+    locations: function () {
         var list = [{label: "All", value: ""}];
         var branchIdSession = Session.get('branchIds');
         var branchIds = [];
@@ -69,9 +69,16 @@ Pos.ListForReport={
 
 
 Pos.List = {
-    locations:function(){
+    customerLocations: function () {
         var list = [{label: "(Select One)", value: ""}];
-        Pos.Collection.Locations.find({branchId:Session.get('currentBranch')}).forEach(function (obj) {
+        Pos.Collection.CustomerLocations.find({branchId: Session.get('currentBranch')}).forEach(function (obj) {
+            list.push({label: obj._id + ' : ' + obj.name, value: obj._id});
+        });
+        return list;
+    },
+    locations: function () {
+        var list = [{label: "(Select One)", value: ""}];
+        Pos.Collection.Locations.find({branchId: Session.get('currentBranch')}).forEach(function (obj) {
             list.push({label: obj._id + ' : ' + obj.name, value: obj._id});
         });
         return list;
@@ -164,6 +171,7 @@ Pos.List = {
     },
     customer: function () {
         var list = [{label: "All", value: ""}];
+        var customerLocationId = Session.get('customerLocationId');
         var branchIdSession = Session.get('branchIds');
         var branchIds = [];
         if (branchIdSession != null) {
@@ -172,7 +180,11 @@ Pos.List = {
             var userId = Meteor.userId();
             branchIds = Meteor.users.findOne(userId).rolesBranch;
         }
-        Pos.Collection.Customers.find({branchId: {$in: branchIds}}).forEach(function (obj) {
+        var selector = {branchId: {$in: branchIds}};
+        if (customerLocationId) {
+            selector.customerLocationId = customerLocationId;
+        }
+        Pos.Collection.Customers.find(selector).forEach(function (obj) {
             list.push({label: obj._id + ' : ' + obj.name, value: obj._id});
         });
 
