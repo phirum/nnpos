@@ -113,3 +113,25 @@ posRoutes.route('/checkout/print/:saleId', {
      parent: 'pos.home'
      }*/
 });
+
+
+//var subs = new SubsManager();
+posRoutes.route('/checkout/printSmallInvoice/:saleId', {
+    name: 'pos.printSmallInvoice',
+    subscriptions: function (params, queryParams) {
+        /*this.register(
+         'pos_exchangeRate',
+         Meteor.subscribe('posExchangeRate')
+         );*/
+    },
+    action: function (params, queryParams) {
+        Layout.render('printLayout', 'pos_printSmallInvoice');
+    },
+    layoutTemplate: 'printLayout'
+    /* breadcrumb: {
+     //params: ['id'],
+     //queryParams: ['show', 'color'],
+     title: 'Checkout',
+     parent: 'pos.home'
+     }*/
+});

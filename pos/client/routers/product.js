@@ -25,10 +25,6 @@ posRoutes.route('/product', {
          Meteor.subscribe('posProduct')
          );*/
         this.register(
-            'pos_category',
-            Meteor.subscribe('posCategory')
-        );
-        this.register(
             'pos_unit',
             Meteor.subscribe('posUnit')
         );

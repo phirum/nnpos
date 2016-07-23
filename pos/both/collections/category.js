@@ -17,10 +17,10 @@ Pos.Schema.Categories = new SimpleSchema({
         optional:true,
         autoform: {
             type: "select2",
-            options: function () {
+           /* options: function () {
                 //return Pos.List.category();
                return Pos.List.category("Select Parent | No Parent");
-            }
+            }*/
         }
     },
     level:{

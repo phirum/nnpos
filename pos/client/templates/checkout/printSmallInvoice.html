@@ -1,0 +1,271 @@
+<template name="pos_printSmallInvoice">
+    {{#if data}}
+        {{#with data}}
+            <div align="center"
+                 style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:260px; margin: 0 auto;">
+
+                <table border="0">
+				     <tr style="text-align: center;">
+					 <img src="/logo.jpg" class="logo" style="width:45px;float:left"/>                                
+                   
+                        <span style="font-weight: bold;font-size: 20px;">NaNa Computer</span><br>
+						 <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
+                    </tr>
+					<!-- <tr style="text-align: center;">
+                        <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
+                    </tr>-->
+                    <tr>
+                        <td style="text-align: center;">
+                            <table width="100%">
+                                <tr>                          
+                                    <td align="center" style="padding-top: 10px;">
+                                        <span style="font-weight: bold;font-family:'Khmer OS Battambang';font-size: 12px;"> {{company.khName}}</span><br><br>
+                                    </td>
+                                </tr>
+                            </table>
+                            Address: {{company.khAddress}}<br>
+                            Tel: {{company.telephone}}<br>
+						<span style="font-weight: bold;font-size: 15px;text-decoration: underline;">
+                            Invoice</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table width="100%">
+                                <tr>
+                                    <td><b>No:</b> {{sale._id}}</td>
+                                    <td align="right"><b>Staff:</b> {{sale._staff.name}}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Date:</b> {{sale.saleDate}}</td>
+                                    <td align="right"><b>Customer:</b> {{sale._customer.name}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table width="100%">
+                                <tr>
+                                    <td style="text-decoration: underline;">#</td>
+                                    <td style="text-decoration: underline;">Product</td>
+                                    <td style="text-decoration: underline;"> Price </td>
+                                    <td align="center">&nbsp;<span style="text-decoration: underline;">Qty</span>&nbsp;</td>
+                                    <td >&nbsp;<span style="text-decoration: underline;">Dis</span>&nbsp;</td>
+                                    <td align="right" style="text-decoration: underline;">Amount</td>
+                                </tr>
+                                {{#each saleDetails}}
+                                    <tr>
+                                        <td>{{order}}</td>
+                                        <td>{{_product.name}}({{_product._unit.name}})</td>
+                                        <td>{{price}}</td>
+                                        <td align="center">&nbsp;{{quantity}}&nbsp;</td>
+                                        <td>&nbsp;{{discount}}&nbsp;</td>
+                                        <td style="text-align: right;">{{amountFormated}}{{baseCurrency.symbol}}</td>
+                                    </tr>
+                                {{/each}}
+
+                            </table>
+                            <hr>
+                            <table width="100%">
+                                <tr style="text-align: right;">
+                                    <td colspan="2">Sub Total:</td>
+                                    <td colspan="2">{{sale.subTotalFormatted}}{{baseCurrency.symbol}}</td>
+                                </tr>
+                                <tr style="text-align: right;">
+                                    <td colspan="2" align="right">Dis:</td>
+                                    <td colspan="2" align="right">{{sale.discount}}%</td>
+
+                                </tr>
+                                <tr style="text-align: right;">
+                                    <td colspan="2">Total {{baseCurrency._id}}:</td>
+                                    <td colspan="2">{{sale.totalFormatted}}{{baseCurrency.symbol}}</td>
+                                </tr>
+                                {{#each sale._exchangeRate.rates}}
+                                    <tr style="text-align: right;">
+                                        <td colspan="2" align="right">{{toCurrencyId}}:</td>
+                                        <td colspan="2" align="right">{{totalFormatted}}{{symbol}}</td>
+                                    </tr>
+                                {{/each}}
+
+                                {{#if hasPayment}}
+                                    <tr style="text-align: right;">
+                                        <td colspan="7">
+                                            <hr>
+                                        </td>
+                                    </tr>
+
+                                    {{#each paymentObj.payments}}
+                                        <tr>
+                                            <td>Paid {{currencyId}}:</td>
+                                            <td style="font-weight: bold">{{payAmount}}</td>
+                                            <td style="text-align: right">Change {{currencyId}}:</td>
+                                            <td style="text-align: right;font-weight: bold">{{formatFixTwo return}}</td>
+                                        </tr>
+                                    {{/each}}
+
+
+                                {{/if}}
+                            </table>
+							<div class="imei" style="text-align:left">
+                    {{#each saleDetails}}
+            {{#if imei}}
+                            <b>Product Name:</b>  {{_product.name}}<br>
+                            {{#each imei}}{{this}}, {{/each}}<br>
+                        {{/if}}
+        {{/each}}
+                </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 10px; text-align: center;"><br><br><br>Powered by: Rabbit IT Solution, Tel: 053 50 66
+                            777
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        {{/with}}
+        {{autoprint close="true"}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
+</template>
+<!--
+<template name="pos_printCheckout">
+    {{#if data}}
+    {{#with data}}
+            <div align="center"></div>
+            <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
+                <img src="/logo.jpg" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>
+                <div width="75%" align="center" style="padding-top: 10px;">
+                    <span style="font-family:'Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.khName}}</span><br>
+                    <span style="font-size: 14px;font-weight: bold;">{{company.enName}}</span><br>
+                    Address: {{company.enAddress}}<br>
+                    Tel: {{company.telephone}}<br>
+                </div>
+
+                <table width="100%">
+                    <tr>
+                        <td> <span style="font-weight: bold;font-size: 18px;">
+                            INVOICE
+                        </span></td>
+                        <td align="right"><b>#:</b> {{sale._id}}</td>
+                    </tr>
+                    <tr>
+
+                        <td><b>Voucher:</b> {{sale.voucher}}</td>
+                        <td align="right"><b>Date:</b> {{sale.saleDate}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Customer:</b> {{sale._customer.name}}</td>
+                        <td align="right"><b>Staff:</b> {{sale._staff.name}}</td>
+                    </tr>
+
+                </table>
+                <table class="table table-bordered auto">
+                    <thead>
+                    <tr>
+                        <th> N<sup style="text-decoration: underline;">o</sup></th>
+                        <th> Product</th>
+                        <th> Price</th>
+                        <th> Qty</th>
+                        <th> Unit</th>
+                        <th> Discount</th>
+                        <th style="text-align: right;"> Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody class="custom">
+                    {{#each saleDetails}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{_product.name}}</td>
+                            <td>{{price}}</td>
+                            <td>{{quantity}}</td>
+                            <td>{{_product._unit.name}}</td>
+                            <td>{{discount}}</td>
+                            <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
+                        </tr>
+                    {{/each}}
+
+                    <tr style="text-align: right;">
+                        <td colspan="6">Sub Total:</td>
+                        <td>{{sale.subTotalFormatted}} {{baseCurrency.symbol}}</td>
+                    </tr>
+                    <tr style="text-align: right;">
+                        <td colspan="6" align="right">Discount:</td>
+                        <td align="right">{{sale.discount}} %</td>
+                    </tr>
+                    <tr style="text-align: right;">
+                        <td colspan="6" align="right">Discount:</td>
+                        <td align="right">{{sale.discountAmount}} {{baseCurrency.symbol}}</td>
+                    </tr>
+                    <tr style="text-align: right;">
+                        <td colspan="6">Total {{baseCurrency._id}}:</td>
+                        <td style="font-weight: bold">{{sale.totalFormatted}} {{baseCurrency.symbol}}</td>
+                    </tr>
+
+                    {{#each sale._exchangeRate.rates}}
+                        <tr style="text-align: right;">
+                            <td colspan="6" align="right">{{toCurrencyId}}:</td>
+                            <td align="right" style="font-weight: bold">{{totalFormatted}} {{symbol}}</td>
+                        </tr>
+                    {{/each}}
+
+        {{#if hasPayment}}
+            {{#each paymentObj.payments}}
+                            <tr>
+                                <td colspan="3"></td>
+                                <td>Paid {{currencyId}}:</td>
+                                <td style="font-weight: bold">{{payAmount}}</td>
+                                <td style="text-align: right">Change {{currencyId}}:</td>
+                                <td style="text-align: right;font-weight: bold">{{formatFixTwo return}}</td>
+                            </tr>
+                        {{/each}}
+
+        {{/if}}
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="footer-header">Stock</td>
+                        <td class="footer-header">Accounting</td>
+                        <td class="footer-header">Customer</td>
+                    </tr>
+                    <tr>
+                        <td class="footer-box"></td>
+                        <td class="footer-box"></td>
+                        <td class="footer-box"></td>
+                    </tr>
+                </table>
+
+                <div class="imei">
+                    {{#each saleDetails}}
+            {{#if imei}}
+                            <b>Product Name:</b>  {{_product.name}}<br>
+                            {{#each imei}}{{this}}, {{/each}}<br>
+                        {{/if}}
+        {{/each}}
+                </div>
+            </div>
+        {{/with}}
+    {{autoprint close="true"}}
+{{else}}
+    {{> loading}}
+{{/if}}
+</template>
+-->
+<!--<tr>
+                        <td colspan="7" style="text-align: center;"><b>Promotion Items</b></td>
+                    </tr>
+                    {{#each promotionSaleDetails}}
+                        <tr>
+                            <td>{{order}}</td>
+                            <td>{{_product.name}}</td>
+                            <td>{{price}}</td>
+                            <td>{{quantity}}</td>
+                            <td>{{_product._unit.name}}</td>
+                            <td>{{discount}}</td>
+                            <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
+                        </tr>
+                    {{/each}}-->
