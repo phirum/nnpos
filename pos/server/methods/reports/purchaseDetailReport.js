@@ -105,7 +105,7 @@ function getPurchaseProducts(params, categoryId) {
     var result = [];
     var purchaseDetails = Pos.Collection.PurchaseDetails.find(
         selectorObj,
-        {fields: {productId: 1, quantity: 1, price: 1, amount: 1, _product: 1}});
+        {sort:{'_product.name':1},fields: {productId: 1, quantity: 1, price: 1, amount: 1, _product: 1}});
     (purchaseDetails.fetch()).reduce(function (res, value) {
         if (!res[value.productId]) {
             res[value.productId] = {
