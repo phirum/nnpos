@@ -2,7 +2,7 @@ Session.setDefault('isRetail', true);
 Session.setDefault('hasUpdate', false);
 Template.pos_checkout.onRendered(function () {
     Meteor.typeahead.inject();
-    createNewAlertify(["customer", "userStaff"]);
+    createNewAlertify(["customer", "userStaff",'customerLocation']);
     if (Session.get('isRetail') == null) {
         Session.set('isRetail', true);
     }
@@ -884,6 +884,10 @@ Template.pos_checkout.events({
     },
     'click .customerInsertAddon': function () {
         alertify.customer(fa('plus', 'Add New Customer'), renderTemplate(Template.pos_customerInsert));
+        // .maximize();
+    }, 
+	'click .customerLocationInsertAddon': function () {
+        alertify.customerLocation(fa('plus', 'Add New Customer Location'), renderTemplate(Template.pos_customerLocationInsert));
         // .maximize();
     },
     /*'change #product-id': function () {

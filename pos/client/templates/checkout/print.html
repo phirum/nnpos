@@ -1,4 +1,8 @@
-<template name="pos_printCheckout">
+
+<!-- <tr style="text-align: center;">
+                        <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
+                    </tr>-->
+<!--<template name="pos_printCheckout">
     {{#if data}}
         {{#with data}}
             <div align="center"
@@ -11,9 +15,7 @@
                         <span style="font-weight: bold;font-size: 20px;">NaNa Computer</span><br>
 						 <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
                     </tr>
-					<!-- <tr style="text-align: center;">
-                        <span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span>
-                    </tr>-->
+					
                     <tr>
                         <td style="text-align: center;">
                             <table width="100%">
@@ -131,16 +133,19 @@
         {{> loading}}
     {{/if}}
 </template>
-<!--
+-->
 <template name="pos_printCheckout">
     {{#if data}}
     {{#with data}}
             <div align="center"></div>
             <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
                 <img src="/logo.jpg" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>
-                <div width="75%" align="center" style="padding-top: 10px;">
-                    <span style="font-family:'Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.khName}}</span><br>
-                    <span style="font-size: 14px;font-weight: bold;">{{company.enName}}</span><br>
+                
+				<div width="75%" align="center" style="padding-top: 10px;">
+				 <span style="font-weight: bold;font-size: 20px;">NaNa Computer</span><br>
+					<span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span><br>
+                    <span style="font-family:'Khmer OS Battambang';font-size: 14px;font-weight: bold;">{{company.khName}}</span><br>
+                  
                     Address: {{company.enAddress}}<br>
                     Tel: {{company.telephone}}<br>
                 </div>
@@ -158,8 +163,8 @@
                         <td align="right"><b>Date:</b> {{sale.saleDate}}</td>
                     </tr>
                     <tr>
-                        <td><b>Customer:</b> {{sale._customer.name}}</td>
-                        <td align="right"><b>Staff:</b> {{sale._staff.name}}</td>
+                        <td><b>Customer:</b> <span style="font-size: 14px;font-weight: bold;">{{sale._customer.name}}</span></td>
+                        <td align="right"><b>Staff:</b> <span style="font-size: 14px;font-weight: bold;">{{sale._staff.name}}</span></td>
                     </tr>
 
                 </table>
@@ -201,8 +206,8 @@
                         <td align="right">{{sale.discountAmount}} {{baseCurrency.symbol}}</td>
                     </tr>
                     <tr style="text-align: right;">
-                        <td colspan="6">Total {{baseCurrency._id}}:</td>
-                        <td style="font-weight: bold">{{sale.totalFormatted}} {{baseCurrency.symbol}}</td>
+                        <td colspan="6" style="font-weight: bold;font-size:14px;">Total {{baseCurrency._id}}:</td>
+                        <td style="font-weight: bold;font-size:14px;">{{sale.totalFormatted}} {{baseCurrency.symbol}}</td>
                     </tr>
 
                     {{#each sale._exchangeRate.rates}}
@@ -254,7 +259,7 @@
     {{> loading}}
 {{/if}}
 </template>
--->
+
 <!--<tr>
                         <td colspan="7" style="text-align: center;"><b>Promotion Items</b></td>
                     </tr>

@@ -14,6 +14,9 @@
                     <i class="fa fa-cogs"></i> Manage <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
+				 <li class="{{isActiveRoute name='pos.customerLocation'}}"><a href="{{pathFor 'pos.customerLocation'}}">
+                        Customer Location</a>
+                    </li>
                     <li class="{{isActiveRoute name='pos.customer'}}"><a href="{{pathFor 'pos.customer'}}">
                         Customer</a>
                     </li>
