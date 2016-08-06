@@ -5,6 +5,9 @@ Template.pos_owedCustomerReport.onRendered(function () {
 });
 
 Template.pos_owedCustomerReport.events({
+    'change [name="customerLocationId"]': function (e) {
+        Session.set('customerLocationId', $(e.currentTarget).val());
+    },
     'change select[name="branch"]': function (e) {
         var branchId = $(e.currentTarget).val();
         if (branchId == "") {

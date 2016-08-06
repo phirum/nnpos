@@ -2,6 +2,17 @@
  * Schema
  */
 Pos.Schema.OwedCustomerReport = new SimpleSchema({
+    customerLocationId: {
+        type: String,
+        optional: true,
+        label: "Customer Location",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return Pos.List.customerLocations();
+            }
+        }
+    },
     locationId: {
         type: String,
         label: "Location",

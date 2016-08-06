@@ -9,6 +9,9 @@ Meteor.methods({
             content: [{index: 'No Result'}],
             footer: {}
         };
+        /*if(arg.customerLocationId!=null || arg.customerLocationId!=""){
+
+        }*/
         var params = {};
         var date = moment(arg.date + " 23:59:59").toDate();
         var customerId = arg.customerId;
