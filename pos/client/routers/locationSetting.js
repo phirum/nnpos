@@ -5,15 +5,15 @@ posRoutes.route('/locationSetting', {
     subscriptions: function (params, queryParams) {
         this.register(
             'pos_locationSetting',
-            Meteor.subscribe('posLocationSetting')
+            Meteor.subscribe('posLocationSetting',{branchId:Session.get('currentBranch')})
         );
         this.register(
             'pos_location',
-            Meteor.subscribe('posLocation')
+            Meteor.subscribe('posLocation',{branchId:Session.get('currentBranch')})
         );
     },
     action: function (params, queryParams) {
-        Layout.main('pos_locationSetting');
+        Layout.main('pos_locationSetting',{branchId:Session.get('currentBranch')});
     },
     breadcrumb: {
         //params: ['id'],
