@@ -15,6 +15,11 @@ Pos.Schema.Sales = new SimpleSchema({
         label: "Staff"
         //regEx: /^[a-z0-9A-Z_]{3,15}$/
     },
+    customerLocationId: {
+        type: String,
+        label: "Customer Location",
+        optional: true
+    },
     customerId: {
         type: String,
         label: "Customer"
@@ -101,13 +106,13 @@ Pos.Schema.Sales = new SimpleSchema({
         blackbox: true,
         optional: true
     },
-    _saleDetailCount:{
-        type:Number,
-        optional:true
+    _saleDetailCount: {
+        type: Number,
+        optional: true
     },
-    _paymentCount:{
-        type:Number,
-        optional:true
+    _paymentCount: {
+        type: Number,
+        optional: true
     }
 });
 Pos.Collection.Sales.attachSchema(Pos.Schema.Sales);

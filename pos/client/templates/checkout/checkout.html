@@ -56,7 +56,8 @@
                             <div class="input-group select2-bootstrap-append">
                                 <select id="customer-location-id" value="" class="form-control input-sm select-two">
                                     {{#each customerLocations}}
-                                        <option value="{{_id}}"> {{_id}} | {{name}}</option>
+                                        <option value="{{_id}}"
+                                                selected="{{#if compareTwoValue _id sale.customerLocationId}}selected{{/if}}"> {{_id}} | {{name}}</option>
                                     {{/each}}
                                 </select>
                                 <span class="input-group-addon customerLocationInsertAddon">
