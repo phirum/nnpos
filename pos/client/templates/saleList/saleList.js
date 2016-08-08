@@ -11,6 +11,9 @@ posSaleListTPL.onRendered(function () {
 });
 
 posSaleListTPL.helpers({
+    customerLocations: function () {
+        return ReactiveMethod.call('customerLocations');
+    },
     selector: function () {
         var selectorSession = Session.get('saleSelectorSession');
         if (selectorSession) {
@@ -27,6 +30,9 @@ posSaleListTPL.helpers({
 });
 
 posSaleListTPL.events({
+    'change #sale-customer-location-filter': function () {
+        setSaleSelectorSession();
+    },
     'change #sale-date-filter': function () {
         setSaleSelectorSession();
     },
@@ -53,7 +59,7 @@ posSaleListTPL.events({
                                     if (err) {
                                         alertify.error(err.message);
                                     } else {
-                                        Session.set('isRetail',isRetail);
+                                        Session.set('isRetail', isRetail);
                                         FlowRouter.go('pos.checkout', {saleId: id});
                                     }
                                 })
@@ -66,7 +72,7 @@ posSaleListTPL.events({
             // alertify.saleUpdate(fa('pencil', 'Update Existing Sale'), renderTemplate(posSaleUpdate, sale));
         }
         else {
-            Session.set('isRetail',isRetail);
+            Session.set('isRetail', isRetail);
             FlowRouter.go('pos.checkout', {saleId: id});
         }
         /* Meteor.call('findOneRecord', 'Pos.Collection.Sales', {_id: id}, {}, function (error, sale) {
@@ -224,6 +230,7 @@ function setSaleSelectorSession() {
     var selector = {branchId: Session.get('currentBranch')};
     var dateRange = $('#sale-date-filter').val();
     var status = $('#sale-status-filter').val();
+    var customerLocationId = $('#sale-customer-location-filter').val();
     if (dateRange != "") {
         var date = dateRange.split(" To ");
         var fromDate = moment(date[0] + " 00:00:00", "YYYY-MM-DD HH:mm:ss").toDate();
@@ -236,7 +243,10 @@ function setSaleSelectorSession() {
         selector.saleDate = {$gte: fromDate, $lte: toDate};
     }
     if (status != "") {
-        selector.status = status
+        selector.status = status;
+    }
+    if (customerLocationId != "") {
+        selector.customerLocationId = customerLocationId;
     }
     Session.set('saleSelectorSession', selector);
 }
