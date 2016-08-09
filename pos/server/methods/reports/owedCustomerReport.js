@@ -9,9 +9,7 @@ Meteor.methods({
             content: [{index: 'No Result'}],
             footer: {}
         };
-        /*if(arg.customerLocationId!=null || arg.customerLocationId!=""){
 
-        }*/
         var params = {};
         var date = moment(arg.date + " 23:59:59").toDate();
         var customerId = arg.customerId;
@@ -26,7 +24,7 @@ Meteor.methods({
         } else {
             branchIds.push(branchId);
         }
-        var customer = "All", location = "All";
+        var customer = "All", location = "All", customerLocation = "All";
         if (customerId != null && customerId != "") {
             params.customerId = customerId;
             customer = Pos.Collection.Customers.findOne(customerId).name;
@@ -34,6 +32,10 @@ Meteor.methods({
         if (locationId != null && locationId != "") {
             params.locationId = locationId;
             location = Pos.Collection.Locations.findOne(locationId).name;
+        }
+        if (arg.customerLocationId != null && arg.customerLocationId != "") {
+            params.customerLocationId = arg.customerLocationId;
+            customerLocation = Pos.Collection.CustomerLocations.findOne(arg.customerLocationId).name;
         }
         params.branchId = {$in: branchIds};
         params.status = "Owed";
@@ -44,6 +46,7 @@ Meteor.methods({
         branchIds.forEach(function (id) {
             branchNames += Cpanel.Collection.Branch.findOne(id).enName + ", ";
         });
+        header.customerLocation = customerLocation;
         header.branch = branchNames.substr(0, branchNames.length - 2);
         header.date = arg.date;
         header.location = location;

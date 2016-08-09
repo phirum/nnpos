@@ -47,7 +47,7 @@ Meteor.methods({
         });
         header.branch = branchNames.substr(0, branchNames.length - 2);
         header.date = arg.date;
-        var staff = "All", customer = "All", location = "All", category = "All", status = "All";
+        var staff = "All", customer = "All", location = "All", category = "All", status = "All", customerLocation = "All";
         if (customerId != null && customerId != "")
             customer = Pos.Collection.Customers.findOne(customerId).name;
         if (staffId != null && staffId != "")
@@ -63,6 +63,12 @@ Meteor.methods({
         } else {
             params.status = {$ne: "Unsaved"};
         }
+        if (arg.customerLocationId != null && arg.customerLocationId != "") {
+            params.customerLocationId = arg.customerLocationId;
+            customerLocation = Pos.Collection.CustomerLocations.findOne(arg.customerLocationId).name;
+        }
+
+        header.customerLocation = customerLocation;
         header.staff = staff;
         header.customer = customer;
         header.location = location;
@@ -110,7 +116,10 @@ function getSaleProducts(params, categoryId, promotion) {
     var result = [];
     var saleDetails = Pos.Collection.SaleDetails.find(
         selectorObj,
-        {sort:{'_product.name':1},fields: {productId: 1, quantity: 1, price: 1, amount: 1, totalCost: 1, _product: 1}});
+        {
+            sort: {'_product.name': 1},
+            fields: {productId: 1, quantity: 1, price: 1, amount: 1, totalCost: 1, _product: 1}
+        });
     (saleDetails.fetch()).reduce(function (res, value) {
         if (!res[value.productId]) {
             res[value.productId] = {
