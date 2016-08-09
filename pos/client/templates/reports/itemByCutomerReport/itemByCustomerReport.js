@@ -36,6 +36,9 @@ Template.pos_itemByCustomerReport.events({
 });
 
 Template.pos_itemByCustomerReportGen.helpers({
+    hasList: function (items) {
+        return items.length > 0;
+    },
     options: function () {
         // font size = null (default), bg
         // paper = a4, a5, mini
