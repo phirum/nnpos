@@ -28,7 +28,7 @@ Meteor.methods({
         }
         /****** Title *****/
         data.title = Cpanel.Collection.Company.findOne();
-        var staff = "All", customer = "All", location = "All", status = "All";
+        var staff = "All", customer = "All", location = "All", status = "All", customerLocation = "All";
         if (fromDate != null && toDate != null) params.saleDate = {$gte: fromDate, $lte: toDate};
         if (customerId != null && customerId != "") {
             params.customerId = customerId;
@@ -49,6 +49,10 @@ Meteor.methods({
         } else {
             params.status = {$ne: "Unsaved"};
         }
+        if (arg.customerLocationId != null && arg.customerLocationId != "") {
+            params.customerLocationId = arg.customerLocationId;
+            customerLocation = Pos.Collection.CustomerLocations.findOne(arg.customerLocationId).name;
+        }
         //params.status = {$ne: "Unsaved"};
         params.transactionType = arg.transactionType;
         //params.transactionType = "Sale";
@@ -60,6 +64,7 @@ Meteor.methods({
         branchIds.forEach(function (id) {
             branchNames += Cpanel.Collection.Branch.findOne(id).enName + ", ";
         });
+        header.customerLocation=customerLocation;
         header.branch = branchNames.substr(0, branchNames.length - 2);
         header.date = arg.date;
         header.location = location;

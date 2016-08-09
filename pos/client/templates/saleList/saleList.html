@@ -18,7 +18,13 @@
             </select>
         </div>
         <div class="col-sm-4">
-
+            Customer Location:
+            <select class="form-control" id="sale-customer-location-filter">
+                <option value="">All</option>
+                {{#each customerLocations}}
+                    <option value="{{_id}}">{{name}}</option>
+                {{/each}}
+            </select>
         </div>
 
     </div>
@@ -38,7 +44,8 @@
         <li><a class="show"><i class="fa fa-eye"></i> Show</a></li>
         <li><a href="/pos/checkout/print/{{this._id}}" target="_blank" class="print"><i class="fa fa-print"></i>
             Print</a></li>
-			     <li><a href="/pos/checkout/printSmallInvoice/{{this._id}}" target="_blank" class="print"><i class="fa fa-print"></i>
+        <li><a href="/pos/checkout/printSmallInvoice/{{this._id}}" target="_blank" class="print"><i
+                class="fa fa-print"></i>
             Print Small Invoice</a></li>
     {{/tabularAction}}
 </template>

@@ -2,7 +2,7 @@ Session.setDefault('isRetail', true);
 Session.setDefault('hasUpdate', false);
 Template.pos_checkout.onRendered(function () {
     Meteor.typeahead.inject();
-    createNewAlertify(["customer", "userStaff",'customerLocation']);
+    createNewAlertify(["customer", "userStaff", 'customerLocation']);
     if (Session.get('isRetail') == null) {
         Session.set('isRetail', true);
     }
@@ -266,6 +266,7 @@ Template.pos_checkout.helpers({
         if (customerLocationId) {
             selector.customerLocationId = customerLocationId;
         }
+        debugger;
         return Pos.Collection.Customers.find(selector, {fields: {_id: 1, name: 1}});
     },
     // products: function () {
@@ -405,6 +406,7 @@ function checkBeforeAddOrUpdate(selector, data) {
 Template.pos_checkout.events({
     'change #customer-location-id': function (e) {
         Session.set('customerLocationId', $(e.currentTarget).val());
+        checkIsUpdate();
     },
     'click #promotion-toggle': function () {
         $('#promotion-div').toggle();
@@ -496,8 +498,9 @@ Template.pos_checkout.events({
         var saleId = $('#sale-id').val();
         if (saleId == "") return;
         var branchId = Session.get('currentBranch');
-        var customer = $('#customer-id').val();
-        var staff = $('#staff-id').val();
+        var customerLocationId = $('#customer-location-id').val();
+        var customerId = $('#customer-id').val();
+        var staffId = $('#staff-id').val();
         var date = $('#input-sale-date').val();
         var transactionType = $('#transaction-type').val();
         var description = $('#description').val();
@@ -510,12 +513,13 @@ Template.pos_checkout.events({
                     alertify.warning('Voucher already exists. Please input other one.');
                 } else {
                     var set = {};
-                    set.customerId = customer;
-                    set.staffId = staff;
+                    set.customerId = customerId;
+                    set.staffId = staffId;
                     set.saleDate = moment(date).toDate();
                     set.transactionType = transactionType;
                     set.description = description;
                     set.voucher = voucher;
+                    set.customerLocationId = customerLocationId;
                     Meteor.call('updateSale', saleId, set, function (error, result) {
                         if (error) {
                             alertify.error(error.message);
@@ -885,8 +889,8 @@ Template.pos_checkout.events({
     'click .customerInsertAddon': function () {
         alertify.customer(fa('plus', 'Add New Customer'), renderTemplate(Template.pos_customerInsert));
         // .maximize();
-    }, 
-	'click .customerLocationInsertAddon': function () {
+    },
+    'click .customerLocationInsertAddon': function () {
         alertify.customerLocation(fa('plus', 'Add New Customer Location'), renderTemplate(Template.pos_customerLocationInsert));
         // .maximize();
     },
@@ -1090,7 +1094,12 @@ function getValidatedValues() {
         data.message = "Please select staff name.";
         return data;
     }
-
+    var customerLocationId = $('#customer-location-id').val();
+    if (customerLocationId == "" || customerLocationId == null) {
+        data.valid = false;
+        data.message = "Please select customer Location name.";
+        return data;
+    }
     var customerId = $('#customer-id').val();
     if (customerId == "" || customerId == null) {
         data.valid = false;
@@ -1114,7 +1123,8 @@ function getValidatedValues() {
         description: $('#description').val(),
         transactionType: transactionType,
         voucher: voucher,
-        locationId: locationId
+        locationId: locationId,
+        customerLocationId: customerLocationId
     };
     var exchangeRate = Pos.Collection.ExchangeRates.findOne({
         base: id,
@@ -1422,9 +1432,10 @@ function checkIsUpdate() {
     var voucher = $('#voucher').val();
     var saleVoucher = sale.voucher == null ? '' : sale.voucher;
     var saleDescription = sale.description == null ? '' : sale.description;
+    var customerLocationId = $('#customer-location-id').val();
     if (date != saleDate || customer != sale.customerId ||
         staff != sale.staffId || transactionType != sale.transactionType ||
-        description != saleDescription || voucher != saleVoucher) {
+        description != saleDescription || voucher != saleVoucher || customerLocationId != sale.customerLocationId) {
         hasUpdate = true;
     }
     Session.set('hasUpdate', hasUpdate);
