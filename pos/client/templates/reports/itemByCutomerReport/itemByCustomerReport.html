@@ -70,12 +70,28 @@
 
                     <tbody class="content-body">
                     {{#each content}}
-                        <tr>
-                            <td>{{order}}</td>
-                            <td>{{productName}}</td>
-                            <td>{{quantity}}</td>
-                            <td>{{totalCost}}</td>
-                            <td>{{total}}</td>
+                        <tr style="background-color: #3A87AD">
+                            <td colspan="5">
+                                {{name}}
+                            </td>
+                        </tr>
+                        {{#each items}}
+                            <tr>
+                                <td>{{order}}</td>
+                                <td>{{productName}}</td>
+                                <td>{{quantity}}</td>
+                                <td>{{totalCost}}</td>
+                                <td>{{total}}</td>
+                            </tr>
+                        {{/each}}
+                        <tr style="background-color: #f7e1b5">
+                            <td colspan="3">Ground Total</td>
+                            <td>
+                                {{grandTotalCostAmount}}
+                            </td>
+                            <td>
+                                {{grandTotalAmount}}
+                            </td>
                         </tr>
                     {{/each}}
                     </tbody>

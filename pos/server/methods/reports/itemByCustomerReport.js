@@ -64,7 +64,7 @@ Meteor.methods({
             params.status = {$ne: "Unsaved"};
         }
         if (arg.customerLocationId != null && arg.customerLocationId != "") {
-            params.customerLocationId = arg.customerLocationId;
+            // params.customerLocationId = arg.customerLocationId;
             customerLocation = Pos.Collection.CustomerLocations.findOne(arg.customerLocationId).name;
         }
 
@@ -78,24 +78,29 @@ Meteor.methods({
 
         /****** Header *****/
         data.header = header;
-        var content = getSaleProducts(params, categoryId, promotion);
-        data.grandTotal = content.grandTotal;
-        data.grandTotalCost = content.grandTotalCost;
+        var getList = getSaleProducts(arg.customerLocationId, params, categoryId, promotion);
+        data.grandTotal = getList.grandTotal;
+        data.grandTotalCost = getList.grandTotalCost;
         //return reportHelper;
         /****** Content *****/
-        if (content.length > 0) {
-            data.content = content;
+        if (getList.list.length > 0) {
+            data.content = getList.list;
         }
         return data;
     }
 });
 
 
-function getSaleProducts(params, categoryId, promotion) {
+function getSaleProducts(customerLocationId, params, categoryId, promotion) {
+    var grandTotal = 0;
+    var grandTotalCost = 0;
     var customerList = [];
-    if (params.customerId != null && params.customerId != "") {
-
-        var customers = Pos.Collection.Customers.find({customerLocationId: params.customerLocationId});
+    if (params.customerId == null || params.customerId == "") {
+        var customerSelector = {};
+        if (params.customerId != null && params.customerId != "") {
+            customerSelector.customerLocationId = customerLocationId;
+        }
+        var customers = Pos.Collection.Customers.find(customerSelector, {sort: {name: 1}});
         customers.forEach(function (customer) {
             params.customerId = customer._id;
             var saleIds = Pos.Collection.Sales.find(params, {fields: {_id: 1}}).map(function (sale) {
@@ -145,12 +150,12 @@ function getSaleProducts(params, categoryId, promotion) {
             }, {});
             var i = 1;
             var arr = [];
-            var granTotalCost = 0;
-            var grandTotal = 0;
+            var granTotalCostAmount = 0;
+            var grandTotalAmount = 0;
             result.forEach(function (r) {
                 // var product = Pos.Collection.Products.findOne(r.productId);
-                grandTotal += r.amount;
-                granTotalCost += r.totalCost;
+                grandTotalAmount += r.amount;
+                granTotalCostAmount += r.totalCost;
                 // var unit = Pos.Collection.Units.findOne(product.unitId).name;
                 arr.push({
                     order: i,
@@ -163,12 +168,20 @@ function getSaleProducts(params, categoryId, promotion) {
                 });
                 i++;
             });
-            arr.grandTotal = numeral(grandTotal).format('0,0.00');
-            arr.grandTotalCost = numeral(granTotalCost).format('0,0.00');
-            customerList.push({customerId:customer._id,name:customer.name,items:arr});
-            return arr;
+            var grandTotalAmountFormatted = numeral(grandTotalAmount).format('0,0.00');
+            var grandTotalCostAmountFormatted = numeral(granTotalCostAmount).format('0,0.00');
+            grandTotal += grandTotalAmount;
+            grandTotalCost += granTotalCostAmount;
+            customerList.push({
+                customerId: customer._id,
+                name: customer.name,
+                items: arr,
+                grandTotalAmount: grandTotalAmountFormatted,
+                grandTotalCostAmount: grandTotalCostAmountFormatted
+            });
         });
     } else {
+        var customer = Pos.Collection.Customers.findOne(params.customerId);
         var saleIds = Pos.Collection.Sales.find(params, {fields: {_id: 1}}).map(function (sale) {
             return sale._id;
         });
@@ -216,12 +229,12 @@ function getSaleProducts(params, categoryId, promotion) {
         }, {});
         var i = 1;
         var arr = [];
-        var granTotalCost = 0;
-        var grandTotal = 0;
+        var granTotalCostAmount = 0;
+        var grandTotalAmount = 0;
         result.forEach(function (r) {
             // var product = Pos.Collection.Products.findOne(r.productId);
-            grandTotal += r.amount;
-            granTotalCost += r.totalCost;
+            grandTotalAmount += r.amount;
+            granTotalCostAmount += r.totalCost;
             // var unit = Pos.Collection.Units.findOne(product.unitId).name;
             arr.push({
                 order: i,
@@ -234,10 +247,21 @@ function getSaleProducts(params, categoryId, promotion) {
             });
             i++;
         });
-        arr.grandTotal = numeral(grandTotal).format('0,0.00');
-        arr.grandTotalCost = numeral(granTotalCost).format('0,0.00');
-        return arr;
+        var grandTotalAmountFormatted = numeral(grandTotalAmount).format('0,0.00');
+        var grandTotalCostAmountFormatted = numeral(granTotalCostAmount).format('0,0.00');
+        grandTotal += grandTotalAmount;
+        grandTotalCost += granTotalCostAmount;
+        customerList.push({
+            customerId: customer._id,
+            name: customer.name,
+            items: arr,
+            grandTotalAmount: grandTotalAmountFormatted,
+            grandTotalCostAmount: grandTotalCostAmountFormatted
+        });
     }
+    var grandTotalF = numeral(grandTotal).format('0,0.00');
+    var grandTotalCostF = numeral(grandTotalCost).format('0,0.00');
+    return {list: customerList, grandTotal: grandTotalF, grandTotalCost: grandTotalCostF};
 }
 
 
