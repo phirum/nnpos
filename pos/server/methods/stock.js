@@ -432,8 +432,9 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        var prefix = branchId + '-';
-        Meteor.defer(function () {
+        try {
+            var prefix = branchId + '-';
+            //Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
             var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
             saleDetails.forEach(function (sd) {
@@ -482,9 +483,14 @@ Meteor.methods({
                         Pos.Collection.FIFOInventory.insert(nextInventory);
                     }
                 });
+                // });
+
             });
             //--- End Inventory type block "FIFO Inventory"---
-        });
+            return true;
+        } catch (e) {
+            throw new Meteor.Error(e.message);
+        }
     },
     /*
      reduceFromInventory: function (purchaseId, branchId) {
@@ -598,7 +604,7 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        Meteor.defer(function () {
+        try {
             var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
             purchaseDetails.forEach(function (pd) {
                 var inventories = Pos.Collection.FIFOInventory.find({
@@ -628,8 +634,11 @@ Meteor.methods({
                         Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
                     }
                 }
-            })
-        });
+            });
+            return true;
+        } catch (e) {
+            throw new Meteor.Error(e.message);
+        }
     }
 });
 
