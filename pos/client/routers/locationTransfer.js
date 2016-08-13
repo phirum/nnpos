@@ -56,7 +56,7 @@ posRoutes.route('/locationTransfer/:locationTransferId?', {
          );*/
         this.register(
             'pos_location',
-            Meteor.subscribe('posLocation')
+            Meteor.subscribe('posLocation',{})
         );
     },
     action: function (params, queryParams) {
