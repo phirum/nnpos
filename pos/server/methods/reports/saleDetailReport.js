@@ -81,6 +81,7 @@ Meteor.methods({
         var content = getSaleProducts(params, categoryId, promotion);
         data.grandTotal = content.grandTotal;
         data.grandTotalCost = content.grandTotalCost;
+        data.grandTotalProfit = content.grandTotalProfit;
         //return reportHelper;
         /****** Content *****/
         if (content.length > 0) {
@@ -152,11 +153,13 @@ function getSaleProducts(params, categoryId, promotion) {
             productName: r._product.name + "(" + r._product._unit.name + ")",
             // price: numeral(r.price).format('0,0.00'),
             quantity: r.quantity,
+            profit: numeral(r.amount - r.totalCost).format('0,0.00'),
             total: numeral(r.amount).format('0,0.00'),
             totalCost: numeral(r.totalCost).format('0,0.00')
         });
         i++;
     });
+    arr.grandTotalProfit = numeral(grandTotal - granTotalCost).format('0,0.00');
     arr.grandTotal = numeral(grandTotal).format('0,0.00');
     arr.grandTotalCost = numeral(granTotalCost).format('0,0.00');
     return arr;

@@ -69,6 +69,7 @@
                         <th>Owed</th>
                         <th>Total Cost</th>
                         <th>Total</th>
+                        <th>Profit</th>
                         {{#each grandTotalConvert}}
                             <th>{{toCurrencyId}}</th>
                         {{/each}}
@@ -88,6 +89,7 @@
                             <td>{{owedAmount}}</td>
                             <td>{{totalCost}}</td>
                             <td>{{total}}</td>
+                            <td>{{profit}}</td>
                             {{#each exchangeRates}}
                                 <td>{{exTotal}}</td>
                             {{/each}}
@@ -101,6 +103,7 @@
                         <td>{{grandTotalOwed}}</td>
                         <td>{{grandTotalCost}}</td>
                         <td>{{grandTotal}}</td>
+                        <td>{{grandTotalProfit}}</td>
                         {{#each grandTotalConvert}}
                             <td>{{totalConvert}}</td>
                         {{/each}}

@@ -76,6 +76,7 @@ Meteor.methods({
         /****** Header *****/
         data.header = header;
         var content = calculateSaleHelper(sale);
+        data.grandTotalProfit = content.grandTotalProfit;
         data.grandTotalPaid = content.grandTotalPaid;
         data.grandTotalOwed = content.grandTotalOwed;
         data.grandTotal = content.grandTotal;
@@ -120,6 +121,7 @@ function calculateSaleHelper(sl) {
         grandTotalOwed += s.owedAmount;
         s.paidAmount = numeral(s.paidAmount).format('0,0.00');
         s.owedAmount = numeral(s.owedAmount).format('0,0.00');
+        s.profit=numeral(s.total-s.totalCost).format('0,0.00');
         s.total = numeral(s.total).format('0,0.00');
         s.totalCost = numeral(s.totalCost).format('0,0.00');
         s.customer = s._customer.name;
@@ -129,6 +131,7 @@ function calculateSaleHelper(sl) {
         i++;
         saleList.push(s);
     });
+    saleList.grandTotalProfit=numeral(grandTotal - grandTotalCost).format('0,0.00');
     saleList.grandTotalPaid = numeral(grandTotal - grandTotalOwed).format('0,0.00');
     saleList.grandTotalOwed = numeral(grandTotalOwed).format('0,0.00');
     saleList.grandTotalCost = numeral(grandTotalCost).format('0,0.00');
