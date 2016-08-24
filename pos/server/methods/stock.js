@@ -474,7 +474,7 @@ Meteor.methods({
                         nextInventory._id = idGenerator.genWithPrefix(Pos.Collection.FIFOInventory, prefix, 13);
                         nextInventory.branchId = branchId;
                         nextInventory.productId = sd.productId;
-                        inventoryObj.locationId = sd.locationId;
+                        nextInventory.locationId = sd.locationId;
                         nextInventory.quantity = tr.quantity;
                         nextInventory.price = tr.price;
                         nextInventory.imei = inventory.imei.concat(sd.imei);
