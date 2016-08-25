@@ -74,9 +74,9 @@ Pos.Schema.Products = new SimpleSchema({
         label: "Category",
         autoform: {
             type: "select2",
-            options: function () {
-                return Pos.List.category();
-            }
+            /*options: function () {
+             return Pos.List.category();
+             }*/
         }
     }
     ,

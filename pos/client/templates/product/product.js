@@ -65,6 +65,21 @@ posProductTPL.events({
 
     }
 });
+posProductInsertTPL.helpers({
+    categoryList: function () {
+        var categories;
+        var list = [];
+        var categoryId = Session.get('CategoryIdSession');
+        categories = ReactiveMethod.call('categoryList', 'Select One | No Parent', categoryId);
+        categories.forEach(function (category) {
+            list.push({
+                label: Spacebars.SafeString(category.label),
+                value: category.value
+            });
+        });
+        return list;
+    }
+});
 posProductInsertTPL.events({
     /*  'change #category-id': function () {
      Session.set('CategoryIdSession', $('#category-id').val());
@@ -79,6 +94,22 @@ posProductInsertTPL.events({
      },*/
     'click .unitInsertAddon': function (e, t) {
         alertify.unit(fa('plus', 'Add New Unit'), renderTemplate(Template.pos_unitInsert));
+    }
+});
+
+posProductUpdateTPL.helpers({
+    categoryList: function () {
+        var categories;
+        var list = [];
+        var categoryId = Session.get('CategoryIdSession');
+        categories = ReactiveMethod.call('categoryList', 'Select One | No Parent', categoryId);
+        categories.forEach(function (category) {
+            list.push({
+                label: Spacebars.SafeString(category.label),
+                value: category.value
+            });
+        });
+        return list;
     }
 });
 posProductUpdateTPL.events({

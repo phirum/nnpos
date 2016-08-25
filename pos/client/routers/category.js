@@ -15,10 +15,6 @@ var subs = new SubsManager();
 posRoutes.route('/category', {
     name: 'pos.category',
     subscriptions: function (params, queryParams) {
-        this.register(
-            'pos_category',
-            Meteor.subscribe('posCategory')
-        );
     },
     action: function (params, queryParams) {
         Layout.main('pos_category');

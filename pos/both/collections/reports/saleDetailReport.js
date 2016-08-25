@@ -18,9 +18,9 @@ Pos.Schema.SaleDetailReport = new SimpleSchema({
         label: "Category",
         autoform: {
             type: "select2",
-            options: function () {
+           /* options: function () {
                 return Pos.List.category("All");
-            }
+            }*/
         },
         optional: true
     },

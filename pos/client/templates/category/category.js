@@ -49,11 +49,42 @@ posCategoryTPL.events({
         alertify.categoryShow(fa('eye', 'Category Detail'), renderTemplate(posCategoryShowTPL, this));
     }
 });
+posCategoryInsertTPL.helpers({
+    categoryList: function () {
+        var categories;
+        var list = [];
+        var categoryId = Session.get('CategoryIdSession');
+        categories = ReactiveMethod.call('categoryList', 'Select One | No Parent', categoryId);
+        categories.forEach(function (category) {
+            list.push({
+                label: Spacebars.SafeString(category.label),
+                value: category.value
+            });
+        });
+        return list;
+    }
+});
+posCategoryUpdateTPL.helpers({
+    categoryList: function () {
+        var categories;
+        var list = [];
+        var categoryId = Session.get('CategoryIdSession');
+        categories = ReactiveMethod.call('categoryList', 'Select One | No Parent', categoryId);
+        categories.forEach(function (category) {
+            list.push({
+                label: Spacebars.SafeString(category.label),
+                value: category.value
+            });
+        });
+        return list;
+    }
+});
 AutoForm.hooks({
     // Customer
     pos_categoryInsert: {
         onSuccess: function (formType, result) {
             alertify.success('Success');
+            alertify.category().close();
         },
         onError: function (formType, error) {
             alertify.error(error.message);

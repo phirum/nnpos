@@ -1,3 +1,17 @@
+Template.pos_productListReport.helpers({
+    categoryList: function () {
+        var categories;
+        var list = [];
+        categories = ReactiveMethod.call('categoryList', 'All', null);
+        categories.forEach(function (category) {
+            list.push({
+                label: Spacebars.SafeString(category.label),
+                value: category.value
+            });
+        });
+        return list;
+    }
+});
 Template.pos_productListReport.events({});
 Template.pos_productListReportGen.helpers({
     options: function () {
