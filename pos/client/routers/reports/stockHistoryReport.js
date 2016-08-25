@@ -3,11 +3,7 @@ posRoutes.route('/stockHistoryReport', {
     subscriptions: function (params, queryParams) {
         this.register(
             'pos_location',
-            Meteor.subscribe('posLocation')
-        );
-        this.register(
-            'pos_category',
-            Meteor.subscribe('posCategory')
+            Meteor.subscribe('posLocation', {})
         );
     },
     action: function (params, queryParams) {

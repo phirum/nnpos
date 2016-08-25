@@ -35,19 +35,15 @@ posRoutes.route('/saleDetailReport', {
     subscriptions: function (params, queryParams) {
         this.register(
             'pos_customer',
-            Meteor.subscribe('posCustomer')
+            Meteor.subscribe('posCustomer',{})
         );
         this.register(
             'pos_staff',
-            Meteor.subscribe('posStaff')
+            Meteor.subscribe('posStaff',{})
         );
         this.register(
             'pos_location',
-            Meteor.subscribe('posLocation')
-        );
-        this.register(
-            'pos_category',
-            Meteor.subscribe('posCategory')
+            Meteor.subscribe('posLocation',{})
         );
     },
     action: function (params, queryParams) {
