@@ -35,10 +35,10 @@ Template.pos_purchaseList.events({
     'click .update': function (e, t) {
         var id = this._id;
         var branchId = Session.get('currentBranch');
-        var total=this.total;
+        var total = this.total;
         if (this.status != "Unsaved") {
             //alertify.purchaseUpdate(fa('pencil', 'Update Existing Purchase'), renderTemplate(posPurchaseUpdate, purchase));
-            Meteor.call('isEnoughStock', id,branchId, function (error, enough) {
+            Meteor.call('isEnoughStock', id, branchId, function (error, enough) {
                 if (error) {
                     alertify.error(error.message);
                 } else {
@@ -49,7 +49,8 @@ Template.pos_purchaseList.events({
                                     Meteor.call('reduceFromInventory', id, branchId, function (err, result) {
                                         if (err) {
                                             alertify.error(err.message);
-                                        } else {
+                                        }
+                                        if (result) {
                                             Meteor.call('updatePurchaseToUnsavedAndRemovePayment', id, total, function (er, re) {
                                                 if (er) {
                                                     alertify.error(er.message);
@@ -95,7 +96,7 @@ Template.pos_purchaseList.events({
                     if (result) {
                         alertify.warning("Data has been used. Can't remove.");
                     } else {
-                        Meteor.call('isEnoughStock', id,branchId, function (err, enough) {
+                        Meteor.call('isEnoughStock', id, branchId, function (err, enough) {
                             if (err) {
                                 alertify.error(err.message);
                             } else {
@@ -103,10 +104,11 @@ Template.pos_purchaseList.events({
                                     alertify.confirm("Are you sure to remove this purchase: [" + id + "]? It will recalculate inventory and remove all it's payment(if it has). ")
                                         .set({
                                             onok: function (closeEvent) {
-                                                Meteor.call('reduceFromInventory', id, branchId, function (er, result) {
+                                                Meteor.call('reduceFromInventory', id, branchId, function (er, re) {
                                                     if (er) {
                                                         alertify.error(er.message);
-                                                    } else {
+                                                    }
+                                                    if (re) {
                                                         Pos.Collection.Purchases.remove(id, function (le) {
                                                             if (le) {
                                                                 alertify.error(le.message);

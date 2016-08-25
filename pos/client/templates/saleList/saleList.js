@@ -48,7 +48,8 @@ posSaleListTPL.events({
                         Meteor.call('returnToInventory', id, branchId, function (error, result) {
                             if (error) {
                                 alertify.error(error.message);
-                            } else {
+                            }
+                            if (result) {
                                 Meteor.call('updateSaleToUnsavedAndRemovePayment', id, total, function (err, re) {
                                     if (err) {
                                         alertify.error(err.message);
@@ -103,7 +104,8 @@ posSaleListTPL.events({
                                     Meteor.call('returnToInventory', id, branchId, function (err, re) {
                                         if (err) {
                                             alertify.error(err.message);
-                                        } else {
+                                        }
+                                        if (re) {
                                             Pos.Collection.Sales.remove(id, function (er, r) {
                                                 if (er) {
                                                     alertify.error(er.message);
