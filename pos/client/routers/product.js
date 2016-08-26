@@ -26,7 +26,7 @@ posRoutes.route('/product', {
          );*/
         this.register(
             'pos_unit',
-            Meteor.subscribe('posUnit')
+            Meteor.subscribe('posUnit',{})
         );
     },
     action: function (params, queryParams) {
