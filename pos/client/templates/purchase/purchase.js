@@ -22,6 +22,10 @@ Template.pos_purchase.onRendered(function () {
     }, 500);
 });
 Template.pos_purchase.helpers({
+    getParents:function(parent){
+        var st='';
+        return getParents(st,parent);
+    },
     search: function (query, sync, callback) {
         Meteor.call('searchProductFromPurchase', query, {}, function (err, res) {
             if (err) {
@@ -1141,3 +1145,22 @@ function getValidatedValues() {
     }
     return data;
 }
+function getParents(st, _parent) {
+    st += _parent.name + ' >> ';
+    if ('_parent' in _parent) {
+        var newParent = _parent._parent;
+        if (newParent) {
+            return getParents(st, newParent);
+        }
+    } else {
+        return st.substr(0, st.length - 3);
+    }
+
+}
+
+Template.repo.helpers({
+   getParents:function(parent){
+       var st='';
+       return getParents(st,parent);
+   }
+});

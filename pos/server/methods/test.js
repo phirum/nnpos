@@ -33,7 +33,14 @@ Meteor.methods({
     },
     updateProductCache: function () {
         Meteor.defer(function () {
-            Pos.Collection.Products.update({}, {$set: {status: 'enable'}}, {multi: true});
+            let count = Pos.Collection.Products.update({}, {$set: {status: 'enable'}}, {multi: true});
+            console.log(count);
+        });
+    },
+    categoryCache: function () {
+        Meteor.defer(function () {
+            let count = Pos.Collection.Categories.update({}, {$set: {description: ''}}, {multi: true});
+            console.log(count);
         });
     }
 });

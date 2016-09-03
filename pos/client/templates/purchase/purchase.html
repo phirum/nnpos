@@ -5,7 +5,10 @@
             <img src="{{url}}" width="80px" height="80px" class="img-circle">
         </div>
         <div class="col-md-9">
-            <p><b style="font-size: 18px;">{{name}} ({{_unit.name}}) </b></p>
+            <p><b style="font-size: 18px;">
+                {{name}} ({{_unit.name}}) </b></p>
+            {{_category.name}} >> {{getParents _category._parent}}
+
             <p>                {{description}}
             </p>
         </div>
@@ -79,7 +82,7 @@
                                                 selected="{{#if compareTwoValue _id purchase.supplierId}}selected{{/if}}">{{name}}</option>
                                     {{/each}}
                                 </select>
-                                 <span class="input-group-addon supplierInsertAddon">
+                                <span class="input-group-addon supplierInsertAddon">
                             <a> <i class="fa fa-plus"></i> </a>
                             </span>
                             </div>
@@ -164,7 +167,8 @@
                             {{#each purchaseDetails}}
                                 <tr data-id="{{_id}}">
                                     <td align="left">
-                                        {{_product.name}} ({{_product._unit.name}})
+                                        {{_product.name}} ({{_product._unit.name}})<br>
+                                        {{getParents _product._category}}
                                     </td>
                                     <!--<td>
                                         {{_product.barcode}}
