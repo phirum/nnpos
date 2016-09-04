@@ -126,7 +126,7 @@
     {{#if data}}
         {{#with data}}
             <div align="center"></div>
-            <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
+            <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:420px; margin: 0 auto;">
               <!--<img src="/logo.jpg" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>-->
                 <div width="75%" align="center" style="padding-top: 10px;">
                     <span style="font-family:'Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.khName}}</span><br>
@@ -166,7 +166,8 @@
                     {{#each purchaseDetails}}
                         <tr>
                             <td>{{order}}</td>
-                            <td>{{_product.name}}</td>
+                            <td>{{_product.name}}<br>
+                                {{getParents _product._category}}</td>
                             <td>{{price}}</td>
                             <td>{{quantity}}</td>
                             <td>{{_product._unit.name}}</td>

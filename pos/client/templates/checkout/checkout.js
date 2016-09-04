@@ -25,6 +25,10 @@ Template.pos_checkout.onRendered(function () {
     }, 500);
 });
 Template.pos_checkout.helpers({
+    getParents:function(parent){
+        var st='';
+        return getParents(st,parent);
+    },
     searchProductPromotion: function (query, sync, callback) {
         Meteor.call('searchProduct', query, {}, function (err, res) {
             if (err) {
@@ -1559,5 +1563,19 @@ function addOrUpdatePromotionProducts(branchId, saleId, product, locationId) {
     $('#product-barcode-promotion').focus();
     $('#product-id').select2('val', '');
     // updateSaleSubTotal(saleId);
+
+}
+
+
+function getParents(st, _parent) {
+    st += _parent.name + ' > ';
+    if ('_parent' in _parent) {
+        var newParent = _parent._parent;
+        if (newParent) {
+            return getParents(st, newParent);
+        }
+    } else {
+        return st.substr(0, st.length - 2);
+    }
 
 }
