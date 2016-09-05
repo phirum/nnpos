@@ -74,9 +74,9 @@ Meteor.methods({
         data.header = header;
 
 
-
         var content = getPurchaseProducts(params, categoryId);
         data.grandTotal = content.grandTotal;
+        data.totalQty = content.totalQty;
 
         if (content.length > 0) {
             data.content = content;
@@ -124,9 +124,11 @@ function getPurchaseProducts(params, categoryId) {
     var i = 1;
     var arr = [];
     var grandTotal = 0;
+    var totalQty = 0;
     result.forEach(function (r) {
         //var product = Pos.Collection.Products.findOne(r.productId);
         grandTotal += r.amount;
+        totalQty += r.quantity;
         //var unit = Pos.Collection.Units.findOne(product.unitId).name;
         arr.push({
             order: i,
@@ -140,6 +142,7 @@ function getPurchaseProducts(params, categoryId) {
         i++;
     });
     arr.grandTotal = numeral(grandTotal).format('0,0.00');
+    arr.totalQty = totalQty;
     return arr;
 }
 function getCategoryIdAndChildrenIds(id, arr) {

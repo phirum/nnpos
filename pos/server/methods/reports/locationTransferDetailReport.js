@@ -66,7 +66,7 @@ Meteor.methods({
         /****** Header *****/
         data.header = header;
         var content = getLocationTransferProducts(params, categoryId);
-
+        data.totalQty = content.totalQty;
         //return reportHelper;
         /****** Content *****/
         if (content.length > 0) {
@@ -117,7 +117,9 @@ function getLocationTransferProducts(params, categoryId) {
     }, {});
     var i = 1;
     var arr = [];
+    var totalQty = 0;
     result.forEach(function (r) {
+        totalQty += r.quantity;
         arr.push({
             order: i,
             productId: r.productId,
@@ -127,6 +129,7 @@ function getLocationTransferProducts(params, categoryId) {
         });
         i++;
     });
+    arr.totalQty = totalQty;
     return arr;
 }
 
