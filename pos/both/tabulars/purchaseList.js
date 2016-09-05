@@ -13,6 +13,7 @@ Pos.TabularTable.Purchases = new Tabular.Table({
                 return moment(val).format("DD-MM-YYYY HH:mm");
             }
         },
+        {data: "voucher", title: "Voucher"},
         {data: "_supplier.name", title: "Supplier"},
         {data: "_staff.name", title: "Staff"},
         {data: "total", title: "Total"},

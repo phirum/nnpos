@@ -1145,19 +1145,6 @@ function getValidatedValues() {
     }
     return data;
 }
-function getParents(st, _parent) {
-    st += _parent.name + ' > ';
-    if ('_parent' in _parent) {
-        var newParent = _parent._parent;
-        if (newParent) {
-            return getParents(st, newParent);
-        }
-    } else {
-        return st.substr(0, st.length - 2);
-    }
-
-}
-
 Template.repo.helpers({
    getParents:function(parent){
        var st='';

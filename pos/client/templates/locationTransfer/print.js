@@ -1,5 +1,9 @@
 
 Template.pos_printLocationTransfer.helpers({
+    getParents:function(parent){
+        var st='';
+        return getParents(st,parent);
+    },
     getFieldOfCurrency: function (id, field) {
         var currency = Cpanel.Collection.Currency.findOne(id);
         return currency[field];

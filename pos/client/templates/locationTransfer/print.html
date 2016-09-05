@@ -111,7 +111,8 @@
                     {{#each locationTransferDetails}}
                         <tr>
                             <td>{{order}}</td>
-                            <td>{{_product.name}}</td>
+                            <td>{{_product.name}}<br>
+                                {{getParents _product._category}}</td>
                             <td>{{_product._unit.name}}</td>
                             <td>{{quantity}}</td>
                       </tr>

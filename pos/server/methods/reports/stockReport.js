@@ -44,6 +44,8 @@ Meteor.methods({
         var i = 1;
         var products = Pos.Collection.Products.find(productSelector, {sort: {barcode: 1}});
         var content = [];
+        var total=0;
+        var totalQty=0;
 
         for (var j = 0; j < locationIds.length; j++) {
             products.forEach(function (p) {
@@ -66,8 +68,12 @@ Meteor.methods({
                     item.remainQty = 0;
                     item.price = p.purchasePrice;
                 }
+                item.category=p._category;
                 item.barcode = p.barcode;
                 item.order = i;
+                item.amount=item.price*item.remainQty;
+                total+=item.amount;
+                totalQty+=item.remainQty;
                 i++;
                 content.push(item);
             });
@@ -89,6 +95,8 @@ Meteor.methods({
          });
          }
          var content = stockArray;*/
+        data.total=total;
+        data.totalQty=totalQty;
         if (content.length > 0) {
             data.content = content;
         }

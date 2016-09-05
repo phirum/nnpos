@@ -54,8 +54,10 @@
                         <th>No</th>
                         <th>Product Name</th>
                         <th>Barcode</th>
+                        <th>Category</th>
                         <th>Purchase Price</th>
                         <th>Remain Qty</th>
+                        <th>Amount</th>
                         <th>Location Name</th>
                     </tr>
                     </thead>
@@ -66,11 +68,19 @@
                             <td>{{order}}</td>
                             <td>{{productName}}</td>
                             <td>{{barcode}}</td>
+                            <td>{{getParents category}}</td>
                             <td>{{price}}</td>
                             <td>{{remainQty}}</td>
+                            <td>{{amount}}</td>
                             <td>{{locationName}}</td>
                         </tr>
                     {{/each}}
+                    <tr>
+                        <td colspan="5">Total</td>
+                        <td>{{totalQty}}</td>
+                        <td>{{total}}</td>
+                        <td></td>
+                    </tr>
                     </tbody>
                 </table>
 

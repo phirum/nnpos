@@ -34,6 +34,10 @@ Template.pos_stockReport.events({
 });
 
 Template.pos_stockReportGen.helpers({
+    getParents:function(parent){
+        var st='';
+        return getParents(st,parent);
+    },
     /*reportHelper: function () {
      var params = {};
      // var date=new Date(this.date);

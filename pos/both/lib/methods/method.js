@@ -1,40 +1,40 @@
 Meteor.methods({
-    insertByCollection: function (collection,obj) {
-        if (! Meteor.userId()) {
+    insertByCollection: function (collection, obj) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        collection=eval(collection);
+        collection = eval(collection);
         collection.insert(obj);
     },
-    directInsertByCollection: function (collection,obj) {
-        if (! Meteor.userId()) {
+    directInsertByCollection: function (collection, obj) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        collection=eval(collection);
+        collection = eval(collection);
         collection.direct.insert(obj);
     },
-    updateByCollection: function (collection,id, set,unset) {
-        if (! Meteor.userId()) {
+    updateByCollection: function (collection, id, set, unset) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        collection=eval(collection);
+        collection = eval(collection);
         var updateObject = {};
         if (set != null) updateObject.$set = set;
         if (unset != null) updateObject.$unset = unset;
         collection.update(id, updateObject);
     },
-    directUpdateByCollection:function(collection,id, set,unset) {
-        if (! Meteor.userId()) {
+    directUpdateByCollection: function (collection, id, set, unset) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        collection=eval(collection);
+        collection = eval(collection);
         var updateObject = {};
         if (set != null) updateObject.$set = set;
         if (unset != null) updateObject.$unset = unset;
         collection.direct.update(id, updateObject);
     },
     getProductSaleReport: function () {
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
         var sD = Pos.Collection.SaleDetails.aggregate([{
@@ -52,7 +52,7 @@ Meteor.methods({
         return arr;
     },
     getCategory: function () {
-        if (! Meteor.userId()) {
+        if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
         return Pos.Collection.Categories.find();
@@ -73,3 +73,14 @@ roundRielCurrency = function (value) {
     return returnValue;
 };
 
+getParents = function (st, _parent) {
+    st += _parent.name + ' > ';
+    if ('_parent' in _parent) {
+        var newParent = _parent._parent;
+        if (newParent) {
+            return getParents(st, newParent);
+        }
+    } else {
+        return st.substr(0, st.length - 2);
+    }
+}

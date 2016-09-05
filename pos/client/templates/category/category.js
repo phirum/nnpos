@@ -11,9 +11,16 @@ posCategoryTPL.events({
         alertify.category(fa('plus', 'Add New Category'), renderTemplate(posCategoryInsertTPL));
     },
     'click .update': function (e, t) {
-        var data = Pos.Collection.Categories.findOne(this._id);
+        ///var data = Pos.Collection.Categories.findOne(this._id);
         Session.set('CategoryIdSession', this._id);
-        alertify.category(fa('pencil', 'Update Existing Category'), renderTemplate(posCategoryUpdateTPL, data));
+        Meteor.call('findOneRecord', 'Pos.Collection.Categories', {_id: this._id}, {}, function (error, category) {
+            Session.set('CategoryIdSession', null);
+            alertify.category(fa('pencil', 'Update Existing Category'), renderTemplate(posCategoryUpdateTPL, category));
+        });
+        Meteor.setTimeout(function () {
+            $('[name="parentId"]').select2();
+        }, 500)
+
     },
     'click .remove': function (e, t) {
         var id = this._id;

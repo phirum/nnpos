@@ -17,6 +17,9 @@ posProductTPL.events({
             Session.set('CategoryIdSession', null);
             alertify.product(fa('pencil', 'Update Existing Product'), renderTemplate(posProductUpdateTPL, product)).maximize();
         });
+        Meteor.setTimeout(function () {
+            $('[name="categoryId"]').select2();
+        }, 500)
     },
     'click .remove': function (e, t) {
         var id = this._id;

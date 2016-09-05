@@ -14,6 +14,10 @@ Template.pos_productListReport.helpers({
 });
 Template.pos_productListReport.events({});
 Template.pos_productListReportGen.helpers({
+    getParents:function(parent){
+        var st='';
+        return getParents(st,parent);
+    },
     options: function () {
         return {
             //fontSize: 'bg',

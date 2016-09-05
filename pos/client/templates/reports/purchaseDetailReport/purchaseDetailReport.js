@@ -34,6 +34,10 @@ Template.pos_purchaseDetailReport.events({
 });
 
 Template.pos_purchaseDetailReportGen.helpers({
+    getParents:function(parent){
+        var st='';
+        return getParents(st,parent);
+    },
     options: function () {
         // font size = null (default), bg
         // paper = a4, a5, mini

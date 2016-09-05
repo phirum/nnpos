@@ -120,6 +120,10 @@ function checkBeforeAddOrUpdate(selector, data) {
     });
 }
 Template.pos_locationTransfer.helpers({
+    getParents:function(parent){
+        var st='';
+        return getParents(st,parent);
+    },
     search: function (query, sync, callback) {
         Meteor.call('searchProduct', query, {}, function (err, res) {
             if (err) {
