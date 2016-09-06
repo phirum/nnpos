@@ -17,6 +17,7 @@ Meteor.methods({
         header.saleId = arg.saleId;
         data.header = header;
         data.sale = Pos.Collection.Sales.findOne(arg.saleId);
+        header.customer = data.sale._customer.name;
         var payments = Pos.Collection.Payments.find(params);
         var content = [];
         var i = 1;

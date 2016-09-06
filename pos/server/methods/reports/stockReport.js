@@ -42,6 +42,8 @@ Meteor.methods({
         data.header = header;
         var stockArray = [];
         var i = 1;
+        var totalQty=0;
+        var total=0;
         var products = Pos.Collection.Products.find(productSelector);
         var content = [];
 
@@ -66,8 +68,11 @@ Meteor.methods({
                     item.remainQty = 0;
                     item.price = p.purchasePrice;
                 }
+                item.amount=item.price*item.remainQty;
                 item.barcode = p.barcode;
                 item.order = i;
+                totalQty+=item.remainQty;
+                total+=item.amount;
                 i++;
                 content.push(item);
             });
@@ -89,6 +94,8 @@ Meteor.methods({
          });
          }
          var content = stockArray;*/
+        data.total=total;
+        data.totalQty=totalQty;
         if (content.length > 0) {
             data.content = content;
         }

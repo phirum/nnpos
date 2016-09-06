@@ -56,6 +56,7 @@
                         <th>Barcode</th>
                         <th>Purchase Price</th>
                         <th>Remain Qty</th>
+                        <th>Amount</th>
                         <th>Location Name</th>
                     </tr>
                     </thead>
@@ -67,10 +68,17 @@
                             <td>{{productName}}</td>
                             <td>{{barcode}}</td>
                             <td>{{price}}</td>
+                            <td>{{amount}}</td>
                             <td>{{remainQty}}</td>
                             <td>{{locationName}}</td>
                         </tr>
                     {{/each}}
+                    <tr>
+                        <td colspan="4" align="right">Total:</td>
+                        <td>{{totalQty}}</td>
+                        <td>{{total}}</td>
+                        <td></td>
+                    </tr>
                     </tbody>
                 </table>
 

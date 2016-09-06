@@ -73,8 +73,10 @@ Meteor.methods({
         /****** Header *****/
         data.header = header;
         var content = getSaleProducts(params, categoryId, promotion);
+        data.totalQty = content.totalQty;
         data.grandTotal = content.grandTotal;
         data.grandTotalCost = content.grandTotalCost;
+        data.profit = content.grandTotalCost;
         //return reportHelper;
         /****** Content *****/
         if (content.length > 0) {
@@ -132,10 +134,12 @@ function getSaleProducts(params, categoryId, promotion) {
     var arr = [];
     var granTotalCost = 0;
     var grandTotal = 0;
+    var totalQty=0;
     result.forEach(function (r) {
         // var product = Pos.Collection.Products.findOne(r.productId);
         grandTotal += r.amount;
         granTotalCost += r.totalCost;
+        totalQty += r.quantity;
         // var unit = Pos.Collection.Units.findOne(product.unitId).name;
         arr.push({
             order: i,
@@ -143,11 +147,14 @@ function getSaleProducts(params, categoryId, promotion) {
             productName: r._product.name + "(" + r._product._unit.name + ")",
             // price: numeral(r.price).format('0,0.00'),
             quantity: r.quantity,
+            profit:numeral(r.amount-r.totalCost).format('0,0.00'),
             total: numeral(r.amount).format('0,0.00'),
             totalCost: numeral(r.totalCost).format('0,0.00')
         });
         i++;
     });
+    arr.totalQty=totalQty;
+    arr.profit = numeral(grandTotal-granTotalCost).format('0,0.00');
     arr.grandTotal = numeral(grandTotal).format('0,0.00');
     arr.grandTotalCost = numeral(granTotalCost).format('0,0.00');
     return arr;
