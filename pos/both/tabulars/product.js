@@ -49,14 +49,18 @@ Pos.TabularTable.Products = new Tabular.Table({
             data: "_category", title: "Parent Category",
             render: function (val, type, doc) {
                 function getParents(st, _parent) {
-                    st += _parent.name + ' > ';
-                    if ('_parent' in _parent) {
-                        var newParent = _parent._parent;
-                        if (newParent) {
-                            return getParents(st, newParent);
+                    if(_parent) {
+                        st += _parent.name + ' > ';
+                        if ('_parent' in _parent) {
+                            var newParent = _parent._parent;
+                            if (newParent) {
+                                return getParents(st, newParent);
+                            }
+                        } else {
+                            return st.substr(0, st.length - 2);
                         }
-                    } else {
-                        return st.substr(0, st.length - 2);
+                    }else{
+                        return '';
                     }
                 }
                 var st = '';
