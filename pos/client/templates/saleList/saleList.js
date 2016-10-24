@@ -1,6 +1,7 @@
 var posSaleListTPL = Template.pos_saleList;
 var posSaleShow = Template.pos_saleShow;
 var posSaleUpdate = Template.pos_saleUpdate;
+var posSaleShow = Template.pos_saleShow;
 
 
 posSaleListTPL.onRendered(function () {
@@ -153,13 +154,21 @@ posSaleListTPL.events({
         }
     },
     'click .show': function (e, t) {
+        debugger;
         Meteor.call('findOneRecord', 'Pos.Collection.Sales', {_id: this._id}, {}, function (error, sale) {
             if (sale) {
                 sale.sDate = moment(this.saleDate).format("YYYY-MM-DD HH:mm:ss");
                 sale.retail = sale.isRetail ? "Retail" : "Wholesale";
+                sale.payments = [];
                 if (sale.totalCost) {
                     sale.profit = sale.total - sale.totalCost;
                 }
+                Meteor.call('findRecords', 'Pos.Collection.Payments', {saleId: sale._id}, {},
+                    function (e, payments) {
+                        if (payments) {
+                            sale.payments = payments;
+                        }
+                    });
                 Meteor.call('findRecords', 'Pos.Collection.SaleDetails', {saleId: sale._id}, {},
                     function (er, saleDetails) {
                         if (saleDetails) {
@@ -175,6 +184,7 @@ posSaleListTPL.events({
                             alertify.error(er.message);
                         }
                     });
+
             } else {
                 alertify.error(error.message);
             }
@@ -194,6 +204,11 @@ posSaleUpdate.onRendered(function () {
     }, 500);
 });
 
+posSaleShow.helpers({
+    formatDate: function (date) {
+        return moment(date).format('DD-MM-YYYY');
+    }
+});
 posSaleUpdate.helpers({
     staffs: function () {
         var userStaff = Pos.Collection.UserStaffs.findOne({userId: Meteor.user()._id});
@@ -252,4 +267,6 @@ function setSaleSelectorSession() {
     }
     Session.set('saleSelectorSession', selector);
 }
+
+
 

@@ -112,6 +112,32 @@
         {{/each}}
         </tbody>
     </table>
+
+    <span style="text-align: center;font-weight: bold;">Payments</span>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Due Amount</th>
+            <th>Paid Amount</th>
+            <th>Balance Amount</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each payments}}
+            <tr>
+                <td>{{_id}}</td>
+                <td>{{formatDate paymentDate}}</td>
+                <td>{{dueAmount}}</td>
+                <td>{{payAmount}}</td>
+                <td>{{balanceAmount}}</td>
+                <td>{{status}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
 </template>
 
 
