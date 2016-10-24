@@ -15,8 +15,10 @@ Meteor.methods({
         data.title = Cpanel.Collection.Company.findOne();
         var header = {};
         header.saleId = arg.saleId;
-        data.header = header;
+
         data.sale = Pos.Collection.Sales.findOne(arg.saleId);
+        header.sale = data.sale;
+        data.header = header;
         var payments = Pos.Collection.Payments.find(params);
         var content = [];
         var i = 1;
