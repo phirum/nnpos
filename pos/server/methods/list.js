@@ -80,5 +80,20 @@ Meteor.methods({
             list.push({label: obj._id + ' : ' + obj.name, value: obj._id});
         });
         return list;
+    },
+    getUserStaffList: function (branchId) {
+        console.log(branchId);
+        var list = [{label: 'Select One', value: ''}];
+        var userStaff = Pos.Collection.UserStaffs.findOne({userId: Meteor.userId});
+        if (userStaff != null) {
+            var staffs = Pos.Collection.Staffs.find({
+                _id: {$in: userStaff.staffIds},
+                branchId: branchId
+            }, {fields: {_id: 1, name: 1}});
+            staffs.forEach(function (staff) {
+                list.push({label: staff.name, value: staff._id});
+            });
+        }
+        return list;
     }
 });

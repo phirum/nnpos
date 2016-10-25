@@ -3,7 +3,7 @@ Pos.Schema.Payments = new SimpleSchema({
     customerId: {
         type: String,
         label: "Customer",
-        optional:true
+        optional: true
     },
     saleId: {
         type: String,
@@ -40,7 +40,13 @@ Pos.Schema.Payments = new SimpleSchema({
         type: [Object],
         label: "Payment",
         blackbox: true
+    },
+    staffId: {
+        type: String,
+        label: "Staff",
+        autoform: {
+            type: "select2"
+        }
     }
-
 });
 Pos.Collection.Payments.attachSchema(Pos.Schema.Payments);

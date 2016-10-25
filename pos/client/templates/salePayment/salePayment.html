@@ -52,6 +52,7 @@
             </div>
             <div class="col-md-6">
                 {{> afQuickField name='paymentDate' type="text" value=paymentDate id="paymentDate"}}
+                {{> afQuickField name='staffId' options=staffs id="staffId"}}
             </div>
             <div class="col-md-12">
                 <table id="payment-table" width="100%">
@@ -193,12 +194,15 @@
     {{#autoForm schema=Pos.Schema.Payments id="pos_salePaymentUpdate" doc=this}}
         <div class="row">
             <div class="col-md-6">
+                <label for="sale-id">Customer</label>
+                <input type="text" value="{{payment._sale._customer.name}}" class="form-control" id="customer-id" readonly>
                 <label for="sale-id">Sale ID</label>
                 <input type="text" value="{{payment.saleId}}" class="form-control" id="sale-id" readonly>
             </div>
             <div class="col-md-6">
                 <label for="sale-id">Payment Date</label>
                 <input type="text" value="{{payment.paymentDate}}" class="form-control" id="payment-date" readonly>
+                {{> afQuickField name='staffId' options=staffs id="staffId"}}
             </div>
             <div class="col-md-12">
                 <table id="payment-table" width="100%">

@@ -126,6 +126,9 @@ posSalePaymentInsertTPL.onRendered(function () {
     datePicker();
 });
 posSalePaymentInsertTPL.helpers({
+    staffs: function () {
+        return ReactiveMethod.call('getUserStaffList', Session.get('currentBranch'));
+    },
     customerList: function () {
 
         var branchIdSession = Session.get('currentBranch');
@@ -189,7 +192,7 @@ posSalePaymentInsertTPL.helpers({
     }
 });
 posSalePaymentInsertTPL.events({
-    'click .pay-amount':function(e){
+    'click .pay-amount': function (e) {
         $(e.currentTarget).select();
     },
     'blur #paymentDate': function (e) {
@@ -248,8 +251,8 @@ posSalePaymentInsertTPL.events({
         }
     },
     'keypress .pay-amount': function (evt) {
-      /*  var charCode = (evt.which) ? evt.which : evt.keyCode;
-        return !(charCode > 31 && (charCode < 48 || charCode > 57));*/
+        /*  var charCode = (evt.which) ? evt.which : evt.keyCode;
+         return !(charCode > 31 && (charCode < 48 || charCode > 57));*/
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if ($(evt.currentTarget).val().indexOf('.') != -1) {
             if (charCode == 46) {
@@ -304,6 +307,9 @@ posSalePaymentInsertTPL.events({
     }
 });
 posSalePaymentUpdateTPL.helpers({
+    staffs: function () {
+        return ReactiveMethod.call('getUserStaffList', Session.get('currentBranch'));
+    },
     compareTwoValue: function (val1, val2) {
         return val1 == val2;
     },
@@ -344,7 +350,7 @@ posSalePaymentUpdateTPL.onRendered(function () {
     datePicker();
 });
 posSalePaymentUpdateTPL.events({
-    'click .pay-amount':function(e){
+    'click .pay-amount': function (e) {
         $(e.currentTarget).select();
     },
     'click #update-payment': function () {
@@ -381,8 +387,8 @@ posSalePaymentUpdateTPL.events({
         }
     },
     'keypress .pay-amount': function (evt) {
-      /*  var charCode = (evt.which) ? evt.which : evt.keyCode;
-        return !(charCode > 31 && (charCode < 48 || charCode > 57));*/
+        /*  var charCode = (evt.which) ? evt.which : evt.keyCode;
+         return !(charCode > 31 && (charCode < 48 || charCode > 57));*/
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if ($(evt.currentTarget).val().indexOf('.') != -1) {
             if (charCode == 46) {
@@ -494,13 +500,13 @@ function pay(saleId) {
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
-        returnAmount=math.round(returnAmount,2);
+        returnAmount = math.round(returnAmount, 2);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
         if (currencyId == "KHR") {
             pay = roundRielCurrency(pay);
-        }else{
-            pay=math.round(pay,2);
+        } else {
+            pay = math.round(pay, 2);
         }
         totalPay += pay / rate;
         obj.payments.push(
@@ -515,10 +521,11 @@ function pay(saleId) {
     var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
     obj.paymentDate = moment($('[name="paymentDate"]').val()).toDate();
     obj.saleId = saleId;
+    obj.staffId = $('#staffId').val();
     //obj.status = "firstPay";
-    obj.payAmount = math.round(totalPay,2);
-    obj.dueAmount =  math.round(parseFloat($('#base-total').val().trim()),2);
-    obj.balanceAmount =  math.round((obj.dueAmount - obj.payAmount),2);
+    obj.payAmount = math.round(totalPay, 2);
+    obj.dueAmount = math.round(parseFloat($('#base-total').val().trim()), 2);
+    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount), 2);
     obj.status = obj.balanceAmount > 0 ? "Owed" : "Paid";
     obj.branchId = branchId;
 
@@ -542,13 +549,13 @@ function updatePayment(paymentId) {
         var rate = $(this).find('.exchange-rate').val() == "" ? 0 : $(this).find('.exchange-rate').val();
         var returnAmount = $(this).find('.return-amount').val();
         returnAmount = numeral().unformat(returnAmount);
-        returnAmount=math.round(returnAmount,2);
+        returnAmount = math.round(returnAmount, 2);
         pay = parseFloat(pay);
         rate = parseFloat(rate);
         if (currencyId == "KHR") {
             pay = roundRielCurrency(pay);
-        }else{
-            pay=math.round(pay,2);
+        } else {
+            pay = math.round(pay, 2);
         }
         totalPay += pay / rate;
         obj.payments.push(
@@ -565,9 +572,10 @@ function updatePayment(paymentId) {
     //obj.paymentDate = $('[name="paymentDate"]').val();
     //obj.saleId = saleId;
     //obj.status = "firstPay";
-    obj.payAmount = math.round(totalPay,2);
-    obj.dueAmount =  math.round(parseFloat($('#base-total').val().trim()),2);
-    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount),2);
+    obj.staffId = $('#staffId').val();
+    obj.payAmount = math.round(totalPay, 2);
+    obj.dueAmount = math.round(parseFloat($('#base-total').val().trim()), 2);
+    obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount), 2);
     obj.status = obj.balanceAmount > 0 ? "Owed" : "Paid";
     //obj.branchId = branchId;
 

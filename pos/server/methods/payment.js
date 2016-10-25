@@ -4,6 +4,8 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         var prefix = obj.saleId;
+        var sale = Pos.Collection.Sales.findOne(obj.saleId);
+        obj.customerId = sale.customerId;
         obj.paymentDate = obj.paymentDate ? obj.paymentDate : new Date();
         obj._id = idGenerator.genWithPrefix(Pos.Collection.Payments, prefix, 3);
         return Pos.Collection.Payments.insert(obj);
