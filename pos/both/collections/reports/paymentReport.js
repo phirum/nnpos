@@ -2,17 +2,6 @@
  * Schema
  */
 Pos.Schema.PaymentReport = new SimpleSchema({
-    locationId: {
-        type: String,
-        label: "Location",
-        autoform: {
-            type: "select2",
-            options: function () {
-                return Pos.ListForReport.locations();
-            }
-        },
-        optional: true
-    },
     customerId: {
         type: String,
         label: "Customer",
@@ -23,13 +12,11 @@ Pos.Schema.PaymentReport = new SimpleSchema({
             }
         },
         optional: true
-
     },
     date: {
         type: String,
         label: "Date"
     },
-
     staffId: {
         type: String,
         label: "Staff",
@@ -51,34 +38,5 @@ Pos.Schema.PaymentReport = new SimpleSchema({
             }
         },
         optional: true
-    },
-    transactionType: {
-        type: String,
-        label: "Transaction Type",
-        autoform: {
-            type: "select2",
-            options: function () {
-                return [
-                    {value: '', label: '(Select One)'},
-                    {value: 'Payment', label: 'Payment'},
-                    {value: 'AdjustmentQtyDown', label: 'AdjustmentQtyDown'}
-                ]
-            }
-        }
-    },
-    status: {
-        type: String,
-        label: "Status",
-        autoform: {
-            type: "select2",
-            options: function () {
-                return [
-                    {value: '', label: 'All'},
-                    {value: 'Owed', label: 'Owed'},
-                    {value: 'Paid', label: 'Paid'}
-                ]
-            }
-        },
-        optional:true
     }
 });
