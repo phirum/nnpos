@@ -14,5 +14,8 @@ Meteor.methods({
             arr.push({value: obj._id, label: obj._id + " | " + obj.name});
         });
         return arr;
+    },
+    getProductPurchasePrice: function (productId) {
+        var purchaseDetails = Pos.Collection.PurchaseDetails.find({productId: productId})
     }
 });

@@ -33,7 +33,7 @@ Pos.TabularTable.Products = new Tabular.Table({
         {data: "barcode", title: "Barcode"},
         {data: "retailPrice", title: "Re.Price"},
         {data: "wholesalePrice", title: "Who.Price"},
-        // {data: "purchasePrice", title: "Pur.Price"},
+        {data: "purchasePrice", title: "Pur.Price"},
         {data: "productType", title: "Type"},
         {data: "status", title: "Status"},
         {

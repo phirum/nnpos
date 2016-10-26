@@ -8,6 +8,14 @@ posProductTPL.onRendered(function () {
     createNewAlertify(['category', 'unit']);
 });
 posProductTPL.events({
+    'click tbody > tr': function (event) {
+        var dataTable = $(event.target).closest('table').DataTable();
+        var rowData = dataTable.row(event.currentTarget).data();
+        alert(rowData._id);
+        Meteor.call('getProductPurchasePrice', rowData._id, function (err, res) {
+            
+        })
+    },
     'click .insert': function (e, t) {
         Session.set('CategoryIdSession', null);
         alertify.product(fa("plus", "Add New Product"), renderTemplate(posProductInsertTPL)).maximize();
