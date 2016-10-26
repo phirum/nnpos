@@ -2,19 +2,26 @@ var posProductTPL = Template.pos_product;
 var posProductInsertTPL = Template.pos_productInsert;
 var posProductUpdateTPL = Template.pos_productUpdate;
 var posProductShowTPL = Template.pos_productShow;
+var posProductShowPurchasePriceTPL = Template.pos_productShowPurchasePrice;
 
 posProductTPL.onRendered(function () {
-    createNewAlertify(['product', 'productShow']);
+    createNewAlertify(['product', 'productShow', 'productShowPurchasePrice']);
     createNewAlertify(['category', 'unit']);
 });
 posProductTPL.events({
     'click tbody > tr': function (event) {
-        var dataTable = $(event.target).closest('table').DataTable();
-        var rowData = dataTable.row(event.currentTarget).data();
-        alert(rowData._id);
-        Meteor.call('getProductPurchasePrice', rowData._id, function (err, res) {
-            
-        })
+        if(event.ctrlKey==true){
+            var dataTable = $(event.target).closest('table').DataTable();
+            var rowData = dataTable.row(event.currentTarget).data();
+            Meteor.call('getProductPurchasePrice', rowData._id, function (err, res) {
+                if (res) {
+                    rowData.purchase = res;
+                }
+                alertify.productShowPurchasePrice(fa('eye', 'Product Detail'),
+                    renderTemplate(posProductShowPurchasePriceTPL, rowData));
+            });
+        }
+
     },
     'click .insert': function (e, t) {
         Session.set('CategoryIdSession', null);
@@ -72,9 +79,7 @@ posProductTPL.events({
                     renderTemplate(posProductShowTPL, product));
             }
         });
-
-
-    }
+    },
 });
 posProductInsertTPL.helpers({
     categoryList: function () {

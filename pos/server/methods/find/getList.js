@@ -16,6 +16,16 @@ Meteor.methods({
         return arr;
     },
     getProductPurchasePrice: function (productId) {
-        var purchaseDetails = Pos.Collection.PurchaseDetails.find({productId: productId})
+        var purchaseDetails = Pos.Collection.PurchaseDetails.find({productId: productId});
+        var list = [];
+        var i=1;
+        purchaseDetails.forEach(function (pd) {
+            var purchase = Pos.Collection.Purchases.findOne(pd.purchaseId);
+            purchase.price = pd.price;
+            purchase.order=i;
+            list.push(purchase);
+            i++;
+        });
+        return list;
     }
 });

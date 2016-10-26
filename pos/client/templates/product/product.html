@@ -215,3 +215,41 @@
 
     </dl>
 </template>
+
+
+<!--Show-->
+<template name="pos_productShowPurchasePrice">
+    <dl class="dl-horizontal">
+        <dt>Id:</dt>
+        <dd>{{_id}}</dd>
+        <dt>Name:</dt>
+        <dd>{{name}}</dd>
+        <dt>Barcode:</dt>
+        <dd>{{barcode}}</dd>
+        <dt>Latest Purchase Price:</dt>
+        <dd>{{purchasePrice}}</dd>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>No</th>
+                <th>Purchase ID</th>
+                <th>Voucher</th>
+                <th>Supplier</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each purchase}}
+                <tr>
+                    <td>{{order}}</td>
+                    <td>{{_id}}</td>
+                    <td>{{voucher}}</td>
+                    <td>{{_supplier.name}}</td>
+                    <td>{{price}}</td>
+                </tr>
+            {{/each}}
+            </tbody>
+
+        </table>
+    </dl>
+</template>
