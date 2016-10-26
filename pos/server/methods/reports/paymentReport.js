@@ -53,10 +53,10 @@ Meteor.methods({
         data.header = header;
         var content = [];
         var payments = Pos.Collection.Payments.find(params);
-        console.log(params);
         var i = 1;
         var total = 0;
         payments.forEach(function (payment) {
+            payment.paymentDate = moment(payment.paymentDate).format('DD-MM-YYYY');
             payment.order = i;
             total += payment.payAmount;
             i++;
