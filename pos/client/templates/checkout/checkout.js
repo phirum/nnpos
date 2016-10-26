@@ -230,7 +230,7 @@ Template.pos_checkout.helpers({
     promotionSaleDetails: function () {
         var saleDetailItems = [];
         var saleId = FlowRouter.getParam('saleId');
-        var sD = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true},{sort: {'_product.barcode': 1}});
+        var sD = Pos.Collection.SaleDetails.find({saleId: saleId, isPromotion: true}, {sort: {'_product.barcode': 1}});
         if (sD.count() > 0) {
             var i = 1;
             sD.forEach(function (sd) {
@@ -1345,6 +1345,7 @@ function pay(saleId) {
     var baseCurrencyId = Cpanel.Collection.Setting.findOne().baseCurrency;
     obj.saleId = saleId;
     obj.payAmount = math.round(totalPay, 2);
+    obj.staffId = $('#staff-id').val();
     // obj.payAmount = numeral().unformat(numeral(totalPay).format('0,0.00'));
     obj.dueAmount = math.round(parseFloat($('#due-grand-total').text().trim()), 2);
     obj.balanceAmount = math.round((obj.dueAmount - obj.payAmount), 2);
