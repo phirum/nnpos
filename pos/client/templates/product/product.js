@@ -5,7 +5,8 @@ var posProductShowTPL = Template.pos_productShow;
 var posProductShowPurchasePriceTPL = Template.pos_productShowPurchasePrice;
 
 posProductTPL.onRendered(function () {
-    createNewAlertify(['product', 'productShow', 'productShowPurchasePrice']);
+    createNewAlertify(['product', 'productShow']);
+    createNewAlertify(['productShowPurchasePrice'],{size:'lg'});
     createNewAlertify(['category', 'unit']);
 });
 posProductTPL.events({

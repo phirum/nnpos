@@ -23,6 +23,7 @@ Meteor.methods({
             var purchase = Pos.Collection.Purchases.findOne(pd.purchaseId);
             purchase.price = pd.price;
             purchase.order=i;
+            purchase.purchaseDate=moment(purchase.purchaseDate).format('DD-MM-YYYY');
             list.push(purchase);
             i++;
         });

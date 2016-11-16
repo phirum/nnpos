@@ -79,7 +79,7 @@
                 <!--{{> afQuickField name='purchasePrice'}}-->
             </div>
             <div class="col-md-6">
-                {{> afQuickField name='productType' type="hidden" value="Stock"}}
+                {{> afQuickField name='productType' value="Stock"}}
                 {{> afQuickField name='status' type="hidden" value="enable"}}
                 {{> afQuickField name='description'}}
                 {{> afQuickField name='barcode'}}
@@ -236,6 +236,7 @@
                 <th>Voucher</th>
                 <th>Supplier</th>
                 <th>Price</th>
+                <th>Date</th>
             </tr>
             </thead>
             <tbody>
@@ -246,6 +247,7 @@
                     <td>{{voucher}}</td>
                     <td>{{_supplier.name}}</td>
                     <td>{{price}}</td>
+                    <td>{{purchaseDate}}</td>
                 </tr>
             {{/each}}
             </tbody>
