@@ -722,23 +722,13 @@ Template.pos_checkout.events({
         var saleId = $('#sale-id').val();
         if (saleId == "") return;
         var branchId = Session.get('currentBranch');
-        Meteor.call('saleManageStock', saleId, branchId, function (error, result) {
-            if (error) {
-                alertify(error.message);
-            }
-            else {
-                var saleObj = {};
-                saleObj.status = 'Owed';
-                Meteor.call('directUpdateSale', saleId, saleObj, function (er, re) {
-                    if (er) {
-                        alertify.error(er.message);
-                    } else {
-                        alertify.success('Sale is saved successfully');
-                        FlowRouter.go('pos.checkout');
-                    }
-                });
-            }
-        });
+        var saleObj = {};
+        saleObj.status = 'Owed';
+        Pos.Collection.Sales.direct.update(saleId, {$set: saleObj});
+        alertify.success('Sale is saved successfully');
+        FlowRouter.go('pos.checkout');
+        Meteor.call('directUpdateSale', saleId, saleObj);
+        Meteor.call('saleManageStock', saleId, branchId);
     },
     'click #btn-pay': function () {
         if ($('#sale-id').val() == "") return;
@@ -1401,19 +1391,12 @@ function pay(saleId) {
     //obj.balanceAmount = numeral().unformat($('#' + baseCurrencyId).val());
     obj.status = obj.balanceAmount <= 0 ? "Paid" : "Owed";
     obj.branchId = branchId;
-    debugger;
-    Meteor.call('insertPayment', obj, function (error, result) {
-        if (error) alertify.error(error.message);
-    });
-    Meteor.call('saleManageStock', saleId, branchId, function (error, result) {
-        if (error) {
-            alertify.error(error.message);
-        } else {
-            $('#payment').modal('hide');
-            FlowRouter.go('pos.checkout');
-            prepareForm();
-        }
-    });
+
+    $('#payment').modal('hide');
+    FlowRouter.go('pos.checkout');
+    prepareForm();
+    Meteor.call('insertPayment', obj);
+    Meteor.call('saleManageStock', saleId, branchId);
 }
 function checkIsUpdate() {
     var saleId = $('#sale-id').val();

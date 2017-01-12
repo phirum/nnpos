@@ -483,19 +483,12 @@ Template.pos_purchase.events({
         var purchaseId = $('#purchase-id').val();
         if (purchaseId == "") return;
         var branchId = Session.get('currentBranch');
-        Meteor.call('purchaseManageStock', purchaseId, branchId, function (er, re) {
-            if (er) {
-                alertify(er.message);
-            }
-            else {
-                var purchaseObj = {};
-                purchaseObj.status = 'Owed';
-                Meteor.call('directUpdatePurchase', purchaseId, purchaseObj);
-                alertify.success('Purchase is saved successfully');
-                FlowRouter.go('pos.purchase');
-            }
-        });
-
+        var purchaseObj = {};
+        purchaseObj.status = 'Owed';
+        Meteor.call('directUpdatePurchase', purchaseId, purchaseObj);
+        alertify.success('Purchase is saved successfully');
+        FlowRouter.go('pos.purchase');
+        Meteor.call('purchaseManageStock', purchaseId, branchId);
     },
     'click #btn-pay': function () {
         if ($('#purchase-id').val() == "") {
@@ -993,9 +986,7 @@ function pay(purchaseId) {
     obj.status = obj.balanceAmount <= 0 ? "Paid" : "Owed";
     obj.branchId = branchId;
     Meteor.call('insertPurchasePayment', obj);
-    Meteor.call('purchaseManageStock', purchaseId, branchId, function (er, re) {
-        if (er) alertify(er.message);
-    });
+    Meteor.call('purchaseManageStock', purchaseId, branchId);
 
     /*var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
      var prefix = branchId + "-";
