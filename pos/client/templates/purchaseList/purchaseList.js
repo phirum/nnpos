@@ -46,16 +46,24 @@ Template.pos_purchaseList.events({
                         alertify.confirm("Are you sure to update this purchase: [" + id + "]? It will recalculate inventory and remove all it's payment(if it has). ")
                             .set({
                                 onok: function (closeEvent) {
+                                    $.blockUI();
                                     Meteor.call('reduceFromInventory', id, branchId, function (err, result) {
                                         if (err) {
                                             alertify.error(err.message);
-                                        }
-                                        if (result) {
+                                        } else {
                                             Meteor.call('updatePurchaseToUnsavedAndRemovePayment', id, total, function (er, re) {
                                                 if (er) {
                                                     alertify.error(er.message);
                                                 } else {
-                                                    FlowRouter.go('pos.purchase', {purchaseId: id});
+                                                    /* Meteor.setTimeout(function () {
+                                                     $.unblockUI();
+                                                     FlowRouter.go('pos.purchase', {purchaseId: id});
+                                                     Meteor.call('reduceFromInventory', id, branchId);
+                                                     },1000);*/
+
+                                                        $.unblockUI();
+                                                        FlowRouter.go('pos.purchase', {purchaseId: id});
+
                                                 }
                                             })
                                         }
@@ -104,18 +112,28 @@ Template.pos_purchaseList.events({
                                     alertify.confirm("Are you sure to remove this purchase: [" + id + "]? It will recalculate inventory and remove all it's payment(if it has). ")
                                         .set({
                                             onok: function (closeEvent) {
-                                                Meteor.call('reduceFromInventory', id, branchId, function (er, re) {
-                                                    if (er) {
-                                                        alertify.error(er.message);
-                                                    }
-                                                    if (re) {
-                                                        Pos.Collection.Purchases.remove(id, function (le) {
-                                                            if (le) {
-                                                                alertify.error(le.message);
-                                                            } else {
-                                                                alertify.success("Success");
-                                                            }
-                                                        });
+                                                $.blockUI();
+                                                /*Meteor.call('reduceFromInventory', id, branchId, function (er, re) {
+                                                 if (er) {
+                                                 alertify.error(er.message);
+                                                 }
+                                                 if (re) {
+                                                 Pos.Collection.Purchases.remove(id, function (le) {
+                                                 if (le) {
+                                                 alertify.error(le.message);
+                                                 } else {
+                                                 $.unblockUI();
+                                                 alertify.success("Success");
+                                                 }
+                                                 });
+                                                 }
+                                                 });*/
+                                                Pos.Collection.Purchases.remove(id, function (le) {
+                                                    if (le) {
+                                                        alertify.error(le.message);
+                                                    } else {
+                                                        $.unblockUI();
+                                                        alertify.success("Success");
                                                     }
                                                 });
                                             },

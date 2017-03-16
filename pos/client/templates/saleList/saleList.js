@@ -52,16 +52,17 @@ posSaleListTPL.events({
             alertify.confirm("Are you sure to update this invoice: [" + id + "]? It will recalculate inventory and remove all it's payment(if it has). ")
                 .set({
                     onok: function (closeEvent) {
+                        $.blockUI();
                         Meteor.call('returnToInventory', id, branchId, function (error, result) {
                             if (error) {
                                 alertify.error(error.message);
-                            }
-                            if (result) {
+                            } else {
                                 Meteor.call('updateSaleToUnsavedAndRemovePayment', id, total, function (err, re) {
                                     if (err) {
                                         alertify.error(err.message);
                                     } else {
                                         Session.set('isRetail', isRetail);
+                                        $.unblockUI();
                                         FlowRouter.go('pos.checkout', {saleId: id});
                                     }
                                 })
@@ -108,18 +109,28 @@ posSaleListTPL.events({
                         alertify.confirm("Are you sure to delete [" + id + "]?")
                             .set({
                                 onok: function (closeEvent) {
-                                    Meteor.call('returnToInventory', id, branchId, function (err, re) {
-                                        if (err) {
-                                            alertify.error(err.message);
-                                        }
-                                        if (re) {
-                                            Pos.Collection.Sales.remove(id, function (er, r) {
-                                                if (er) {
-                                                    alertify.error(er.message);
-                                                } else {
-                                                    alertify.success("Success");
-                                                }
-                                            });
+                                    $.blockUI();
+                                    /*Meteor.call('returnToInventory', id, branchId, function (err, re) {
+                                     if (err) {
+                                     alertify.error(err.message);
+                                     }
+                                     if (re) {
+                                     Pos.Collection.Sales.remove(id, function (er, r) {
+                                     if (er) {
+                                     alertify.error(er.message);
+                                     } else {
+                                     $.unblockUI();
+                                     alertify.success("Success");
+                                     }
+                                     });
+                                     }
+                                     });*/
+                                    Pos.Collection.Sales.remove(id, function (er, r) {
+                                        if (er) {
+                                            alertify.error(er.message);
+                                        } else {
+                                            $.unblockUI();
+                                            alertify.success("Success");
                                         }
                                     });
 

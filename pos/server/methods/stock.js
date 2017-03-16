@@ -432,7 +432,7 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        try {
+        Meteor.defer(function () {
             var prefix = branchId + '-';
             //Meteor.defer(function () {
             //---Open Inventory type block "FIFO Inventory"---
@@ -487,10 +487,11 @@ Meteor.methods({
 
             });
             //--- End Inventory type block "FIFO Inventory"---
-            return true;
-        } catch (e) {
-            throw new Meteor.Error(e.message);
-        }
+            /*       return true;
+             } catch (e) {
+             throw new Meteor.Error(e.message);
+             }*/
+        });
     },
     /*
      reduceFromInventory: function (purchaseId, branchId) {
@@ -604,41 +605,42 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
-        try {
-            var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
-            purchaseDetails.forEach(function (pd) {
-                var inventories = Pos.Collection.FIFOInventory.find({
-                    branchId: branchId,
-                    productId: pd.productId,
-                    locationId: pd.locationId,
-                    isSale: false
-                }, {sort: {_id: -1}}).fetch();
-                var enoughQuantity = pd.quantity;
-                for (var i = 0; i < inventories.length; i++) {
-                    var inventorySet = {};
-                    if (inventories[i].price == pd.price && enoughQuantity != 0) {
-                        var remainQuantity = inventories[i].quantity - enoughQuantity;
-                        if (remainQuantity > 0) {
-                            inventorySet.quantity = remainQuantity;
+        Meteor.defer(function () {
+            try {
+                var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
+                purchaseDetails.forEach(function (pd) {
+                    var inventories = Pos.Collection.FIFOInventory.find({
+                        branchId: branchId,
+                        productId: pd.productId,
+                        locationId: pd.locationId,
+                        isSale: false
+                    }, {sort: {_id: -1}}).fetch();
+                    var enoughQuantity = pd.quantity;
+                    for (var i = 0; i < inventories.length; i++) {
+                        var inventorySet = {};
+                        if (inventories[i].price == pd.price && enoughQuantity != 0) {
+                            var remainQuantity = inventories[i].quantity - enoughQuantity;
+                            if (remainQuantity > 0) {
+                                inventorySet.quantity = remainQuantity;
+                                inventorySet.remainQty = inventories[i].remainQty - enoughQuantity;
+                                inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
+                                enoughQuantity = 0;
+                                Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
+                            } else {
+                                enoughQuantity -= inventories[i].quantity;
+                                Pos.Collection.FIFOInventory.direct.remove(inventories[i]._id);
+                            }
+                        } else {
                             inventorySet.remainQty = inventories[i].remainQty - enoughQuantity;
                             inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
-                            enoughQuantity = 0;
                             Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
-                        } else {
-                            enoughQuantity -= inventories[i].quantity;
-                            Pos.Collection.FIFOInventory.direct.remove(inventories[i]._id);
                         }
-                    } else {
-                        inventorySet.remainQty = inventories[i].remainQty - enoughQuantity;
-                        inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
-                        Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
                     }
-                }
-            });
-            return true;
-        } catch (e) {
-            throw new Meteor.Error(e.message);
-        }
+                });
+            } catch (e) {
+                console.log(e.message);
+            }
+        });
     }
 });
 

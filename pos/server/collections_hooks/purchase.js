@@ -13,7 +13,10 @@ Pos.Collection.Purchases.before.update(function (userId, doc, fieldNames, modifi
  });*/
 
 Pos.Collection.Purchases.after.remove(function (userId, doc) {
-    Pos.Collection.PurchaseDetails.remove({purchaseId: doc._id});
+    Meteor.defer(function () {
+        reduceFromInventoryFun(doc._id, doc.branchId);
+        Pos.Collection.PurchaseDetails.remove({purchaseId: doc._id});
+    });
     //Pos.Collection.PurchaseDetails.direct.remove({purchaseId: doc._id});
 });
 
@@ -54,12 +57,12 @@ function updatePurchaseTotal(purchaseId) {
         /*var Setting = Cpanel.Collection.Setting.findOne();
          var baseCurrencyId = Setting && Setting.baseCurrency ? Setting.baseCurrency : 0;*/
         //var total = purchaseSubTotal - discount;
-        purchaseSubTotal=math.round(purchaseSubTotal,2);
+        purchaseSubTotal = math.round(purchaseSubTotal, 2);
         var total = purchaseSubTotal * (1 - discount / 100);
         if (baseCurrencyId == "KHR") {
             total = roundRielCurrency(total);
-        }else{
-            total=math.round(total,2);
+        } else {
+            total = math.round(total, 2);
         }
         var set = {};
         set.subTotal = purchaseSubTotal;
@@ -70,4 +73,59 @@ function updatePurchaseTotal(purchaseId) {
         //Meteor.call('updatePurchase', purchaseId, set);
     });
 
+}
+function reduceFromInventoryFun(purchaseId, branchId) {
+
+    /*try {*/
+    var purchaseDetails = Pos.Collection.PurchaseDetails.find({purchaseId: purchaseId});
+    purchaseDetails.forEach(function (pd) {
+        var inventories = Pos.Collection.FIFOInventory.find({
+            branchId: branchId,
+            productId: pd.productId,
+            locationId: pd.locationId,
+            isSale: false
+        }, {sort: {_id: -1}}).fetch();
+        var enoughQuantity = pd.quantity;
+        for (var i = 0; i < inventories.length; i++) {
+            var inventorySet = {};
+            if (inventories[i].price == pd.price && enoughQuantity != 0) {
+                var remainQuantity = inventories[i].quantity - enoughQuantity;
+                if (remainQuantity > 0) {
+                    inventorySet.quantity = remainQuantity;
+                    inventorySet.remainQty = inventories[i].remainQty - enoughQuantity;
+                    inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
+                    enoughQuantity = 0;
+                    Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
+                } else {
+                    enoughQuantity -= inventories[i].quantity;
+                    Pos.Collection.FIFOInventory.direct.remove(inventories[i]._id);
+                }
+            } else {
+                inventorySet.remainQty = inventories[i].remainQty - enoughQuantity;
+                inventorySet.imei = subtractImeiArray(inventories[i].imei, pd.imei);
+                Pos.Collection.FIFOInventory.update(inventories[i]._id, {$set: inventorySet});
+            }
+        }
+    });
+    /*     return true;
+     } catch (e) {
+     throw new Meteor.Error(e.message);
+     }*/
+
+}
+function subtractImeiArray(src, filt) {
+    var temp = {}, i, result = [];
+    // load contents of filt into an object
+    // for faster lookup
+    for (i = 0; i < filt.length; i++) {
+        temp[filt[i]] = true;
+    }
+
+    // go through each item in src
+    for (i = 0; i < src.length; i++) {
+        if (!(src[i] in temp)) {
+            result.push(src[i]);
+        }
+    }
+    return (result);
 }

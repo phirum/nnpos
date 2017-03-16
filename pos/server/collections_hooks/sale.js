@@ -77,7 +77,11 @@ Pos.Collection.Sales.after.update(function (userId, doc, fieldNames, modifier, o
 
 });
 Pos.Collection.Sales.after.remove(function (userId, doc) {
-    Pos.Collection.SaleDetails.remove({saleId: doc._id});
+    Meteor.defer(function () {
+        returnToInventoryFun(doc._id,doc.branchId);
+        Pos.Collection.SaleDetails.remove({saleId: doc._id});
+    });
+
     //Pos.Collection.SaleDetails.direct.remove({saleId: doc._id});
 });
 
@@ -274,4 +278,66 @@ function checkPromotion(saleDetail, saleDate) {
         }
     }
 
+}
+
+
+ function returnToInventoryFun(saleId, branchId) {
+        var prefix = branchId + '-';
+        //Meteor.defer(function () {
+        //---Open Inventory type block "FIFO Inventory"---
+        var saleDetails = Pos.Collection.SaleDetails.find({saleId: saleId});
+        saleDetails.forEach(function (sd) {
+            sd.transaction.forEach(function (tr) {
+                sd.price = tr.price;
+                sd.quantity = tr.quantity;
+                //fifoInventoryInsert(branchId,sd,prefix);
+                var inventory = Pos.Collection.FIFOInventory.findOne({
+                    branchId: branchId,
+                    productId: sd.productId,
+                    locationId: sd.locationId
+                    //price: pd.price
+                }, {sort: {createdAt: -1}});
+                if (inventory == null) {
+                    var inventoryObj = {};
+                    inventoryObj._id = idGenerator.genWithPrefix(Pos.Collection.FIFOInventory, prefix, 13);
+                    inventoryObj.branchId = branchId;
+                    inventoryObj.productId = sd.productId;
+                    inventoryObj.quantity = tr.quantity;
+                    inventoryObj.locationId = sd.locationId;
+                    inventoryObj.price = tr.price;
+                    inventoryObj.imei = sd.imei;
+                    inventoryObj.remainQty = tr.quantity;
+                    inventoryObj.isSale = false;
+                    Pos.Collection.FIFOInventory.insert(inventoryObj);
+                }
+                else if (inventory.price == tr.price) {
+                    var inventorySet = {};
+                    inventorySet.quantity = tr.quantity + inventory.quantity;
+                    inventorySet.imei = inventory.imei.concat(sd.imei);
+                    inventorySet.remainQty = inventory.remainQty + sd.quantity;
+                    inventorySet.isSale = false;
+                    Pos.Collection.FIFOInventory.update(inventory._id, {$set: inventorySet});
+                }
+                else {
+                    var nextInventory = {};
+                    nextInventory._id = idGenerator.genWithPrefix(Pos.Collection.FIFOInventory, prefix, 13);
+                    nextInventory.branchId = branchId;
+                    nextInventory.productId = sd.productId;
+                    nextInventory.locationId = sd.locationId;
+                    nextInventory.quantity = tr.quantity;
+                    nextInventory.price = tr.price;
+                    nextInventory.imei = inventory.imei.concat(sd.imei);
+                    nextInventory.remainQty = inventory.remainQty + tr.quantity;
+                    nextInventory.isSale = false;
+                    Pos.Collection.FIFOInventory.insert(nextInventory);
+                }
+            });
+            // });
+
+        });
+        //--- End Inventory type block "FIFO Inventory"---
+        /*       return true;
+         } catch (e) {
+         throw new Meteor.Error(e.message);
+         }*/
 }
