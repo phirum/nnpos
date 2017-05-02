@@ -4,11 +4,11 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         options = options || {};
-        // guard against client-side DOS: hard limit to 50
+        // guard against client-side DOS: hard limit to 100
         if (options.limit) {
-            options.limit = Math.min(50, Math.abs(options.limit));
+            options.limit = Math.min(100, Math.abs(options.limit));
         } else {
-            options.limit = 50;
+            options.limit = 100;
         }
         // TODO fix regexp to support multiple tokens
         var regex = new RegExp(query, 'i');
@@ -31,11 +31,11 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         options = options || {};
-        // guard against client-side DOS: hard limit to 50
+        // guard against client-side DOS: hard limit to 100
         if (options.limit) {
-            options.limit = Math.min(50, Math.abs(options.limit));
+            options.limit = Math.min(100, Math.abs(options.limit));
         } else {
-            options.limit = 50;
+            options.limit = 100;
         }
         // TODO fix regexp to support multiple tokens
         var regex = new RegExp(query, 'i');
@@ -61,11 +61,11 @@ Meteor.methods({
         }
         collectionName = eval(collectionName);
         options = options || {};
-        // guard against client-side DOS: hard limit to 50
+        // guard against client-side DOS: hard limit to 100
         if (options.limit) {
-            options.limit = Math.min(50, Math.abs(options.limit));
+            options.limit = Math.min(100, Math.abs(options.limit));
         } else {
-            options.limit = 50;
+            options.limit = 100;
         }
         // TODO fix regexp to support multiple tokens
         var regex = new RegExp(query, 'i');

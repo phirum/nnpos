@@ -6,6 +6,8 @@
 }
 
 .tt-menu {
+    max-height: 500px;
+    overflow-y: auto;
     margin-top: 3px;
     background: #fff;
     border: 1px solid #888;

@@ -22,9 +22,9 @@ Template.pos_purchase.onRendered(function () {
     }, 500);
 });
 Template.pos_purchase.helpers({
-    getParents:function(parent){
-        var st='';
-        return getParents(st,parent);
+    getParents: function (parent) {
+        var st = '';
+        return getParents(st, parent);
     },
     search: function (query, sync, callback) {
         Meteor.call('searchProductFromPurchase', query, {}, function (err, res) {
@@ -55,14 +55,14 @@ Template.pos_purchase.helpers({
                         product.defaultPrice = defaultPrice;
                         if (defaultPrice >= product.wholesalePrice) {
                             alertify.alert('Are you sure to purchase this purchase? ' +
-                                    'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
+                                'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
                                 .set({
                                     title: "Price should be changed."
                                 });
                         }
                         else if (defaultPrice >= product.wholesalePrice) {
                             alertify.alert('Are you sure to purchase this purchase? ' +
-                                    'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
+                                'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
                                 .set({
                                     title: "Price should be changed."
                                 });
@@ -360,7 +360,7 @@ Template.pos_purchase.events({
         set.description = description;
         set.locationId = locationId;
         Meteor.call('updatePurchase', purchaseId, set, function (error, result) {
-            if (error)alertify.error(error.message);
+            if (error) alertify.error(error.message);
         });
         Session.set('purchaseHasUpdate', false);
         $('#product-barcode').focus();
@@ -794,14 +794,14 @@ Template.pos_purchase.events({
                             product.defaultPrice = defaultPrice;
                             if (defaultPrice >= product.wholesalePrice) {
                                 alertify.alert('Are you sure to purchase this purchase? ' +
-                                        'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
+                                    'The price should be lower than wholesale price "' + product.wholesalePrice + '" of this product.')
                                     .set({
                                         title: "Price should be changed."
                                     });
                             }
                             else if (defaultPrice >= product.wholesalePrice) {
                                 alertify.alert('Are you sure to purchase this purchase? ' +
-                                        'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
+                                    'The price should be lower than retail price "' + product.retailPrice + '" of this product.')
                                     .set({
                                         title: "Price should be changed."
                                     });
@@ -1146,8 +1146,9 @@ function getValidatedValues() {
     return data;
 }
 Template.repo.helpers({
-   getParents:function(parent){
-       var st='';
-       return getParents(st,parent);
-   }
+    getParents: function (parent) {
+        var st = '';
+        var parents = getParents(st, parent);
+        return parents == '' ? '' : '>> ' + parents;
+    }
 });

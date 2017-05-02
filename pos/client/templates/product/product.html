@@ -255,3 +255,41 @@
         </table>
     </dl>
 </template>
+<!--Show-->
+<template name="pos_productShowSalePrice">
+    <dl class="dl-horizontal">
+        <dt>Id:</dt>
+        <dd>{{_id}}</dd>
+        <dt>Name:</dt>
+        <dd>{{name}}</dd>
+        <dt>Barcode:</dt>
+        <dd>{{barcode}}</dd>
+        <dt>Latest Sale Price:</dt>
+        <dd>{{salePrice}}</dd>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>No</th>
+                <th>Sale ID</th>
+                <th>Voucher</th>
+                <th>Customer</th>
+                <th>Price</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each sale}}
+                <tr>
+                    <td>{{order}}</td>
+                    <td>{{_id}}</td>
+                    <td>{{voucher}}</td>
+                    <td>{{_customer.name}}</td>
+                    <td>{{price}}</td>
+                    <td>{{saleDate}}</td>
+                </tr>
+            {{/each}}
+            </tbody>
+
+        </table>
+    </dl>
+</template>

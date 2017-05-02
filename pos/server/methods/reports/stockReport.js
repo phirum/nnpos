@@ -95,7 +95,7 @@ Meteor.methods({
          });
          }
          var content = stockArray;*/
-        data.total=total;
+        data.total=numeral(total).format('0,0.00');
         data.totalQty=totalQty;
         if (content.length > 0) {
             data.content = content;

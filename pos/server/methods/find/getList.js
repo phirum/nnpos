@@ -28,5 +28,19 @@ Meteor.methods({
             i++;
         });
         return list;
+    },
+    getProductSalePrice:function (productId) {
+        var saleDetails = Pos.Collection.SaleDetails.find({productId: productId});
+        var list = [];
+        var i=1;
+        saleDetails.forEach(function (pd) {
+            var sale = Pos.Collection.Sales.findOne(pd.saleId);
+            sale.price = pd.price;
+            sale.order=i;
+            sale.saleDate=moment(sale.saleDate).format('DD-MM-YYYY');
+            list.push(sale);
+            i++;
+        });
+        return list;
     }
 });

@@ -127,7 +127,7 @@
                             </select>-->
                             <input class="form-control typeahead input-sm" name="search" type="text"
                                    placeholder="Type your product name" autocomplete="on" spellcheck="off"
-                                   data-source="search" data-select='selected' data-highlight=true
+                                   data-source="search" data-select='selected' data-highlight=true data-limit="100"
                                    data-template='repo'/>
                         </div>
                         <div class="col-md-2">
@@ -147,8 +147,8 @@
                             <tr>
                                 <th>Product</th>
                                <!-- <th>Barcode</th>-->
-                                <th class="align-center">Price</th>
                                 <th class="align-center">Quantity</th>
+                                <th class="align-center">Price</th>
                                 <th class="align-center">Discount</th>
                                 <th class="align-center">Amount</th>
                                 <th class="align-center">&nbsp;&nbsp;Action&nbsp;&nbsp;</th>
@@ -167,16 +167,17 @@
                                         {{_product.barcode}}
                                     </td>-->
                                     <td>
-                                        <input type="text" class="la-box price validation" step="0.01"
-                                               value="{{price}}"/>
-
-                                    </td>
-                                    <td>
                                         <input type="text" style="width: 100px;" min="1"
                                                class="la-box quantity validation"
                                                value="{{quantity}}"/>
 
                                     </td>
+                                    <td>
+                                        <input type="text" class="la-box price validation" step="0.01"
+                                               value="{{price}}"/>
+
+                                    </td>
+
                                     <td>
                                         <input type="text" min="0" max="100" class="la-box discount validation"
                                                value="{{discount}}"/>

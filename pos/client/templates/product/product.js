@@ -3,15 +3,18 @@ var posProductInsertTPL = Template.pos_productInsert;
 var posProductUpdateTPL = Template.pos_productUpdate;
 var posProductShowTPL = Template.pos_productShow;
 var posProductShowPurchasePriceTPL = Template.pos_productShowPurchasePrice;
+var posProductShowSalePriceTPL=Template.pos_productShowSalePrice;
 
 posProductTPL.onRendered(function () {
     createNewAlertify(['product', 'productShow']);
     createNewAlertify(['productShowPurchasePrice'],{size:'lg'});
+    createNewAlertify(['productShowSalePrice'],{size:'lg'});
     createNewAlertify(['category', 'unit']);
 });
 posProductTPL.events({
     'click tbody > tr': function (event) {
-        if(event.ctrlKey==true){
+        debugger;
+        if(event.ctrlKey){
             var dataTable = $(event.target).closest('table').DataTable();
             var rowData = dataTable.row(event.currentTarget).data();
             Meteor.call('getProductPurchasePrice', rowData._id, function (err, res) {
@@ -20,6 +23,17 @@ posProductTPL.events({
                 }
                 alertify.productShowPurchasePrice(fa('eye', 'Product Detail'),
                     renderTemplate(posProductShowPurchasePriceTPL, rowData));
+            });
+        }
+        if(event.shiftKey){
+            var dataTable = $(event.target).closest('table').DataTable();
+            var rowData = dataTable.row(event.currentTarget).data();
+            Meteor.call('getProductSalePrice', rowData._id, function (err, res) {
+                if (res) {
+                    rowData.sale = res;
+                }
+                alertify.productShowSalePrice(fa('eye', 'Sale Detail'),
+                    renderTemplate(posProductShowSalePriceTPL, rowData));
             });
         }
 
