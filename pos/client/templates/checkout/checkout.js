@@ -207,7 +207,7 @@ Template.pos_checkout.helpers({
         var sD = Pos.Collection.SaleDetails.find({
             saleId: FlowRouter.getParam('saleId'),
             isPromotion: {$ne: true}
-        }, {sort: {'_product.barcode': 1}});
+        }, {sort: {'_id': -1}});
         if (sD.count() > 0) {
             var i = 1;
             sD.forEach(function (sd) {
