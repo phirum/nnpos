@@ -47,10 +47,12 @@
                     <tr>
                         <th>No</th>
                         <th>Product</th>
+                        <th>Barcode</th>
                         <th>Unit</th>
                         <th>Category</th>
-                        <th>Retail Price</th>
-                        <th>Wholesale Price</th>
+                        <th>R-Price</th>
+                        <th>Wh-Price</th>
+                        <th>Pur-Price</th>
                     </tr>
                     </thead>
 
@@ -59,10 +61,12 @@
                         <tr>
                             <td>{{order}}</td>
                             <td>{{name}}</td>
+                            <td>{{barcode}}</td>
                             <td>{{_unit.name}}</td>
                             <td>{{getParents _category}}</td>
                             <td>{{retailPrice}}</td>
                             <td>{{wholesalePrice}}</td>
+                            <td>{{purchasePrice}}</td>
                         </tr>
                     {{/each}}
                     </tbody>
