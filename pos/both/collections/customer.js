@@ -3,6 +3,7 @@ Pos.Schema.Customers = new SimpleSchema({
     customerId:{
         type:"String",
         label:"ID",
+        optional:true
     },
     name: {
         type: String,
