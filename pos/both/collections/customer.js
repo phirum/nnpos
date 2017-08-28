@@ -1,5 +1,9 @@
 Pos.Collection.Customers = new Mongo.Collection("pos_customers");
 Pos.Schema.Customers = new SimpleSchema({
+    customerId:{
+        type:"String",
+        label:"ID",
+    },
     name: {
         type: String,
         label: "Name",

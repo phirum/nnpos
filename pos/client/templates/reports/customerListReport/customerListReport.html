@@ -1,0 +1,82 @@
+<!--Form-->
+<template name="pos_customerListReport">
+    {{#autoForm schema=Pos.Schema.CustomerListReport id="pos_customerListReport" action="customerListReportGen"
+                target="_blank"}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='branch'}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name='customerLocationId'}}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+    {{/autoForm}}
+</template>
+
+<!--Generate-->
+<template name="pos_customerListReportGen">
+    {{#if data}}
+        {{#reportTpl options}}
+            {{#with data}}
+                {{#with title}}
+                    <div class="title">
+                        <div class="title-1x-kh-muol">{{khName}}</div>
+                        <div class="title-1x">{{enName}}</div>
+                        <div style="text-decoration: underline;">CustomerList Summary Report</div>
+                        <div class="title-2x">{{enAddress}}</div>
+                    </div>
+                {{/with}}
+                {{#with header}}
+                    <div style="width: 100%">
+                        <div style="width: 50%; float: left">
+                            <ul class="list-unstyled">
+                                <li><strong>Branch:</strong> {{branch}}</li>
+                            </ul>
+                        </div>
+                        <div style="width: 50%; float: right">
+                            <ul class="list-unstyled">
+                                <li><strong>Customer Location:</strong> {{customerLocation}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                {{/with}}
+                <!--Content-->
+                <table class="report-content">
+                    <thead class="content-header">
+                    <tr>
+                        <th>name</th>
+                        <th>Cus ID</th>
+                        <!--<th>Location</th>-->
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <!--<th>Branch</th>-->
+                    </tr>
+                    </thead>
+                    <tbody class="content-body">
+                    {{#each content}}
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>{{customerId}}</td>
+                            <!--<td>{{customerLocationId}}</td>-->
+                            <td>{{gender}}</td>
+                            <td>{{phone}}</td>
+                            <td>{{address}}</td>
+                            <!--<td>{{_branch.khName}}</td>-->
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            {{/with}}
+            <!--Sign-->
+            {{> signFooter}}
+        {{/reportTpl}}
+        <!--Auto print-->
+        <!--{{autoprint close="true"}}-->
+    {{else}}
+        {{> loading}}
+    {{/if}}
+
+</template>

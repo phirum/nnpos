@@ -8,6 +8,7 @@ Pos.TabularTable.Customers = new Tabular.Table({
         },
         {data: "_id", title: "ID"},
         {data: "name", title: "Name"},
+        {data: "customerId", title: "Cus ID"},
         {data: "gender", title: "Gender"},
         {data: "phone", title: "Phone"},
         {data: "address", title: "Address"},

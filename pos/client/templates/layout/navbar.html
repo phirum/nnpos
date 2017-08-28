@@ -14,7 +14,8 @@
                     <i class="fa fa-cogs"></i> Manage <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-				 <li class="{{isActiveRoute name='pos.customerLocation'}}"><a href="{{pathFor 'pos.customerLocation'}}">
+                    <li class="{{isActiveRoute name='pos.customerLocation'}}"><a
+                            href="{{pathFor 'pos.customerLocation'}}">
                         Customer Location</a>
                     </li>
                     <li class="{{isActiveRoute name='pos.customer'}}"><a href="{{pathFor 'pos.customer'}}">
@@ -131,10 +132,12 @@
                     <i class="fa fa-file-text"></i> Reports <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <!--<li class="{{isActiveRoute name='pos.myCustomerReport'}}"><a
-                        href="{{pathFor 'pos.myCustomerReport'}}">Sample</a>
-                </li>-->
-                    <li class="{{isActiveRoute name='pos.productListReport'}}"><a href="{{pathFor 'pos.productListReport'}}">
+                    <li class="{{isActiveRoute name='pos.customerListReport'}}"><a
+                            href="{{pathFor 'pos.customerListReport'}}">
+                        <i class="fa fa-file-text"></i> Customer List</a>
+                    </li>
+                    <li class="{{isActiveRoute name='pos.productListReport'}}"><a
+                            href="{{pathFor 'pos.productListReport'}}">
                         <i class="fa fa-file-text"></i> Product List</a>
                     </li>
                     <li class="{{isActiveRoute name='pos.saleReport'}}"><a href="{{pathFor 'pos.saleReport'}}">
@@ -169,7 +172,8 @@
                     <li class="{{isActiveRoute name='pos.stockReport'}}"><a href="{{pathFor 'pos.stockReport'}}">
                         <i class="fa fa-file-text"></i> Stock Balance</a>
                     </li>
-                    <li class="{{isActiveRoute name='pos.stockHistoryReport'}}"><a href="{{pathFor 'pos.stockHistoryReport'}}">
+                    <li class="{{isActiveRoute name='pos.stockHistoryReport'}}"><a
+                            href="{{pathFor 'pos.stockHistoryReport'}}">
                         <i class="fa fa-file-text"></i> Stock History</a>
                     </li>
                     <li class="divider"></li>
