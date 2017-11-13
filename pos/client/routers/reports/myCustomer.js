@@ -57,7 +57,7 @@ Router.route('pos/myCustomerReportGen', function () {
                 },
                 header: function () {
                     return [
-                        {col1: 'Staff: Rabbit', col2: 'Customer: like ' + q.name, col3: 'Filter: ....'},
+                        {col1: 'Staff: Pinrong', col2: 'Customer: like ' + q.name, col3: 'Filter: ....'},
                         {col1: 'Gender: ...', col2: 'Filter: ...........'}
                     ];
                 },

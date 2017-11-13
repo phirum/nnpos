@@ -1,8 +1,8 @@
 SEO = new FlowRouterSEO();
 
 SEO.setDefaults({
-    title: 'Rabbit Project',
-    description: 'Rabbit IT Solutions, Tel: 053 50 66 777',
+    title: 'Pinrong Project',
+    description: 'Pinrong IT Solutions, Tel: 053 50 66 777',
     meta: {
         'property="og:type"': 'website',
         'property="og:site_name"': 'Default site name',

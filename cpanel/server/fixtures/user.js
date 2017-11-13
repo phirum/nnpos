@@ -7,7 +7,7 @@ Meteor.startup(function () {
                 email: 'super@gmail.com',
                 password: 'rabbitsuper',
                 profile: {
-                    name: 'Rabbit'
+                    name: 'Pinrong'
                 }
             }
         );

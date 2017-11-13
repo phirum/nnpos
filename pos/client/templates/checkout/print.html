@@ -120,7 +120,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-size: 10px; text-align: center;"><br><br><br>Powered by: Rabbit IT Solution, Tel: 053 50 66
+                        <td style="font-size: 10px; text-align: center;"><br><br><br>Powered by: Pinrong IT Solution, Tel: 053 50 66
                             777
                         </td>
                     </tr>
@@ -139,12 +139,11 @@
     {{#with data}}
             <div align="center"></div>
             <div style="font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana; font-size: 11px; width:720px; margin: 0 auto;">
-                <img src="/logo.jpg" class="logo" style="width:63px;position: absolute; top: 15px;left: 5px;"/>
+
                 
-				<div width="75%" align="center" style="padding-top: 10px;">
-				 <span style="font-weight: bold;font-size: 20px;">NaNa Computer</span><br>
-					<span style="font-weight: bold;font-size: 14px;">Sale, Repair & Services</span><br>
-                    <span style="font-family:'Khmer OS Battambang';font-size: 14px;font-weight: bold;">{{company.khName}}</span><br>
+				<div align="center" style="padding-top: 10px;">
+
+                    <span style="font-family:'Khmer OS Muol light','Khmer OS Muol';font-size: 14px;font-weight: bold;">{{company.khName}}</span><br>
                   
                     Address: {{company.enAddress}}<br>
                     Tel: {{company.telephone}}<br>
@@ -168,51 +167,53 @@
                     </tr>
 
                 </table>
-                <table class="table table-bordered auto">
+                <table class="table table-striped auto">
                     <thead>
                     <tr>
-                        <th> N<sup style="text-decoration: underline;">o</sup></th>
-                        <th> Product</th>
-                        <th> Price</th>
-                        <th> Qty</th>
-                        <th> Unit</th>
-                        <th> Discount</th>
+                        <th>N<sup style="text-decoration: underline;">o</sup></th>
+                        <th>Product</th>
+                        <th>Barcode</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Unit</th>
+                        <th>Discount</th>
                         <th style="text-align: right;"> Amount</th>
                     </tr>
                     </thead>
                     <tbody class="custom">
                     {{#each saleDetails}}
                         <tr>
-                            <td>{{order}}</td>
-                            <td>{{_product.name}}</td>
-                            <td>{{price}}</td>
-                            <td>{{quantity}}</td>
-                            <td>{{_product._unit.name}}</td>
-                            <td>{{discount}}</td>
-                            <td style="text-align: right;">{{amountFormated}} {{baseCurrency.symbol}}</td>
+                            <td> {{order}}</td>
+                            <td> {{_product.name}}</td>
+                            <td> {{_product.barcode}}</td>
+                            <td> {{price}}</td>
+                            <td> {{quantity}}</td>
+                            <td> {{_product._unit.name}}</td>
+                            <td> {{discount}}</td>
+                            <td style="text-align: right;"> {{amountFormated}} {{baseCurrency.symbol}}</td>
                         </tr>
                     {{/each}}
 
                     <tr style="text-align: right;">
-                        <td colspan="6">Sub Total:</td>
+                        <td colspan="7">Sub Total:</td>
                         <td>{{sale.subTotalFormatted}} {{baseCurrency.symbol}}</td>
                     </tr>
                     <tr style="text-align: right;">
-                        <td colspan="6" align="right">Discount:</td>
+                        <td colspan="7" align="right">Discount:</td>
                         <td align="right">{{sale.discount}} %</td>
                     </tr>
                     <tr style="text-align: right;">
-                        <td colspan="6" align="right">Discount:</td>
+                        <td colspan="7" align="right">Discount:</td>
                         <td align="right">{{sale.discountAmount}} {{baseCurrency.symbol}}</td>
                     </tr>
                     <tr style="text-align: right;">
-                        <td colspan="6" style="font-weight: bold;font-size:14px;">Total {{baseCurrency._id}}:</td>
+                        <td colspan="7" style="font-weight: bold;font-size:14px;">Total {{baseCurrency._id}}:</td>
                         <td style="font-weight: bold;font-size:14px;">{{sale.totalFormatted}} {{baseCurrency.symbol}}</td>
                     </tr>
 
                     {{#each sale._exchangeRate.rates}}
                         <tr style="text-align: right;">
-                            <td colspan="6" align="right">{{toCurrencyId}}:</td>
+                            <td colspan="7" align="right">{{toCurrencyId}}:</td>
                             <td align="right" style="font-weight: bold">{{totalFormatted}} {{symbol}}</td>
                         </tr>
                     {{/each}}
@@ -220,7 +221,7 @@
         {{#if hasPayment}}
             {{#each paymentObj.payments}}
                             <tr>
-                                <td colspan="3"></td>
+                                <td colspan="4"></td>
                                 <td>Paid {{currencyId}}:</td>
                                 <td style="font-weight: bold">{{payAmount}}</td>
                                 <td style="text-align: right">Change {{currencyId}}:</td>
@@ -231,7 +232,7 @@
         {{/if}}
                     </tbody>
                 </table>
-                <table class="table table-bordered">
+          <!--      <table class="table table-bordered">
                     <tr>
                         <td class="footer-header">Stock</td>
                         <td class="footer-header">Accounting</td>
@@ -251,7 +252,7 @@
                             {{#each imei}}{{this}}, {{/each}}<br>
                         {{/if}}
         {{/each}}
-                </div>
+                </div>-->
             </div>
         {{/with}}
     {{autoprint close="true"}}

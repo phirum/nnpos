@@ -26,7 +26,7 @@ helpTpl.helpers({
             var moduleWord = s.words(module, ':');
             return Module[moduleWord[0]];
         }
-        return {name: 'Rabbit Project', version: ''};
+        return {name: 'Pinrong Project', version: ''};
     }
 });
 
